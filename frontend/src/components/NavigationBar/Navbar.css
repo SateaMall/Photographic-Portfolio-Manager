@@ -20,7 +20,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin: 0 auto; 
-  justify-content: center;   /* ✅ center everything */
+  justify-content: center;   /* center everything */
 }
 
 .rg-brand {
@@ -29,7 +29,7 @@
   font-size: 25px;
   font-weight: 600 ;
   margin-left: 0; /* keep your old spacing */
-  margin-right: 110px;
+  margin-right: 20vw;
 }
 .rg-brand:hover {
   color: rgb(171, 174, 202) ;

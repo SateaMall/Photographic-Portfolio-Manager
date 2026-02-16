@@ -2,6 +2,8 @@ package com.AlexiSatea.backend.repo;
 
 import com.AlexiSatea.backend.model.AlbumPhoto;
 import com.AlexiSatea.backend.model.AlbumPhotoId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,7 +27,8 @@ public interface AlbumPhotoRepository extends JpaRepository<AlbumPhoto, AlbumPho
         where ap.album.id = :albumId
         order by ap.position asc, ap.addedAt asc
     """)
-    List<AlbumPhoto> findByAlbumIdWithPhoto(@Param("albumId") UUID albumId);
+    Page<AlbumPhoto> findByAlbumIdWithPhoto(@Param("albumId") UUID albumId,
+                                            Pageable pageable);
     @Query("""
         select ap
         from AlbumPhoto ap

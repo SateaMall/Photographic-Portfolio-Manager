@@ -23,10 +23,17 @@
   height: 100%;
   overflow: hidden; /* Hide any overflow from the carousel */
 }
+.scroll-indicator {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+}
 
+
+/** Content **/
 .content {
   padding: 10px 10px;
-  padding-bottom: 40ox;
+  padding-bottom: 40px;
 }
 /* section spacing */
 .hp-section {
@@ -60,31 +67,3 @@
   letter-spacing: 0.2px;
   text-transform: lowercase; /* matches your "photos" sketch vibe */
 }
-
-.hero-scroll-indicator {
-  position: absolute;
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 15;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  animation: bounce 1.6s infinite;
-
-}
-.hero-scroll-indicator svg{
-  font-size: 30px;
-  opacity: 0.8;
-  width: 10vw;
-}
-.hero-scroll-indicator :hover {
-  color: rgb(229, 181, 35);
-  opacity: 1;
-}
-@keyframes bounce {
-  0%,100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, 6px); }
-}
-

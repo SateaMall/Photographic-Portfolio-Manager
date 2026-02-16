@@ -10,6 +10,8 @@ import com.AlexiSatea.backend.repo.AlbumPhotoRepository;
 import com.AlexiSatea.backend.repo.AlbumRepository;
 import com.AlexiSatea.backend.repo.PhotoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -109,8 +111,8 @@ public class AlbumService {
 
         /*********************   PhotoBrowser(Album)   *********************/
     @Transactional(readOnly = true)
-    public List<AlbumPhotoItem> getAlbumItems(UUID albumId){
-        List<AlbumPhoto> relations = albumPhotoRepository.findByAlbumIdWithPhoto(albumId);
+    public Page<AlbumPhotoItem> getAlbumItems(UUID albumId, Pageable pageable){
+        Page<AlbumPhoto> relations = albumPhotoRepository.findByAlbumIdWithPhoto(albumId,pageable);
         return AlbumPhotoItem.from(relations);
     }
 

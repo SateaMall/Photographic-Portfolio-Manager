@@ -1,0 +1,27 @@
+.hero-scroll-indicator {
+  z-index: 15;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  animation: bounce 1.6s infinite;
+
+}
+
+.hero-scroll-indicator svg{
+  font-size: 30px;
+  opacity: 0.8;
+  width: 10vw;
+}
+
+.hero-scroll-indicator :hover {
+  color: rgb(229, 181, 35);
+  opacity: 1;
+}
+
+@keyframes bounce {
+  0%,100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 6px); }
+}
+

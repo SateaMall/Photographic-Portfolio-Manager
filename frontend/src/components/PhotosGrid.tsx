@@ -5,12 +5,17 @@ import { useParams } from "react-router-dom";
 import { PhotoCard } from "./PhotoCard";
 
 import "./PhotosGrid.css"
-
-export function PhotosGrid({photoId,  onCarrouselPhotosChange, }:{photoId?:string , onCarrouselPhotosChange?: (photos: PhotoResponse[]) => void;}){
+import { fetchAlbumItems, fetchAlbumItemsAsPhotos } from "../api/photoBrowse";
+type PhotosGridProps = {
+  photoId?: string;
+  albumId?: string;
+  onPhotosChange?: (photos: PhotoResponse[]) => void;
+}
+export function PhotosGrid(PhotosGridProps: PhotosGridProps) {
   const { context } = useParams(); // "satea" | "alexis" | "shared"
   const scope = context?.toUpperCase() as "SATEA" | "ALEXIS" | "SHARED";
 
-  const PAGE_SIZE = photoId? 8 : 20;
+  const PAGE_SIZE = PhotosGridProps.photoId? 8 : 20;
   const FIRST_VISIBLE = 12;
   const [photos, setPhotos] = useState<PhotoResponse[]>([]);
   const [page, setPage] = useState(0); // backend page index
@@ -27,41 +32,37 @@ export function PhotosGrid({photoId,  onCarrouselPhotosChange, }:{photoId?:strin
 
 // Context can change (via routing), we need to reset when that happens
 useEffect(() => {
-  setPhotos([]);
-  setPage(0);
-  setVisibleCount(FIRST_VISIBLE);
-  setHasMorePages(true);
-  setInitialRevealDone(false);
-}, [context,photoId]);
+  let cancelled = false;
 
-useEffect(() => {
-  if (initialRevealDone) {
-    setVisibleCount(photos.length);
-  }
- }, [photos.length, initialRevealDone]);
-
-// Fetch photos when page or scope changes
-useEffect(() => {
   setPhotosLoading(true);
-  fetchPhotos(scope, page, PAGE_SIZE,photoId)
+  (PhotosGridProps.albumId?fetchAlbumItemsAsPhotos(PhotosGridProps.albumId): 
+  fetchPhotos(scope, page, PAGE_SIZE, PhotosGridProps.photoId))
     .then((res) => {
+      if (cancelled) return;
+
       setPhotos((prev) => {
-        // prevent duplicate pages
-        const existingIds = new Set(prev.map(p => p.id));
-        const newPhotos = res.content.filter(p => !existingIds.has(p.id));
+        const existingIds = new Set(prev.map((p) => p.id));
+        const newPhotos = res.content.filter((p) => !existingIds.has(p.id));
         return [...prev, ...newPhotos];
       });
 
       setHasMorePages(!res.last);
     })
-    .catch((e) => setError(e.message))
-    .finally(() => setPhotosLoading(false));
- 
-}, [scope, page,photoId]);
+    .catch((e) => {
+      if (!cancelled) setError(e.message);
+    })
+    .finally(() => {
+      if (!cancelled) setPhotosLoading(false);
+    });
+
+  return () => {
+    cancelled = true;
+  };
+}, [scope, page, PhotosGridProps.photoId, PhotosGridProps.albumId]);
 
 
 useEffect(() => {
-  loadCarrouselPhotos(photos.slice(0, 4));
+  loadCarrouselPhotos(photos);
   // console.log("photos changed:", photos.length);
 }, [photos]);
 
@@ -79,8 +80,8 @@ useEffect(() => {
 
   // Loading carrousel photos
   const loadCarrouselPhotos = (photos: PhotoResponse[]) => {
-    if(onCarrouselPhotosChange)
-      {onCarrouselPhotosChange(photos);}
+    if(PhotosGridProps.onPhotosChange)
+      {PhotosGridProps.onPhotosChange(photos);}
 
   };
 
@@ -118,7 +119,7 @@ return (
   </div>
 
   {/* SECOND SEE MORE (pagination) */}
-  {!hasHiddenInCurrent && hasMorePages && !photoId && (
+  {!hasHiddenInCurrent && hasMorePages && !PhotosGridProps.photoId && !PhotosGridProps.albumId &&(
     <div style={{ textAlign: "center", marginTop: 20 }} >
       <button className="hp-more-btn" onClick={loadMore}>
         Load more photos
