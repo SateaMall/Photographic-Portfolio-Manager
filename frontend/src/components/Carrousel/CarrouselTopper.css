@@ -18,19 +18,20 @@
 .embla-img_topper {
   width: 100%;
   height: 100vh; 
-  object-fit: cover;                 /* ✅ fills area, crops if needed */
+  object-fit: cover;                 /* fills area, crops if needed */
   display: block;  
   filter: brightness(0.6) contrast(1.05);               /* removes tiny image baseline gap */
 }
 
-/* Optional: remove any extra spacing around the topper wrapper */
+/* remove any extra spacing around the topper wrapper */
 .carousel_topper,
 .carrousel-topper-wrapper_topper {
   margin: 0;
   padding: 0;
 }
 
-/* Nav buttons */
+/*** Navigation buttons ***/
+
 .nav_topper {
   position: absolute;
   top: 35%;
@@ -66,3 +67,37 @@
   opacity: 0;
   pointer-events: none;
 }
+
+/*** Navigation points DISALBLED ***/
+ /* .embla__dots_topper {
+  position: absolute;        
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+.embla__dot_topper {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+  padding: 0;
+}
+
+.embla__dot_topper.is-active {
+  background: rgba(255,255,255,0.95);
+  border-color: rgba(255,255,255,0.95);
+} 
+
+.embla__dot_topper:hover {
+  background: rgb(229, 181, 35);
+  border-color: rgb(229, 181, 35);
+
+}
+ */

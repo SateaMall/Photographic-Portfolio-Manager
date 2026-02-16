@@ -9,13 +9,23 @@ import "./CarrouselTopper.css";
 export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoResponse[] }) {
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start",   /* loop: true,*/   }); 
+      //Left-Right buttons state
   const [canPrev, setCanPrev] = useState(false); 
   const [canNext, setCanNext] = useState(false);
 
+      //Dots state
+  //const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+  //const [selectedIndex, setSelectedIndex] = useState(0);
+
   const update = useCallback(() => {
     if (!emblaApi) return;
+    //Left-Right buttons state
     setCanPrev(emblaApi.canScrollPrev());
     setCanNext(emblaApi.canScrollNext());
+    
+    //Dots state
+    //setScrollSnaps(emblaApi.scrollSnapList());
+    //setSelectedIndex(emblaApi.selectedScrollSnap);
   }, [emblaApi]);
 
   useEffect(() => {
@@ -23,7 +33,9 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
     update();
     emblaApi.on("select", update);
     emblaApi.on("reInit", update);
+    
   }, [emblaApi, update]);
+
 
  /* //AUTOPLAY
   useEffect(() => {
@@ -38,6 +50,7 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
 */
   return (
     <div className="carousel_topper">
+      {/* Left-Right navigation buttons */}
       <button
         type="button"
         className={`nav_topper nav-left_topper ${canPrev ? "" : "is-hidden"}`}
@@ -63,6 +76,7 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
         </div>
       </div>
 
+ {/* Left-Right navigation buttons */}
       <button
         type="button"
         className={`nav_topper nav-right_topper ${canNext ? "" : "is-hidden"}`}
@@ -71,6 +85,22 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
       >
         <span className="nav-icon_topper">›</span>
       </button>
+
+      {/* <div className="embla__dots_topper" aria-label="Carousel pagination">
+  {scrollSnaps.map((_, idx) => (
+    <button
+      key={idx}
+      type="button"
+      className={`embla__dot_topper ${
+        idx === selectedIndex ? "is-active" : ""
+      }`}
+      onClick={() => emblaApi?.scrollTo(idx)}
+      aria-label={`Go to slide ${idx + 1}`}
+      aria-current={idx === selectedIndex ? "true" : undefined}
+    />
+  ))}
+</div>*/}
+
     </div>
   );
 }

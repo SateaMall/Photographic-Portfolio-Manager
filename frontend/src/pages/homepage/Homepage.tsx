@@ -8,6 +8,7 @@ import { SocialBioSection } from "./components/SocialBioSection";
 import { PhotosGrid } from "../../components/PhotosGrid";
 import { CarrouselTopper } from "../../components/Carrousel/CarrouselTopper";
 import { Navbar } from "../../components/NavigationBar/Navbar";
+import { BsChevronDoubleDown  } from "react-icons/bs";
 export default function Homepage() {
 
 const { context } = useParams(); // "satea" | "alexis" | "shared"
@@ -52,7 +53,18 @@ return (
       <div className="bio-container">
         <SocialBioSection />
       </div>
-    </div>
+      <button
+        className="hero-scroll-indicator"
+        onClick={() => {
+          const el = document.getElementById("albums") 
+            || document.getElementById("photos");
+          el?.scrollIntoView({ behavior: "smooth" });
+        }}
+        aria-label="Scroll down"
+      >
+         <BsChevronDoubleDown  />
+      </button>
+      </div>
   
   <div className="content">
       {/* Albums */}
@@ -74,7 +86,7 @@ return (
       <PhotosGrid onCarrouselPhotosChange={setCarrouselPhotos}/>
     </section>
   </div>
-  
+
   </div>
 );
 
