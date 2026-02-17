@@ -5,7 +5,6 @@
   right: 0;
   top: clamp(90px, 14vh, 160px); /* moves it down under navbar */
   z-index: 0;
-
   padding: 0 clamp(12px, 3vw, 28px);
   color: #fff;
 }

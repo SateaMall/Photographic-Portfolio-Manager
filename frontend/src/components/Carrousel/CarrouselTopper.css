@@ -12,6 +12,7 @@
 /* Control how big each slide is */
 .embla__slide_topper {
   flex: 0 0  100%; 
+  overflow: hidden; /* important so zoom doesn't spill outside */
 }
 
 /* LIMIT “long” photos: fixed height (responsive) + cover */
@@ -20,9 +21,25 @@
   height: 100vh; 
   object-fit: cover;                 /* fills area, crops if needed */
   display: block;  
-  filter: brightness(0.6) contrast(1.05);               /* removes tiny image baseline gap */
+  filter: brightness(0.6) contrast(1.05);   
+  transform: scale(1);
+  will-change: transform;            /* removes tiny image baseline gap */
+}
+.embla-img_topper.is-active {
+  animation: embla-kenburns 15s ease-in-out forwards;
 }
 
+@keyframes embla-kenburns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+
+/* respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .embla-img_topper.is-active {
+    animation: none;
+  }
+}
 /* remove any extra spacing around the topper wrapper */
 .carousel_topper,
 .carrousel-topper-wrapper_topper {

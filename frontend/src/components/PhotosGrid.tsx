@@ -32,6 +32,15 @@ export function PhotosGrid(PhotosGridProps: PhotosGridProps) {
 
 // Context can change (via routing), we need to reset when that happens
 useEffect(() => {
+  setPhotos([]);
+  setPage(0);
+  setVisibleCount(FIRST_VISIBLE);
+  setHasMorePages(true);
+  setInitialRevealDone(false);
+}, [context,PhotosGridProps.photoId, PhotosGridProps.albumId]);
+
+useEffect(() => {
+  
   let cancelled = false;
 
   setPhotosLoading(true);

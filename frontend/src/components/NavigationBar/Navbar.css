@@ -1,11 +1,12 @@
+
 /* Make it sit ON TOP of the carousel */
 .rg-nav {
+    
   position: absolute; 
   top: 0;
   left: 0;
   right: 0;
   z-index: 20;
-
   color: white;
   background: transparent;
 }
@@ -24,7 +25,8 @@
 }
 
 .rg-brand {
-  color: white;
+  font-family: "Montserrat", sans-serif;
+  color: rgb(220, 224, 99);
   text-decoration: none;
   font-size: 25px;
   font-weight: 600 ;
@@ -32,7 +34,7 @@
   margin-right: 20vw;
 }
 .rg-brand:hover {
-  color: rgb(171, 174, 202) ;
+  color:  rgb(220, 223, 147);
 }
 /* Desktop menu */
 .rg-menu--desktop {

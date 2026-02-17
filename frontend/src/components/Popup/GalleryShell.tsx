@@ -44,7 +44,7 @@ console.log("GalleryShell location:", location.pathname, { backgroundLocation })
         {/* BackgroundLocation (whats behind the popup)*/}
         <Routes location={backgroundLocation || location}>
           <Route path="/" element={<Homepage />} />
-          <Route path="album/:albumId/:photoId?" element={<AlbumPage />} />
+          <Route path="album/:albumId" element={<AlbumPage />} />
 
           {/* full page photo when opened directly */}
           <Route path="photo/:photoId" element={<PhotoPage />} />

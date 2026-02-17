@@ -4,10 +4,13 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import "./Navbar.css";
+import { PROFILE_BY_ID } from "../../constants/constants";
+
 export function Navbar() {
   const { context } = useParams(); // "satea" | "alexis" | "shared" | undefined
   const location = useLocation();
   const [open, setOpen] = useState(false);
+
 
   // "shared mode" when:
   // - we are on /profiles
@@ -28,7 +31,7 @@ export function Navbar() {
     <header className="rg-nav">
       <div className="rg-nav__inner">
         {/* Brand */}
-        <Link className="rg-brand" to={base}>
+        <Link className="rg-brand" to={base} >
           {brandText}
         </Link>
 

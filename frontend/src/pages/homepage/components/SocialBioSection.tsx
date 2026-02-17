@@ -19,9 +19,9 @@ function buildLinks(profile: {
     ? `https://www.instagram.com/${profile.instagram.trim().replace(/^@/, "")}/`
     : "";
 
-  const emailUrl = profile.email?.trim() ? `mailto:${profile.email.trim()}` : "";
+  
 
-  return { linkedInUrl, instagramUrl, emailUrl };
+  return { linkedInUrl, instagramUrl };
 }
 
 export function SocialBioSection() {
@@ -37,8 +37,8 @@ export function SocialBioSection() {
   }, [ctx]);
 
   const hasAny = profilesToShow.some((p) => {
-    const { linkedInUrl, instagramUrl, emailUrl } = buildLinks(p);
-    return Boolean(linkedInUrl || instagramUrl || emailUrl || p.bio);
+    const { linkedInUrl, instagramUrl } = buildLinks(p);
+    return Boolean(linkedInUrl || instagramUrl || p.bio || p.email);
   });
 
   if (!hasAny) return null;
@@ -49,9 +49,9 @@ export function SocialBioSection() {
       ? "hero-bio__inner"
       : "hearo-bio_ineer_two-columns"}>
         {profilesToShow.map((p) => {
-          const { linkedInUrl, instagramUrl, emailUrl } = buildLinks(p);
+          const { linkedInUrl, instagramUrl } = buildLinks(p);
 
-          const hasLinks = Boolean(linkedInUrl || instagramUrl || emailUrl);
+          const hasLinks = Boolean(linkedInUrl || instagramUrl || p.email);
           const hasBio = Boolean(p.bio?.trim());
 
           if (!hasLinks && !hasBio) return null;
@@ -93,12 +93,15 @@ export function SocialBioSection() {
                   </a>
                 )}
 
-                {emailUrl && (
+                {p.email && (
                   <a
                     className="hero-bio__icon"
-                    href={emailUrl}
                     aria-label={`${p.label} Email`}
                     title="Email"
+                    onClick={() => {
+                      navigator.clipboard.writeText(p.email!);
+                      alert("Email copied!");
+                    }}
                   >
                     <BsEnvelope />
                   </a>

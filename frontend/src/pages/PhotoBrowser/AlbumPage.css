@@ -32,6 +32,21 @@
 
 /** Content **/
 .content {
-  padding: 10px 10px;
-  padding-bottom: 40ox;
+  padding: 40px 30px 30px 30px;
+}
+
+.hp-head__album {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 30px 25px 20px;
+}
+
+.hp-title__album {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+  text-transform: lowercase; /* matches your "photos" sketch vibe */
 }
