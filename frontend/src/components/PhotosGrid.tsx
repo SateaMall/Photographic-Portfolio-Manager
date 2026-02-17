@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { PhotoCard } from "./PhotoCard";
 
 import "./PhotosGrid.css"
-import { fetchAlbumItems, fetchAlbumItemsAsPhotos } from "../api/photoBrowse";
+import {fetchAlbumItemsAsPhotos } from "../api/photoBrowse";
 type PhotosGridProps = {
   photoId?: string;
   albumId?: string;

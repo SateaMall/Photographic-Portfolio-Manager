@@ -1,4 +1,3 @@
-import React from "react";
 import "./AlbumInfo.css";
 import type { AlbumViewResponse } from "../../../types/types";
 type AlbumInfoProps = {

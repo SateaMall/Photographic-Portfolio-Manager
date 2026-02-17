@@ -1,5 +1,5 @@
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { CarrouselTopper } from "../../components/Carrousel/CarrouselTopper";
 import { ScrollIndicator } from "../../components/Indicator/ScrollIndicator";
 import { Navbar } from "../../components/NavigationBar/Navbar";
@@ -12,8 +12,7 @@ import { useEffect, useState } from "react";
 import { AlbumInfo } from "./components/AlbumInfo";
 
 export default function AlbumPage() {
-  const navigate = useNavigate();
-  const {context, albumId} = useParams<{ context:string, albumId: string;}>();
+  const { albumId } = useParams<{albumId: string;}>();
   const [album, setAlbum] = useState <AlbumViewResponse| null>(null);
   const [photos, setPhotos] = useState<PhotoResponse[]>([]);
 

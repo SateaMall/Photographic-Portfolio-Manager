@@ -1,6 +1,4 @@
 import { Navigate, Outlet, useParams, useLocation} from "react-router-dom";
-import { Navbar } from "../components/NavigationBar/Navbar";
-
 const ALLOWED = new Set(["SATEA", "ALEXIS", "SHARED"]);
 import { useEffect } from "react";
 
