@@ -4,7 +4,6 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import "./Navbar.css";
-import { PROFILE_BY_ID } from "../../constants/constants";
 
 export function Navbar() {
   const { context } = useParams(); // "satea" | "alexis" | "shared" | undefined
