@@ -30,10 +30,12 @@
 
 .album-info__title {
   margin: 0;
+  margin-top: clamp(12px, 2vw, 20px);
   font-size: clamp(30px, 3.9vw, 42px);
-  font-weight: 650;
+  font-weight: 550;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+    font-family:  var(--font-copperplate);
 }
 
 .album-info__description {

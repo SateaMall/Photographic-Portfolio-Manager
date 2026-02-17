@@ -1,3 +1,10 @@
+/*  
+  var(--font-body)
+  var(--font-copperplate)
+  var(--font-roboto)
+  var(--font-Montserrat)
+*/
+
 /* Put this section inside your HERO wrapper (position: absolute over carousel) */
 .hero-bio {
   position: absolute;
@@ -12,7 +19,6 @@
 .hero-bio__inner {
   max-width: 1000px;
   margin: 0 auto;
-
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: clamp(12px, 2vw, 26px);
@@ -37,15 +43,17 @@
   /* subtle glass look on top of photos */
   background: rgba(0, 0, 0, 0.22);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.12);
+
   border-radius: 18px;
   padding: clamp(14px, 2vw, 22px);
 }
 
 .hero-bio__name {
-  margin: 0;
-  font-size: clamp(30px, 3.9vw, 42px);
-  font-weight: 650;
+  margin-top: clamp(12px, 2vw, 20px);
+  margin-bottom: clamp(12px, 2vw, 20px);
+  font-size: clamp(24px, 3.9vw, 35px);
+  font-family:   var(--font-copperplate);
+  font-weight: 550;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -67,6 +75,8 @@
   display: flex;
   justify-content: center;
   gap: 16px;
+    margin-bottom: clamp(12px, 2vw, 20px);
+
 }
 
 .hero-bio__icon {
