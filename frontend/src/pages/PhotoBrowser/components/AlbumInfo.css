@@ -39,7 +39,7 @@
 }
 
 .album-info__description {
-  margin: 5vh auto 0 auto;
+  margin: 2vh auto clamp(12px, 2vw, 20px) auto;
   max-width: 55ch;
   font-size: clamp(19px, 1.6vw, 21px);
   line-height: 1.45;
