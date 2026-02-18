@@ -47,7 +47,9 @@
 
 .photo-page__image {
   width: 100%;
-  height: min(70vh, 620px);
+  min-height: 50vh;
+  max-height: 80vh;
+  height: auto;
   object-fit: contain;
   display: block;
   background: #0b0b0c;
@@ -69,6 +71,8 @@
   border-radius: 18px;
   padding: 16px 16px;
   background-color:   rgba(42, 42, 42, 0.883);
+
+  
 }
 
 .photo-page__title {

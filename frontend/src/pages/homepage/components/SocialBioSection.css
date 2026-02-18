@@ -39,11 +39,7 @@
 
 .hero-bio__card {
   text-align: center;
-
-  /* subtle glass look on top of photos */
   background: rgba(0, 0, 0, 0.327);
-
-
   border-radius: 18px;
   padding: clamp(14px, 2vw, 22px);
 }

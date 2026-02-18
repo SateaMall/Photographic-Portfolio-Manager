@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { PROFILE_BY_ID } from "../constants/constants";
 import { BsPersonFill, BsLink45Deg, BsGeoAltFill } from "react-icons/bs";
-import { useOpenPhoto } from "./Popup/useOpenPhoto";
+import { useOpenPhoto } from "../layouts/components/Popup/useOpenPhoto";
 
 export function PhotoCard({ photo }: { photo: PhotoResponse }) {
   const navigate = useNavigate();

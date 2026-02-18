@@ -6,7 +6,7 @@ import GalleryLayout from "./layouts/GalleryLayout";
 import RootLayout from "./layouts/RootLayout.tsx";
 import NotFound from "./pages/NotFound";
 import AdminPage from "./AdminSection/admin_upload";
-import { GalleryShell } from "./components/Popup/GalleryShell.tsx";
+import { GalleryShell } from "./layouts/components/Popup/GalleryShell.tsx";
 
 
 export const router = createBrowserRouter([

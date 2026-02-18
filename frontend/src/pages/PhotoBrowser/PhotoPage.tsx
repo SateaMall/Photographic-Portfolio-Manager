@@ -9,8 +9,11 @@ import "react-photo-view/dist/react-photo-view.css";
 import "./PhotoPage.css"
 import { PROFILE_BY_ID } from "../../constants/constants";
 
-
-export default function PhotoPage() {
+type PhotoPageProps = {
+  lightboxPortalContainer?: HTMLElement | null;
+  lightboxKey?: string; // used to force remount when photoId changes, ensuring correct portal behavior
+};
+export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: PhotoPageProps) {
   const { photoId } = useParams<{ photoId: string }>();
   const [mainPhoto, setMainPhoto] = useState<MainPhotoResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -61,6 +64,8 @@ export default function PhotoPage() {
             <div className="photo-page__viewer">
                             {/* Lightbox (inside modal portal container) */}
               <PhotoProvider
+                key={lightboxKey} // important
+                portalContainer={lightboxPortalContainer ?? undefined}
                 maskClosable={true}
                 photoClosable={true}
                 >

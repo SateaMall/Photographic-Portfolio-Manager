@@ -1,33 +1,9 @@
-import { Routes, Route, useLocation, useNavigate, useParams } from "react-router-dom";
-import Homepage from "../../pages/homepage/Homepage";
-import AlbumPage from "../../pages/PhotoBrowser/AlbumPage";
-import PhotoPage from "../../pages/PhotoBrowser/PhotoPage";
-import * as Dialog from "@radix-ui/react-dialog";
-import "./PhotoModal.css"
+import { Routes, Route, useLocation, useParams } from "react-router-dom";
+import Homepage from "../../../pages/homepage/Homepage";
+import AlbumPage from "../../../pages/PhotoBrowser/AlbumPage";
+import PhotoPage from "../../../pages/PhotoBrowser/PhotoPage";
+import {PhotoModal} from "./PhotoModal";
 
-
-function PhotoModal() {
-  const navigate = useNavigate();
-
-  return (
-    <Dialog.Root open onOpenChange={(open) => !open && navigate(-1)}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="modal-overlay-popup" />
-        <Dialog.Content className="modal-content-popup" aria-label="Photo viewer"
-  >
-            <Dialog.Title></Dialog.Title>
-            <Dialog.Description>
-            </Dialog.Description>
-
-          <Dialog.Close className="modal-close-popup" aria-label="Close">
-            ✕
-          </Dialog.Close>
-          <PhotoPage />
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
-  );
-}
 
 export function GalleryShell() {
   
