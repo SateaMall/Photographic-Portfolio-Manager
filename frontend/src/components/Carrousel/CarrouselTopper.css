@@ -21,7 +21,7 @@
   height: 100vh; 
   object-fit: cover;                 /* fills area, crops if needed */
   display: block;  
-  filter: brightness(0.6) contrast(1.05);   
+  filter: brightness(0.5) contrast(1.05);   
   transform: scale(1);
   will-change: transform;            /* removes tiny image baseline gap */
 }
@@ -51,7 +51,7 @@
 
 .nav_topper {
   position: absolute;
-  top: 35%;
+  top: 40%;
   z-index: 2;
   font-size: 30px;
   width: 40px;

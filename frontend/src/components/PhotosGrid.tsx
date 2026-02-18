@@ -106,6 +106,7 @@ function loadMore() {
 
 return (
     <>
+    {error && <div className="hp hp-error">{error}</div>}
     {photosLoading && (<div className="hp">Photos Loading…</div>)}
      <div className={`photos-preview ${hasHiddenInCurrent ? "is-clamped" : ""}`}>
     <div className="photos-masonry">

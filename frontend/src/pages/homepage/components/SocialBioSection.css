@@ -41,8 +41,8 @@
   text-align: center;
 
   /* subtle glass look on top of photos */
-  background: rgba(0, 0, 0, 0.22);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.327);
+
 
   border-radius: 18px;
   padding: clamp(14px, 2vw, 22px);
@@ -53,7 +53,7 @@
   margin-bottom: clamp(12px, 2vw, 20px);
   font-size: clamp(24px, 3.9vw, 35px);
   font-family:   var(--font-copperplate);
-  font-weight: 550;
+  font-weight: 650;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
