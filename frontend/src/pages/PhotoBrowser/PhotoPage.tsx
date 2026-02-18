@@ -79,7 +79,7 @@ export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: Pho
                       decoding="async"
                     />
                     <div className="photo-page__hint">
-                      Click to fullscreen
+                      Click to fullscreen / zoom
                     </div>
                   </button>
                 </PhotoView>
