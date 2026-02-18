@@ -1,4 +1,4 @@
-import type { AlbumPhotoItem, PhotoResponse } from "../types/types";
+import type { PhotoResponse } from "../types/types";
 import { photoFileUrl } from "../api/photos";
 import "./PhotoCard.css";
 import { useNavigate, useParams } from "react-router-dom";

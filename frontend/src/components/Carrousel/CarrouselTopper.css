@@ -26,7 +26,7 @@
   will-change: transform;            /* removes tiny image baseline gap */
 }
 .embla-img_topper.is-active {
-  animation: embla-kenburns 15s ease-in-out forwards;
+  animation: embla-kenburns 14s ease-in-out forwards;
 }
 
 @keyframes embla-kenburns {

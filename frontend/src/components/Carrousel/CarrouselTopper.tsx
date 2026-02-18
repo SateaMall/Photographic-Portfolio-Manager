@@ -49,17 +49,17 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
     update();
   }, [emblaApi, carrouselPhotos.length, update]);
 
- /* //AUTOPLAY
+  //AUTOPLAY
   useEffect(() => {
     if (!emblaApi) return;
 
     const id = window.setInterval(() => {
       emblaApi.scrollNext();
-    }, 3500); // 3.5s
+    }, 9000); // 9s
 
     return () => window.clearInterval(id);
   }, [emblaApi]);
-*/
+
   return (
     <div className="carousel_topper">
       {/* Left-Right navigation buttons */}
