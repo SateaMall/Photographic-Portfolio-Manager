@@ -23,10 +23,17 @@
   height: 100%;
   overflow: hidden; /* Hide any overflow from the carousel */
 }
+.scroll-indicator {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+}
 
+
+/** Content **/
 .content {
   padding: 10px 10px;
-  padding-bottom: 40ox;
+  padding-bottom: 40px;
 }
 /* section spacing */
 .hp-section {
@@ -60,4 +67,3 @@
   letter-spacing: 0.2px;
   text-transform: lowercase; /* matches your "photos" sketch vibe */
 }
-

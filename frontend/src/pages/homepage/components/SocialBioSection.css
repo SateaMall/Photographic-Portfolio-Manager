@@ -1,3 +1,10 @@
+/*  
+  var(--font-body)
+  var(--font-copperplate)
+  var(--font-roboto)
+  var(--font-Montserrat)
+*/
+
 /* Put this section inside your HERO wrapper (position: absolute over carousel) */
 .hero-bio {
   position: absolute;
@@ -5,7 +12,6 @@
   right: 0;
   top: clamp(90px, 14vh, 160px); /* moves it down under navbar */
   z-index: 0;
-
   padding: 0 clamp(12px, 3vw, 28px);
   color: #fff;
 }
@@ -13,7 +19,6 @@
 .hero-bio__inner {
   max-width: 1000px;
   margin: 0 auto;
-
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: clamp(12px, 2vw, 26px);
@@ -34,19 +39,16 @@
 
 .hero-bio__card {
   text-align: center;
-
-  /* subtle glass look on top of photos */
-  background: rgba(0, 0, 0, 0.22);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0, 0, 0, 0.327);
   border-radius: 18px;
-
   padding: clamp(14px, 2vw, 22px);
 }
 
 .hero-bio__name {
-  margin: 0;
-  font-size: clamp(30px, 3.9vw, 42px);
+  margin-top: clamp(12px, 2vw, 20px);
+  margin-bottom: clamp(12px, 2vw, 20px);
+  font-size: clamp(24px, 3.9vw, 35px);
+  font-family:   var(--font-copperplate);
   font-weight: 650;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -55,7 +57,7 @@
 .hero-bio__text {
   margin: 5vh auto 0 auto;
   max-width: 55ch;
-  font-size: clamp(19px, 1.6vw, 25px);
+  font-size: clamp(19px, 1.6vw, 21px);
   line-height: 1.45;
   opacity: 0.95;
 }
@@ -69,6 +71,8 @@
   display: flex;
   justify-content: center;
   gap: 16px;
+    margin-bottom: clamp(12px, 2vw, 20px);
+
 }
 
 .hero-bio__icon {

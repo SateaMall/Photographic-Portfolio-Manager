@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation, useNavigate, useParams } from "react-router-dom";
-import Homepage from "../../pages/homepage/Homepage";
-import AlbumPage from "../../pages/PhotoBrowser/AlbumPage";
-import PhotoPage from "../../pages/PhotoBrowser/PhotoPage";
+import Homepage from "../../../pages/homepage/Homepage";
+import AlbumPage from "../../../pages/PhotoBrowser/AlbumPage";
+import PhotoPage from "../../../pages/PhotoBrowser/PhotoPage";
 import * as Dialog from "@radix-ui/react-dialog";
 import "./PhotoModal.css"
 
@@ -44,7 +44,7 @@ console.log("GalleryShell location:", location.pathname, { backgroundLocation })
         {/* BackgroundLocation (whats behind the popup)*/}
         <Routes location={backgroundLocation || location}>
           <Route path="/" element={<Homepage />} />
-          <Route path="album/:albumId/:photoId?" element={<AlbumPage />} />
+          <Route path="album/:albumId" element={<AlbumPage />} />
 
           {/* full page photo when opened directly */}
           <Route path="photo/:photoId" element={<PhotoPage />} />

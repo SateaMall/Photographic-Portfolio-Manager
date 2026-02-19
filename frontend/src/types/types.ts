@@ -10,7 +10,7 @@ export type AlbumViewResponse = {
 
 export type AlbumPhotoItem = {
   photoId: string,
-  Owner: Owner,
+  owner: Owner,
   title: string | null,
   description: string | null;
   country: string | null;

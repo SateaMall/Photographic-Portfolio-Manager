@@ -1,3 +1,4 @@
+
 /* Make it sit ON TOP of the carousel */
 .rg-nav {
   position: absolute; 
@@ -5,34 +6,39 @@
   left: 0;
   right: 0;
   z-index: 20;
-
   color: white;
   background: transparent;
+  font-family:    var(--font-roboto);
 }
-
+/*  
+  var(--font-body)
+  var(--font-copperplate)
+  var(--font-roboto)
+  var(--font-Montserrat)
+*/
 /* Inner layout */
 .rg-nav__inner {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: clamp(10px, 2vw, 18px) clamp(12px, 3vw, 28px);
-  font-weight: 500;
+  font-weight: 51;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin: 0 auto; 
-  justify-content: center;   /* ✅ center everything */
+  justify-content: center;   /* center everything */
 }
 
 .rg-brand {
-  color: white;
+  color: rgb(227, 228, 244);
   text-decoration: none;
   font-size: 25px;
   font-weight: 600 ;
   margin-left: 0; /* keep your old spacing */
-  margin-right: 110px;
+  margin-right: 20vw;
 }
 .rg-brand:hover {
-  color: rgb(171, 174, 202) ;
+  color:  rgb(167, 178, 215);
 }
 /* Desktop menu */
 .rg-menu--desktop {

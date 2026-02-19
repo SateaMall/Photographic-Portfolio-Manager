@@ -1,4 +1,4 @@
-import { useEffect, useState,useRef } from "react";
+import { useEffect, useState } from "react";
 import { fetchAlbums} from "../../api/homepage";
 import type { AlbumViewResponse, PhotoResponse } from "../../types/types";
 import {AlbumsRow} from "./components/AlbumsRow"
@@ -8,6 +8,7 @@ import { SocialBioSection } from "./components/SocialBioSection";
 import { PhotosGrid } from "../../components/PhotosGrid";
 import { CarrouselTopper } from "../../components/Carrousel/CarrouselTopper";
 import { Navbar } from "../../components/NavigationBar/Navbar";
+import { ScrollIndicator } from "../../components/Indicator/ScrollIndicator";
 export default function Homepage() {
 
 const { context } = useParams(); // "satea" | "alexis" | "shared"
@@ -21,7 +22,7 @@ const [error, setError] = useState<string | null>(null);
 
   const [albums, setAlbums] = useState<AlbumViewResponse[]>([]);
   const [albumsLoading, setAlbumsLoading] = useState(false);
-  const [carrouselPhotos, setCarrouselPhotos] = useState<PhotoResponse[]>([]);
+  const [photos, setPhotos] = useState<PhotoResponse[]>([]);
   useEffect(() => {
      setAlbumsLoading(true);
     fetchAlbums(scope)
@@ -30,9 +31,6 @@ const [error, setError] = useState<string | null>(null);
       .finally(() => setAlbumsLoading(false));
   }, [context]);
 
-useEffect(() => {
-  console.log("carrouselPhotos changed:", carrouselPhotos.length, carrouselPhotos);
-}, [carrouselPhotos]);
 
   
   if (error) return <div className="hp hp-error">{error}</div>;
@@ -47,10 +45,13 @@ return (
       </div>
       
       <div className="carrousel-container">
-        <CarrouselTopper carrouselPhotos={carrouselPhotos} />
+        <CarrouselTopper carrouselPhotos={photos.slice(0,5)} />
       </div>
       <div className="bio-container">
         <SocialBioSection />
+      </div>
+      <div className="scroll-indicator">
+        <ScrollIndicator targetId={["albums", "photos"]} />
       </div>
     </div>
   
@@ -71,10 +72,10 @@ return (
       <header className="hp-head">
         <h1 className="hp-title ">Photos</h1>
       </header>
-      <PhotosGrid onCarrouselPhotosChange={setCarrouselPhotos}/>
+      <PhotosGrid onPhotosChange={setPhotos}/>
     </section>
   </div>
-  
+
   </div>
 );
 

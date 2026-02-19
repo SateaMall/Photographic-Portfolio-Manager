@@ -6,10 +6,10 @@ import com.AlexiSatea.backend.dto.AlbumViewResponse;
 import com.AlexiSatea.backend.model.Enum.AlbumScope;
 import com.AlexiSatea.backend.service.AlbumService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,8 +25,13 @@ public class PublicAlbumController {
     }
 
     @GetMapping("/Photobrowser/albumItems/{albumId}")
-    public List<AlbumPhotoItem> albumItemsList (@PathVariable UUID albumId) {
-        return albumService.getAlbumItems(albumId);
+    public Page<AlbumPhotoItem> albumItemsList (
+            @PathVariable UUID albumId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return albumService.getAlbumItems(albumId,pageable);
     }
 
     @GetMapping("/homepage/albums/{scope}")

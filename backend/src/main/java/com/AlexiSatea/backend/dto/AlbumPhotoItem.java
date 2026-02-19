@@ -2,6 +2,7 @@ package com.AlexiSatea.backend.dto;
 
 import com.AlexiSatea.backend.model.*;
 import com.AlexiSatea.backend.model.Enum.Owner;
+import org.springframework.data.domain.Page;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -36,12 +37,10 @@ public record AlbumPhotoItem(
         );
     }
 
-    public static List<AlbumPhotoItem> from(List<AlbumPhoto> relations) {
-        List<AlbumPhotoItem> items = new ArrayList<>();
-        for (AlbumPhoto ap : relations) {
+    public static Page<AlbumPhotoItem> from(Page<AlbumPhoto> relations) {
+        return relations.map(ap -> {
             Photo photo = ap.getPhoto();
-            AlbumPhotoItem item=
-                    new AlbumPhotoItem(
+            return new AlbumPhotoItem(
                     photo.getId(),
                     photo.getOwner(),
                     photo.getTitle(),
@@ -50,11 +49,9 @@ public record AlbumPhotoItem(
                     photo.getCity(),
                     photo.getCaptureYear(),
                     ap.getAddedAt(),
-                            photo.getWidth(),
-                            photo.getHeight()
-        );
-        items.add(item);
-        }
-        return items;
+                    photo.getWidth(),
+                    photo.getHeight()
+            );
+        });
     }
 }

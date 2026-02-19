@@ -1,9 +1,9 @@
 
 /* ----------------------------- */
-/* PHOTOS: rhythmic masonry layout */
+/* PHOTOS */
 /* ----------------------------- */
 
-/* Masonry using CSS columns (best “rhythmic” look without JS) */
+/* Masonry using CSS columns  */
 
 .photos-masonry {
   display: grid;
@@ -26,51 +26,6 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 }
-
-
-/******* show photos on columns 
-/* Beautifull but we end up with alot of limitaions and bugs
-/* when scrolling for more images 
-/* and paysage images are less seen *******/
-
-
-/*     
-.photos-masonry {
-  column-gap: 18px;
-  columns: 1;
-}
-
-@media (min-width: 520px) {
-  .photos-masonry { columns: 2; }
-}
-@media (min-width: 900px) {
-  .photos-masonry { columns: 3; }
-}
-@media (min-width: 1200px) {
-  .photos-masonry { columns: 4; }
-}
-
-.photo-card {
-  break-inside: avoid;
-  margin: 0 0 18px;
-  border-radius: 16px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
-  transform: translateZ(0);
-}
-
-.photo-img {
-  width: 100%;
-  height: auto;     
-  display: block;    
-  object-fit: cover;
-  transition: transform 220ms ease, opacity 220ms ease;
-}
-
-
-
-*/
 
 
 
