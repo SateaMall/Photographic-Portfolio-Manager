@@ -79,8 +79,8 @@
 }
 
 .albums-nav:hover {
-  color: rgb(34, 34, 34);
-  background: rgba(188, 188, 188, 0.298);
+  color: rgb(240, 240, 240);
+  background: var(--primaryColor);
  
 }
 
