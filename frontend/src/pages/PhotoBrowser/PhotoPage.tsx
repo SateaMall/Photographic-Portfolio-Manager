@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { fetchMainPhoto } from "../../api/photoBrowse";
 import type { MainPhotoResponse, Profile } from "../../types/types";
 import { PhotosGrid } from "../../components/PhotosGrid";
@@ -8,18 +8,21 @@ import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 import "./PhotoPage.css"
 import { PROFILE_BY_ID } from "../../constants/constants";
+import { Navbar } from "../../components/NavigationBar/Navbar";
 
 type PhotoPageProps = {
   lightboxPortalContainer?: HTMLElement | null;
   lightboxKey?: string; // used to force remount when photoId changes, ensuring correct portal behavior
 };
 export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: PhotoPageProps) {
-  const { photoId } = useParams<{ photoId: string }>();
+  const uselocation = useLocation();
+  const isModalOpen = Boolean(uselocation.state?.backgroundLocation);
+  const { photoId, context } = useParams<{ photoId: string; context?: string }>();
   const [mainPhoto, setMainPhoto] = useState<MainPhotoResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mainProfile, setMainProfile] = useState<Profile | null>(null);
-
+  const profile = context ? PROFILE_BY_ID[context.toUpperCase() as keyof typeof PROFILE_BY_ID] : null;  
   if (!photoId) return;
   const image = photoFileUrl(photoId);
   useEffect(() => {
@@ -53,7 +56,11 @@ export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: Pho
   if (!photoId) return null;
 
   return (
-    <section className="photo-page">
+    <section className={`photo-page ${!isModalOpen ? "background__noModule" : ""}`}
+      style={{ ["--primaryColor" as any]: profile?.avatar?.primaryColor  ?? "#111827" ,
+      ["--secondaryColor" as any]: profile?.avatar?.secondaryColor}}
+    >
+      {!isModalOpen && <div className="navigationBar"><Navbar /></div>}
       {loading && <div className="photo-page__status">Loading…</div>}
       {error && <div className="photo-page__status photo-page__status--error">{error}</div>}
 

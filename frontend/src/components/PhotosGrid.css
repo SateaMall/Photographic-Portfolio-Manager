@@ -83,7 +83,7 @@
 
 .hp-more-btn:hover {
   color: rgb(254, 254, 254); ;
-  background: rgb(229, 181, 35);
+  background: var(--primaryColor, rgba(0, 0, 0, 0.967));
 }
 
 

@@ -84,8 +84,8 @@ export function PhotoCard({ photo }: { photo: PhotoResponse }) {
           className="photo-owner"
           onClick={onOwnerClick}
         >
-          <span className="photo-owner-avatar"  style={{ ["--bgCard" as any]: p.avatar?.bg  ?? "#111827" ,
-                  ["--bgCardHover" as any]: p.avatar?.bgHoverOn
+          <span className="photo-owner-avatar"  style={{ ["--primaryColorCard" as any]: p.avatar?.primaryColor  ?? "#111827" ,
+                  ["--secondaryColorCard" as any]: p.avatar?.secondaryColor
                 }}>
           <BsPersonFill/>
           </span>

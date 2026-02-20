@@ -32,8 +32,9 @@
 
 /* THE CUBE */
 .ps-card{
+  opacity: 0.7;
   border-radius: 26px;
-  backdrop-filter: blur(10px);
+
   background: var(--bgCard);
   border: 3px solid rgba(0, 0, 0, 0.364);
   color: rgb(255, 255, 255);
@@ -45,16 +46,20 @@
     0 0 0 1px rgba(255,255,255,0.12) inset;
   cursor: pointer;
   padding: 20px;
-   font-family: "Roboto Condensed", "Roboto", sans-serif;
+  font-family: "Roboto Condensed", "Roboto", sans-serif;
 
+  transition: transform 200ms ease; 
+  will-change: transform;  
 }
 
 
 
 /* HOVER: background changes + a bit bigger + more shadow */
 .ps-card:hover{
-  background: var(--bgCardHover);
+  opacity: 0.9;
+  background: var(--bgCard);
   transform: scale(1.05);
+         
   box-shadow:
     0 18px 38px rgba(0, 0, 0, 0.548),
     0 6px 14px rgba(0, 0, 0, 0.358),
@@ -69,7 +74,6 @@
   opacity: 0.9;
 }
 .ps-card:hover .ps-label {
-  font-weight: 520;
   opacity: 1;
 }
 

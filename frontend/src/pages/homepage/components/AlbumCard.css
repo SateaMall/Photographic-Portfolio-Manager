@@ -30,7 +30,7 @@
 }
 
 .album-title {
-  font-weight: 650;
+  font-weight: 450;
   font-size: 15px;
   line-height: 1.2;
 }
@@ -43,7 +43,11 @@
   opacity: 0.75;
 }
 
-
+@media (min-width: 800px) {
+ .album-title {
+      font-weight: 650 ;
+  }
+}
 
 
 

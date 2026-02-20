@@ -1,7 +1,6 @@
 
 /* Make it sit ON TOP of the carousel */
 .rg-nav {
-  position: absolute; 
   top: 0;
   left: 0;
   right: 0;
@@ -38,7 +37,7 @@
   margin-right: 20vw;
 }
 .rg-brand:hover {
-  color:  rgb(167, 178, 215);
+  color:  var(--secondaryColor, white);
 }
 /* Desktop menu */
 .rg-menu--desktop {
@@ -65,13 +64,31 @@
   cursor: pointer;
   font: inherit;
   font-size: 20px;
+  font-weight: 500;
 
 }
+.rg-link {
+  position: relative;
+  text-decoration: none; 
+}
 
+.rg-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px; /* adjust distance from text */
+  width: 0;
+  height: 2px; /* thickness of the line */
+  background-color: var(--secondaryColor, white); /* line color */
+  transition: width 0.3s ease;
+}
+
+.rg-link:hover::after {
+  width: 100%;
+}
 .rg-link:hover {
  
-  color:   rgb(229, 181, 35);
-  font-weight: 550;
+  color: var(--secondaryColor, white);
 
 }
 

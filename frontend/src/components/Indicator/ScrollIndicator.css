@@ -16,7 +16,7 @@
 }
 
 .hero-scroll-indicator :hover {
-  color: rgb(229, 181, 35);
+  color: var(--secondaryColor);
   opacity: 1;
 }
 

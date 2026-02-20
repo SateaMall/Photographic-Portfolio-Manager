@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import { useState } from "react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -7,25 +7,21 @@ import "./Navbar.css";
 
 export function Navbar() {
   const { context } = useParams(); // "satea" | "alexis" | "shared" | undefined
-  const location = useLocation();
   const [open, setOpen] = useState(false);
-
 
   // "shared mode" when:
   // - we are on /profiles
   // - OR context is shared
-  const isSharedMode = location.pathname.startsWith("/profiles") || context === "SHARED";
 
-  const brandText = isSharedMode
+  const brandText =  context === "SHARED"
     ? "Almallouhi &  Cordier"
     : context === "ALEXIS"
       ? "Alexis Cordier"
       : "Mohamad Satea Almallouhi";
 
   // Base for albums/photos links and brand
-  const base = isSharedMode ? "/SHARED" : `/${context}`;
+  const base = `/${context}`;
 
- 
   return (
     <header className="rg-nav">
       <div className="rg-nav__inner">
