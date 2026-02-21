@@ -70,9 +70,11 @@ public class PhotoService {
         return photoRepository.findFeatured(context, owner, pageable)
                 .map(r-> PhotoResponse.from(r.getPhoto(),r.getPhotoFeature()));}
         else{
+            Photo p= photoRepository.findById(photoId).orElseThrow(() -> new IllegalArgumentException(
+                    "Photo not found for photoId=" + photoId ));
             List<Theme> themes = photoRepository.findThemesByPhotoId(photoId);
             logger.info(themes.toString());
-            return  photoRepository.findFeaturedPriorityThemes(context, owner,themes, pageable)
+            return  photoRepository.findFeaturedPriorityThemes(context, owner,photoId,themes,p.getCountry(),p.getCity(), pageable)
                     .map(r-> PhotoResponse.from(r.getPhoto(),r.getPhotoFeature()));
         }
     }

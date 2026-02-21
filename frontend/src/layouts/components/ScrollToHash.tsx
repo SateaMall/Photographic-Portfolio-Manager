@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigationType } from "react-router-dom";
 
 export function ScrollToHash() {
   const { pathname, hash } = useLocation();
-
+  const navType = useNavigationType(); 
   useEffect(() => {
-    if (!hash) return;
+    if (!hash || navType === "POP") return;
    const go = () => { const el = document.querySelector(hash);
     el?.scrollIntoView({ behavior: "smooth", block: "start" });
    };

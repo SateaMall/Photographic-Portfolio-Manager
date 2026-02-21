@@ -11,7 +11,7 @@ export function GalleryShell() {
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location } | null;
   const backgroundLocation = state?.backgroundLocation;
-console.log("GalleryShell location:", location.pathname, { backgroundLocation });
+  console.log("GalleryShell location:", location.pathname, { backgroundLocation });
 
   if (!context) return null;
 

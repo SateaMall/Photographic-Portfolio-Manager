@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { fetchMainPhoto } from "../../api/photoBrowse";
-import type { MainPhotoResponse, Profile } from "../../types/types";
+import type { MainPhotoResponse, PhotoResponse, Profile } from "../../types/types";
 import { PhotosGrid } from "../../components/PhotosGrid";
 import { photoFileUrl } from "../../api/photos";
 import { PhotoProvider, PhotoView } from "react-photo-view";
@@ -23,6 +23,7 @@ export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: Pho
   const [error, setError] = useState<string | null>(null);
   const [mainProfile, setMainProfile] = useState<Profile | null>(null);
   const profile = context ? PROFILE_BY_ID[context.toUpperCase() as keyof typeof PROFILE_BY_ID] : null;  
+  const [photos, setPhotos] = useState<PhotoResponse[] | null>([]);
   if (!photoId) return;
   const image = photoFileUrl(photoId);
   useEffect(() => {
@@ -45,13 +46,13 @@ export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: Pho
   }, [photoId]);
 
   const title = mainPhoto?.title?.trim() || "Untitled";
-  const description = mainPhoto?.description?.trim?.() || mainPhoto?.description || "—";
-  const owner = mainProfile?.label || "—";
+  const description = mainPhoto?.description?.trim?.() || mainPhoto?.description ;
+  const owner = mainProfile?.label ;
   const themes = mainPhoto?.themes ?? (mainPhoto as any)?.themeNames ?? [];
   const location = [mainPhoto?.city, mainPhoto?.country]
     .filter(Boolean)
-    .join(", ") || "—";
-  const captureYear = mainPhoto?.captureYear?? "—";
+    .join(", ") ;
+  const captureYear = mainPhoto?.captureYear;
 
   if (!photoId) return null;
 
@@ -90,53 +91,55 @@ export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: Pho
                     </div>
                   </button>
                 </PhotoView>
+              {photos && photos.length > 0 && photos.map((src) => (
+                <PhotoView key={src.id} src={photoFileUrl(src.id)}>
+                  <span style={{ display: "none" }}></span>
+                </PhotoView>
+              ))}
               </PhotoProvider>
             </div>
 
-            <aside className="photo-page__meta" aria-label="Photo details">
-              <h1 className="photo-page__title">{title}</h1>
+            <div className="photo-page__meta" aria-label="Photo details">
+
+
+              <div className="photo-page__subline">
+                <h1 className="photo-page__title">{title}</h1>
+                <span className="meta-sep">•</span>
+                <span className="meta-pill"> {location}</span>
+                <span className="meta-sep">•</span>
+                <span className="meta-pill"> {captureYear}</span>
+                <span className="meta-sep">•</span>
+                <span className="meta-pill"> {owner}</span>
+              </div>
+              <details className="meta-details">
+              <summary className="meta-summary">More details</summary>
               <p className="photo-page__desc">{description}</p>
-
-              <dl className="photo-page__dl">
-                <div className="photo-page__row">
-                  <dt className="meta-headlines">Owner</dt>
-                  <dd className="meta-info">{owner}</dd>
-                </div>
-
-                <div className="photo-page__row">
-                  <dt className="meta-headlines">Themes</dt>
-                  <dd>
-                    {Array.isArray(themes) && themes.length > 0 ? (
-                      <div className="photo-page__chips">
-                        {themes.map((t: string) => (
-                          <span key={t} className="photo-page__chip">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      "—"
-                    )}
-                  </dd>
-                </div>
-
-                <div className="photo-page__row">
-                  <dt className="meta-headlines">Location</dt>
-                  <dd className="meta-info">{location}</dd>
-                </div>
-
-                <div className="photo-page__row">
-                  <dt className="meta-headlines">Capture year</dt>
-                  <dd className="meta-info">{captureYear}</dd>
-                </div>
-              </dl>
-            </aside>
+                <dl className="photo-page__dl">
+                  <div className="photo-page__row">
+                    <dt className="meta-headlines">Themes</dt>
+                    <dd>
+                      {Array.isArray(themes) && themes.length > 0 ? (
+                        <div className="photo-page__chips">
+                          {themes.map((t: string) => (
+                            <span key={t} className="photo-page__chip">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        "—"
+                      )}
+                    </dd>
+                  </div>
+                </dl>
+              </details>
+            </div>
           </div>
 
           {/* Related suggestions */}
           <div className="photo-page__related">
             <h2 className="photo-page__h2">Related photos</h2>
-            <PhotosGrid photoId={photoId} />
+            <PhotosGrid photoId={photoId} onPhotosChange={setPhotos} />
           </div>
         </>
       )}

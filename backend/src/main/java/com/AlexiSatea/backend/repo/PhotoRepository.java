@@ -48,10 +48,14 @@ public interface PhotoRepository extends JpaRepository<Photo, UUID> {
        and pf.context = :context
        and pf.enabled = true
     left join p.themes t
-    where (:owner is null or p.owner = :owner)
+    where (:owner is null or p.owner = :owner) AND :photoId!=p.id
     group by p, pf
     order by
-      coalesce(sum(case when t in :themes then 1 else 0 end), 0) desc,
+       (
+         coalesce(sum(case when :themes is not null and t in :themes then 1 else 0 end), 0)
+         + case when :country is not null and p.country = :country then 0.5 else 0 end
+         + case when :city is not null and p.city = :city then 0.5 else 0 end
+       ) desc,
       pf.orderIndex asc nulls last,
       pf.featuredAt desc,
       p.createdAt desc
@@ -59,7 +63,10 @@ public interface PhotoRepository extends JpaRepository<Photo, UUID> {
 Page<PhotoAndFeature> findFeaturedPriorityThemes(
             @Param("context") FeatureContext context,
             @Param("owner") @Nullable Owner owner,
+            @Param("photoId") UUID photoId,
             @Param("themes")@Nullable List<Theme> themes,
+            @Param("country")@Nullable String country,
+            @Param("city")@Nullable String city,
             Pageable pageable
     );
 
