@@ -76,7 +76,7 @@ export type Context = "PERSONAL" | "SHARED";
 export type Profile = {
   id: Scope;
   label: string;
-  avatar?: { type: "initials"; bg: string; bgHoverOn: string };
+  avatar?: { type: "initials"; primaryColor: string; secondaryColor: string };
   linkedIn: string | null;
   instagram: string | null;
   location: string | null;

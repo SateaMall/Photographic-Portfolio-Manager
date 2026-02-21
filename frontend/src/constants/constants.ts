@@ -7,7 +7,7 @@ export const PROFILES: Profile[] = [
       {
     id: "SATEA",
     label: "Mohamad Satea Almallouhi",
-    avatar: { type: "initials", bg: "#d98a8652", bgHoverOn: "#8b4845b7"},
+    avatar: { type: "initials", primaryColor: "#8b4845ff", secondaryColor: "#c81b12ff"},
     linkedIn: "satea-almallouhi",
     instagram: "satea_almallouhi",
     location: "Montpellier, France",
@@ -19,7 +19,7 @@ export const PROFILES: Profile[] = [
       {
     id: "SHARED",
     label: "Shared space",
-    avatar: { type: "initials", bg:"#8a9cc46f", bgHoverOn: "#384b74c6"   },
+    avatar: { type: "initials", primaryColor:"#3e5a96ff", secondaryColor: "#124ac2ff"   },
     linkedIn: "",
     instagram: "",
     location: "",
@@ -29,7 +29,7 @@ export const PROFILES: Profile[] = [
   {
     id: "ALEXIS",
     label: "Alexis Cordier",
-    avatar: { type: "initials", bg: "#c0bb8773", bgHoverOn:  "#b9af4dc0" },
+    avatar: { type: "initials", primaryColor: "#978e40ff", secondaryColor:  "#ddec0dff" },
     linkedIn: "alexis683off",
     instagram: "alexis683off",
     location: "Toulouse, France",

@@ -71,7 +71,7 @@
   display: flex;
   justify-content: center;
   gap: 16px;
-    margin-bottom: clamp(12px, 2vw, 20px);
+  margin-bottom: clamp(12px, 2vw, 20px);
 
 }
 
@@ -96,5 +96,6 @@
   transform: translateY(-1px);
   background: rgba(255,255,255,0.14);
   border-color: rgba(255,255,255,0.3);
-  color: rgb(229, 181, 35);
+  color: var(--secondaryColor, #fff);
+  cursor: pointer;
 }

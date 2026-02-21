@@ -55,6 +55,7 @@
 
 /* Nav buttons */
 .albums-nav {
+
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -68,19 +69,19 @@
   border: none;
   background: rgba(255, 255, 255, 0.691);
   backdrop-filter: blur(6px);
-  color: inherit;
+  color: rgb(120, 120, 120);
 
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 
   display: grid;
   place-items: center;
-
   transition: background 140ms ease, color 140ms ease, transform 140ms ease, opacity 140ms ease;
 }
 
 .albums-nav:hover {
-  color: aliceblue;
-  background: rgb(229, 181, 35);
+  color: rgb(240, 240, 240);
+  background: var(--primaryColor);
+ 
 }
 
 .albums-nav-left { left: 4px; }

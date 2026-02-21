@@ -36,9 +36,9 @@ export function SocialBioSection() {
     return p ? [p] : [];
   }, [ctx]);
 
-  const hasAny = profilesToShow.some((p) => {
-    const { linkedInUrl, instagramUrl } = buildLinks(p);
-    return Boolean(linkedInUrl || instagramUrl || p.bio || p.email);
+  const hasAny = profilesToShow.some((profile) => {
+    const { linkedInUrl, instagramUrl } = buildLinks(profile);
+    return Boolean(linkedInUrl || instagramUrl || profile.bio || profile.email);
   });
 
   if (!hasAny) return null;
@@ -48,32 +48,34 @@ export function SocialBioSection() {
       <div className={profilesToShow.length===1 
       ? "hero-bio__inner"
       : "hearo-bio_ineer_two-columns"}>
-        {profilesToShow.map((p) => {
-          const { linkedInUrl, instagramUrl } = buildLinks(p);
+        {profilesToShow.map((profile) => {
+          const { linkedInUrl, instagramUrl } = buildLinks(profile);
 
-          const hasLinks = Boolean(linkedInUrl || instagramUrl || p.email);
-          const hasBio = Boolean(p.bio?.trim());
+          const hasLinks = Boolean(linkedInUrl || instagramUrl || profile.email);
+          const hasBio = Boolean(profile.bio?.trim());
 
           if (!hasLinks && !hasBio) return null;
 
           return (
-            <article className="hero-bio__card" key={p.id}>
-              <h2 className="hero-bio__name">{p.label}</h2>
+            <article className="hero-bio__card" key={profile.id}>
+              <h2 className="hero-bio__name">{profile.label}</h2>
 
-              {p.bio?.trim() ? (
-                <p className="hero-bio__text">{p.bio.trim()}</p>
+              {profile.bio?.trim() ? (
+                <p className="hero-bio__text">{profile.bio.trim()}</p>
               ) : (
                 <div className="hero-bio__text hero-bio__text--empty" />
               )}
 
-              <div className="hero-bio__icons" aria-label={`${p.label} social links`}>
+              <div className="hero-bio__icons" 
+                aria-label={`${profile.label} social links`}
+              >
                 {linkedInUrl && (
                   <a
                     className="hero-bio__icon"
                     href={linkedInUrl}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={`${p.label} LinkedIn`}
+                    aria-label={`${profile.label} LinkedIn`}
                     title="LinkedIn"
                   >
                     <BsLinkedin />
@@ -86,20 +88,20 @@ export function SocialBioSection() {
                     href={instagramUrl}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={`${p.label} Instagram`}
+                    aria-label={`${profile.label} Instagram`}
                     title="Instagram"
                   >
                     <BsInstagram />
                   </a>
                 )}
 
-                {p.email && (
+                {profile.email && (
                   <a
                     className="hero-bio__icon"
-                    aria-label={`${p.label} Email`}
+                    aria-label={`${profile.label} Email`}
                     title="Email"
                     onClick={() => {
-                      navigator.clipboard.writeText(p.email!);
+                      navigator.clipboard.writeText(profile.email!);
                       alert("Email copied!");
                     }}
                   >
