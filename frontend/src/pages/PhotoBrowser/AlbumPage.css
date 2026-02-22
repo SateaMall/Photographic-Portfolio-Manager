@@ -36,11 +36,10 @@
 }
 
 .hp-head__album {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
   margin: 30px 25px 20px;
+  padding-bottom: 20px;
+  justify-content: space-between;
+  text-align: center;
 }
 
 .hp-title__album {
