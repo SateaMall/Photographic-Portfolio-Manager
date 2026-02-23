@@ -108,6 +108,7 @@
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.92);
+  display: none;
 }
 
 .photo-owner-avatar{
@@ -121,7 +122,7 @@
   opacity: 0.7;
   position: relative;
   top: 5px;
-
+  
 }
 
 .photo-owner-avatar svg{
@@ -135,6 +136,7 @@
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 12px;
   color:rgba(214, 214, 214, 0.652);
+
 }
 
 .photo-card:hover .photo-owner {
@@ -170,7 +172,7 @@
   border: none;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  display: none;
 }
 
 
@@ -186,6 +188,7 @@
   color: #ffffffd7;
   display: inline-grid;
   place-items: center;
+  display: none;
 }
 .photo-location-avatar svg{
   width: 18px;
@@ -200,4 +203,14 @@
 
 .photo-location:hover .photo-location-name{
   color:rgba(255, 255, 255, 0.798);
+}
+@media (min-width: 800px) {
+.photo-location {
+  display: inline-flex;
+}
+.photo-location-avatar{
+  display: inline-flex;
+}
+.photo-owner{
+  display: block;} 
 }

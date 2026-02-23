@@ -53,11 +53,17 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
   useEffect(() => {
     if (!emblaApi) return;
 
-    const id = window.setInterval(() => {
-      emblaApi.scrollNext();
-    }, 9000); // 9s
+    const tick = () => {
+      // If we're at the end, go to the first slide; otherwise go next
+      if (!emblaApi.canScrollNext()) {
+        emblaApi.scrollTo(0);
+      } else {
+        emblaApi.scrollNext();
+      }
+  };
 
-    return () => window.clearInterval(id);
+  const id = window.setInterval(tick, 5000);
+  return () => window.clearInterval(id);
   }, [emblaApi]);
 
   return (

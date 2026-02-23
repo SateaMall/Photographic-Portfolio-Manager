@@ -32,8 +32,12 @@
 
 /** Content **/
 .content {
-  padding: 10px 10px;
+  padding: 0px;
   padding-bottom: 40px;
+}
+@media (min-width: 800px) {
+.content{
+   padding: 10px;} 
 }
 /* section spacing */
 .hp-section {

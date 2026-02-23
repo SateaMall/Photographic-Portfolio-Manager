@@ -55,11 +55,11 @@ useEffect(() => {
         </div>
       
       <section className="content" id="photos">
-      <header className="hp-head__album">
-        <h1 className="hp-title__album ">Album photos</h1>
-      </header>
+        <header className="hp-head__album">
+          <h1 className="hp-title__album ">Album photos</h1>
+        </header>
           {/* Photos */}
-          <PhotosGrid albumId={albumId} onPhotosChange={setPhotos}/>
+        <PhotosGrid albumId={albumId} onPhotosChange={setPhotos}/>
       </section>
     </div>
  

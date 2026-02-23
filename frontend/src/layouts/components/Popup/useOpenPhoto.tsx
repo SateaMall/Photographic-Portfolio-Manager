@@ -7,7 +7,7 @@ export function useOpenPhoto() {
   const location = useLocation();
   const { context } = useParams<{ context: string }>();
 
-  return (photoId: string, mode: "modal" | "auto" = "auto") => {
+  return (photoId: string, mode: "modal" | "auto" = "auto", albumId?: string) => {
     if (!context) return;
 
     const state = location.state as ModalState | null;
@@ -16,7 +16,7 @@ export function useOpenPhoto() {
 
     // If already in a modal, keep the SAME background and replace history
     if (inModal) {
-      navigate(`/${context}/photo/${photoId}`, {
+      navigate(`/${context}${albumId ? `/album/${albumId}` : ""}/photo/${photoId}`, {
         replace: true,
         state: { backgroundLocation: bg },
       });
@@ -25,13 +25,13 @@ export function useOpenPhoto() {
 
     // Not in a modal: open as modal only when asked (homepage/album)
     if (mode === "modal") {
-      navigate(`/${context}/photo/${photoId}`, {
+      navigate(`/${context}${albumId ? `/album/${albumId}` : ""}/photo/${photoId}`, {
         state: { backgroundLocation: location },
       });
       return;
     }
 
     // Otherwise behave normally (full page)
-    navigate(`/${context}/photo/${photoId}`);
+    navigate(`/${context}${albumId ? `/album/${albumId}` : ""}/photo/${photoId}`);
   };
 }
