@@ -5,14 +5,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { PROFILE_BY_ID } from "../constants/constants";
 import { BsPersonFill, BsLink45Deg, BsGeoAltFill } from "react-icons/bs";
-import { useOpenPhoto } from "../layouts/components/Popup/useOpenPhoto";
 
-export function PhotoCard({ photo }: { photo: PhotoResponse }) {
+type PhotoCardProps = {
+  photo: PhotoResponse;
+  onClick?: () => void;
+};
+
+export function PhotoCard({ photo, onClick }: PhotoCardProps) {
   const navigate = useNavigate();
   const { context } = useParams();
   const image = photoFileUrl(photo.id);
   const [copied, setCopied] = useState(false);
-  const openPhoto = useOpenPhoto();
 
   function onOwnerClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();     // prevents the article onClick
@@ -40,7 +43,7 @@ export function PhotoCard({ photo }: { photo: PhotoResponse }) {
       className="photo-card"
       role="button"
       tabIndex={0}
-      onClick={() => openPhoto(photo.id,"modal")}
+      onClick={onClick}
       onMouseLeave={() => setCopied(false)} // reset when hover ends
     >
       <div className="photo-media">

@@ -7,23 +7,26 @@
 
 .photos-masonry {
   display: grid;
-  grid-template-columns: repeat(2, minmax(240px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 /* ≥ 600px */
 @media (min-width: 500px) {
   .photos-masonry {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
   }
 }
 @media (min-width: 800px) {
   .photos-masonry {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
   }
 }
 @media (min-width: 1000px) {
 .photos-masonry {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
 }
 }
 

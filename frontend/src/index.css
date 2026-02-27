@@ -12,7 +12,13 @@
 
 html, body {
   font-family: var(--font-roboto);
+  margin: 0;
+  padding: 0;
 }
 * {
   font-family: inherit;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }

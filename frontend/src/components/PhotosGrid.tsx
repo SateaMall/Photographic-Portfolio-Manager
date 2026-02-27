@@ -6,6 +6,7 @@ import { PhotoCard } from "./PhotoCard";
 
 import "./PhotosGrid.css"
 import {fetchAlbumItemsAsPhotos } from "../api/photoBrowse";
+import { useOpenPhoto } from "../layouts/components/Popup/useOpenPhoto";
 type PhotosGridProps = {
   photoId?: string;
   albumId?: string;
@@ -23,11 +24,10 @@ export function PhotosGrid(PhotosGridProps: PhotosGridProps) {
   const [visibleCount, setVisibleCount] = useState(FIRST_VISIBLE);
   const [hasMorePages, setHasMorePages] = useState(true);
   const [initialRevealDone, setInitialRevealDone] = useState(false);
-  const hasHiddenInCurrent =
-  !initialRevealDone && visibleCount < photos.length;
+  const hasHiddenInCurrent = !initialRevealDone && visibleCount < photos.length;
   const restoreScrollYRef = useRef<number | null>(null);
   const [photosLoading, setPhotosLoading] = useState(false);
-
+  const OpenPhoto = useOpenPhoto();
 
 
 // Context can change (via routing), we need to reset when that happens
@@ -72,7 +72,6 @@ useEffect(() => {
 
 useEffect(() => {
   loadCarrouselPhotos(photos);
-  // console.log("photos changed:", photos.length);
 }, [photos]);
 
 useEffect(() => {
@@ -111,7 +110,7 @@ return (
      <div className={`photos-preview ${hasHiddenInCurrent ? "is-clamped" : ""}`}>
     <div className="photos-masonry">
       {photos.slice(0, visibleCount).map((p) => (
-        <PhotoCard key={p.id} photo={p} />
+        <PhotoCard key={p.id} photo={p} onClick={() => OpenPhoto(p.id,"modal",PhotosGridProps?.albumId)}/>
       ))}
     </div>
 

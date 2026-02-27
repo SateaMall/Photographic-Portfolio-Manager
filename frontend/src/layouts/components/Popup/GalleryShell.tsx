@@ -30,6 +30,7 @@ export function GalleryShell() {
         {backgroundLocation && (
           <Routes>
             <Route path="photo/:photoId" element={<PhotoModal />} />
+            <Route path="album/:albumId/photo/:photoId" element={<PhotoModal />} />
           </Routes>
         )}
       </>

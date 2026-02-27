@@ -31,7 +31,7 @@
 
 @keyframes embla-kenburns {
   from { transform: scale(1); }
-  to   { transform: scale(1.08); }
+  to   { transform: scale(1.1); }
 }
 
 /* respect users who prefer reduced motion */
