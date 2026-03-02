@@ -1,7 +1,7 @@
-package com.AlexiSatea.backend.model;
+package com.AlexiSatea.backend.model.photo;
 
-import com.AlexiSatea.backend.model.Enum.Owner;
-import com.AlexiSatea.backend.model.Enum.Theme;
+import com.AlexiSatea.backend.model.album.AlbumPhoto;
+import com.AlexiSatea.backend.model.user.AppUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -17,18 +17,22 @@ import java.util.UUID;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "photos", indexes = {
-        @Index(name = "idx_photos_owner", columnList = "owner"),
-        @Index(name = "idx_photos_createdAt", columnList = "createdAt")
-})
+@Table(name = "photos",
+        indexes = {
+                @Index(name = "idx_photos_author", columnList = "author_user_id"),
+                @Index(name = "idx_photos_created_at", columnList = "created_at"),
+                @Index(name = "idx_photos_country_city", columnList = "country, city")
+        }
+)
 public class Photo {
 // ID is created later
     @Id
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Owner owner;
+    // who uploaded / owns the file record
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "author_user_id", nullable = false)
+    private AppUser author;
 
     // ---- Original (as uploaded) ----
 

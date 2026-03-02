@@ -2,21 +2,16 @@ package com.AlexiSatea.backend.controller;
 
 
 import com.AlexiSatea.backend.dto.PhotoResponse;
-import com.AlexiSatea.backend.model.Enum.Owner;
-import com.AlexiSatea.backend.model.Enum.PhotoVariant;
-import com.AlexiSatea.backend.model.Photo;
+import com.AlexiSatea.backend.model.photo.PhotoVariant;
+import com.AlexiSatea.backend.model.photo.Photo;
 import com.AlexiSatea.backend.service.PhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController

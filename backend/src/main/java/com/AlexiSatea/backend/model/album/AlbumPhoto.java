@@ -1,5 +1,6 @@
-package com.AlexiSatea.backend.model;
+package com.AlexiSatea.backend.model.album;
 
+import com.AlexiSatea.backend.model.photo.Photo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,7 +35,7 @@ public class AlbumPhoto {
     @Column(nullable = false)
     private int position; // ordering inside album (optional but useful)
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "added_at", nullable = false, updatable = false)
     private Instant addedAt;
 
 

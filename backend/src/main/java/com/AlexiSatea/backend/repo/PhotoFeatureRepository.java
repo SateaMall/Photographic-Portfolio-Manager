@@ -2,7 +2,7 @@ package com.AlexiSatea.backend.repo;
 
 import com.AlexiSatea.backend.model.Enum.FeatureContext;
 import com.AlexiSatea.backend.model.Enum.Owner;
-import com.AlexiSatea.backend.model.PhotoFeature;
+import com.AlexiSatea.backend.model.photo.feature.PhotoFeature;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

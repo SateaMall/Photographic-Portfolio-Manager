@@ -1,0 +1,103 @@
+package com.AlexiSatea.backend.model.user;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_users_email", columnNames = "email")
+        },
+        indexes = {
+                @Index(name = "idx_users_email", columnList = "email")
+        }
+)
+public class AppUser {
+
+    @Id
+    @GeneratedValue
+    @UuidGenerator
+    private UUID id;
+
+    // Login email
+    @Email
+    @Column(nullable = false, length = 255)
+    private String email;
+
+    @JsonIgnore
+    @Column(name = "password_hash", nullable = false, length = 255)
+    private String passwordHash;
+
+    @Column(name = "first_name", length = 80)
+    private String firstName;
+
+    @Column(name = "last_name", length = 80)
+    private String lastName;
+
+    // Public/social fields (as you requested)
+    @Email
+    @Column(name = "public_email", length = 255)
+    private String publicEmail;
+
+    @Size(max = 300)
+    @Column(name = "linkedin", length = 300)
+    private String linkedIn;
+
+    @Size(max = 300)
+    @Column(name = "instagram", length = 300)
+    private String instagram;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean enabled = true;
+
+    @Column(name = "email_verified_at")
+    private Instant emailVerifiedAt;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
+
+    // Inverse relationship (optional but useful)
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfileUser> memberships = new ArrayList<>();
+
+    @PrePersist
+    void onCreate() {
+        Instant now = Instant.now();
+        if (createdAt == null) createdAt = now;
+        if (updatedAt == null) updatedAt = now;
+        normalize();
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = Instant.now();
+        normalize();
+    }
+
+    private void normalize() {
+        if (email != null) email = email.trim().toLowerCase();
+        if (publicEmail != null) publicEmail = publicEmail.trim().toLowerCase();
+        if (linkedIn != null) linkedIn = linkedIn.trim();
+        if (instagram != null) instagram = instagram.trim();
+        if (firstName != null) firstName = firstName.trim();
+        if (lastName != null) lastName = lastName.trim();
+    }
+}

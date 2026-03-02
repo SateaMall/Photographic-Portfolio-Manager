@@ -1,7 +1,7 @@
 package com.AlexiSatea.backend.repo;
 
 
-import com.AlexiSatea.backend.model.Album;
+import com.AlexiSatea.backend.model.album.Album;
 import com.AlexiSatea.backend.model.Enum.AlbumScope;
 import com.AlexiSatea.backend.model.Interface.AlbumViewRow;
 import org.springframework.data.jpa.repository.JpaRepository;

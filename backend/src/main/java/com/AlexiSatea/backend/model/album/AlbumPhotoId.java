@@ -1,4 +1,4 @@
-package com.AlexiSatea.backend.model;
+package com.AlexiSatea.backend.model.album;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

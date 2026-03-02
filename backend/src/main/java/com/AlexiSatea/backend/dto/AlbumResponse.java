@@ -1,9 +1,7 @@
 package com.AlexiSatea.backend.dto;
 
-import com.AlexiSatea.backend.model.*;
-import com.AlexiSatea.backend.model.Enum.AlbumScope;
+import com.AlexiSatea.backend.model.album.Album;
 
-import java.util.List;
 import java.util.UUID;
 
 public record AlbumResponse(

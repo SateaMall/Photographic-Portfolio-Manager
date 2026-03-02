@@ -2,9 +2,9 @@ package com.AlexiSatea.backend.repo;
 
 import com.AlexiSatea.backend.model.Enum.FeatureContext;
 import com.AlexiSatea.backend.model.Enum.Owner;
-import com.AlexiSatea.backend.model.Enum.Theme;
+import com.AlexiSatea.backend.model.photo.Theme;
 import com.AlexiSatea.backend.model.Interface.PhotoAndFeature;
-import com.AlexiSatea.backend.model.Photo;
+import com.AlexiSatea.backend.model.photo.Photo;
 import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +13,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface PhotoRepository extends JpaRepository<Photo, UUID> {
@@ -52,9 +51,12 @@ public interface PhotoRepository extends JpaRepository<Photo, UUID> {
     group by p, pf
     order by
        (
-         coalesce(sum(case when :themes is not null and t in :themes then 1 else 0 end), 0)
-         + case when :country is not null and p.country = :country then 0.5 else 0 end
-         + case when :city is not null and p.city = :city then 0.5 else 0 end
+           case when :hasThemes = true
+             then coalesce(sum( case when t in :themes then 1 else 0 end), 0)
+             else 0
+           end
+           + case when :country is not null and p.country = :country then 0.5 else 0 end
+           + case when :city is not null and p.city = :city then 0.5 else 0 end
        ) desc,
       pf.orderIndex asc nulls last,
       pf.featuredAt desc,
@@ -65,6 +67,7 @@ Page<PhotoAndFeature> findFeaturedPriorityThemes(
             @Param("owner") @Nullable Owner owner,
             @Param("photoId") UUID photoId,
             @Param("themes")@Nullable List<Theme> themes,
+            @Param("hasThemes") boolean hasThemes,
             @Param("country")@Nullable String country,
             @Param("city")@Nullable String city,
             Pageable pageable

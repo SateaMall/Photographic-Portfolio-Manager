@@ -3,8 +3,12 @@ package com.AlexiSatea.backend.service;
 
 import com.AlexiSatea.backend.dto.MainPhotoResponse;
 import com.AlexiSatea.backend.dto.PhotoResponse;
-import com.AlexiSatea.backend.model.*;
-import com.AlexiSatea.backend.model.Enum.*;
+import com.AlexiSatea.backend.model.album.Album;
+import com.AlexiSatea.backend.model.album.AlbumPhoto;
+import com.AlexiSatea.backend.model.photo.Photo;
+import com.AlexiSatea.backend.model.photo.PhotoVariant;
+import com.AlexiSatea.backend.model.photo.feature.PhotoFeature;
+import com.AlexiSatea.backend.model.photo.Theme;
 import com.AlexiSatea.backend.repo.AlbumRepository;
 import com.AlexiSatea.backend.repo.PhotoFeatureRepository;
 import com.AlexiSatea.backend.repo.PhotoRepository;
@@ -17,9 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,9 +35,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.AlexiSatea.backend.model.Enum.PhotoVariant.MEDIUM;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +73,7 @@ public class PhotoService {
                     "Photo not found for photoId=" + photoId ));
             List<Theme> themes = photoRepository.findThemesByPhotoId(photoId);
             logger.info(themes.toString());
-            return  photoRepository.findFeaturedPriorityThemes(context, owner,photoId,themes,p.getCountry(),p.getCity(), pageable)
+            return  photoRepository.findFeaturedPriorityThemes(context, owner,photoId,themes, !(themes.isEmpty()), p.getCountry(),p.getCity(), pageable)
                     .map(r-> PhotoResponse.from(r.getPhoto(),r.getPhotoFeature()));
         }
     }

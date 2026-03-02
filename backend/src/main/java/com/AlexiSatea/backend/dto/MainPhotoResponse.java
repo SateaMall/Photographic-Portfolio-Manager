@@ -1,8 +1,8 @@
 package com.AlexiSatea.backend.dto;
 
 import com.AlexiSatea.backend.model.Enum.Owner;
-import com.AlexiSatea.backend.model.Enum.Theme;
-import com.AlexiSatea.backend.model.Photo;
+import com.AlexiSatea.backend.model.photo.Theme;
+import com.AlexiSatea.backend.model.photo.Photo;
 
 import java.time.Instant;
 import java.util.ArrayList;

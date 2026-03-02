@@ -1,12 +1,11 @@
 package com.AlexiSatea.backend.dto;
 
-import com.AlexiSatea.backend.model.*;
 import com.AlexiSatea.backend.model.Enum.Owner;
+import com.AlexiSatea.backend.model.album.AlbumPhoto;
+import com.AlexiSatea.backend.model.photo.Photo;
 import org.springframework.data.domain.Page;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public record AlbumPhotoItem(

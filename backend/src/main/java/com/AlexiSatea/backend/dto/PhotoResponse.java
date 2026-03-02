@@ -2,14 +2,10 @@ package com.AlexiSatea.backend.dto;
 
 
 import com.AlexiSatea.backend.model.Enum.Owner;
-import com.AlexiSatea.backend.model.Photo;
-import com.AlexiSatea.backend.model.Enum.Theme;
-import com.AlexiSatea.backend.model.PhotoFeature;
-import jakarta.persistence.Column;
+import com.AlexiSatea.backend.model.photo.Photo;
+import com.AlexiSatea.backend.model.photo.feature.PhotoFeature;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public record PhotoResponse(

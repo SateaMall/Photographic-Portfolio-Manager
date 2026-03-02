@@ -1,7 +1,7 @@
 package com.AlexiSatea.backend.repo;
 
-import com.AlexiSatea.backend.model.AlbumPhoto;
-import com.AlexiSatea.backend.model.AlbumPhotoId;
+import com.AlexiSatea.backend.model.album.AlbumPhoto;
+import com.AlexiSatea.backend.model.album.AlbumPhotoId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
