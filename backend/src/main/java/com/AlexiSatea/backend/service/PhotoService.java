@@ -234,6 +234,12 @@ public class PhotoService {
     }
 
     @Transactional(readOnly = true)
+    public Photo getPublicPhotoForProfile(UUID id, String slug) {
+        return photoRepository.findPublicPhotoForProfile(id,slug)
+                .orElseThrow(() -> new IllegalArgumentException("Photo not found: " + id));
+    }
+
+    @Transactional(readOnly = true)
     public Photo get(UUID id) {
         return photoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Photo not found: " + id));

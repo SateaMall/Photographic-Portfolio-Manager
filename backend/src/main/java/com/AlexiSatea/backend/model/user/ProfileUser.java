@@ -14,6 +14,7 @@ import java.time.Instant;
 @Table(name = "profile_user",
         indexes = {
                 @Index(name = "idx_profile_user_profile", columnList = "profile_id"),
+                @Index(name = "idx_profile_user_user_profile", columnList= "user_id, profile_id"),
                 @Index(name = "idx_profile_user_user", columnList = "user_id"),
                 @Index(name = "idx_profile_user_role", columnList = "role")
         }

@@ -47,19 +47,6 @@ public class AppUser {
     @Column(name = "last_name", length = 80)
     private String lastName;
 
-    // Public/social fields (as you requested)
-    @Email
-    @Column(name = "public_email", length = 255)
-    private String publicEmail;
-
-    @Size(max = 300)
-    @Column(name = "linkedin", length = 300)
-    private String linkedIn;
-
-    @Size(max = 300)
-    @Column(name = "instagram", length = 300)
-    private String instagram;
-
     @Builder.Default
     @Column(nullable = false)
     private boolean enabled = true;
@@ -94,9 +81,6 @@ public class AppUser {
 
     private void normalize() {
         if (email != null) email = email.trim().toLowerCase();
-        if (publicEmail != null) publicEmail = publicEmail.trim().toLowerCase();
-        if (linkedIn != null) linkedIn = linkedIn.trim();
-        if (instagram != null) instagram = instagram.trim();
         if (firstName != null) firstName = firstName.trim();
         if (lastName != null) lastName = lastName.trim();
     }

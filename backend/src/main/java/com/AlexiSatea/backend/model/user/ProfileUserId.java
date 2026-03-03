@@ -18,4 +18,5 @@ public class ProfileUserId implements Serializable {
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;
+
 }

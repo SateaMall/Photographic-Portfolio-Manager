@@ -106,9 +106,9 @@ public class AlbumService {
 
     /*********************   Homepage(Album)   *********************/
     @Transactional(readOnly = true)
-    public List<AlbumViewResponse> getAlbums(AlbumScope scope) {
-            List<AlbumViewRow> Rows= albumRepository.findAlbumViews(scope);
-        return AlbumViewResponse.from(Rows);
+    public List<AlbumViewResponse> getAlbums(String profileSlug) {
+            List<AlbumViewRow> rows = albumRepository.findAlbumViews(profileSlug);
+        return AlbumViewResponse.from(rows);
         }
 
 

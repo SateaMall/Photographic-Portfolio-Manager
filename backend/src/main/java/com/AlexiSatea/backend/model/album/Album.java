@@ -17,7 +17,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "albums", indexes = {
-        @Index(name = "idx_albums_scope", columnList = "scope"),
+        @Index(name = "idx_albums_profile_public", columnList = "owner_profile_id, is_public"),
         @Index(name = "idx_albums_created_by", columnList = "created_by_user_id"),
         @Index(name = "idx_albums_created_at", columnList = "created_at")
 })
@@ -46,16 +46,15 @@ public class Album {
     @OrderBy("position ASC")
     private List<AlbumPhoto> photoLinks = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 16)
-    @Builder.Default
-    private AlbumVisibility visibility = AlbumVisibility.PUBLIC;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    @Column(name = "is_public", nullable = false)
+    @Builder.Default
+    private boolean isPublic = true;
 
     @PrePersist
     void onCreate() {

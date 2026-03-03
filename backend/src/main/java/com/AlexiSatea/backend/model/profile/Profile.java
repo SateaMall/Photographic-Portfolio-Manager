@@ -1,6 +1,8 @@
 package com.AlexiSatea.backend.model.profile;
 
+import com.AlexiSatea.backend.model.user.ProfileUser;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -52,6 +54,19 @@ public class Profile {
     @Column(name = "is_public", nullable = false)
     private boolean isPublic = true;
 
+    // Public/social fields (as you requested)
+    @Email
+    @Column(name = "public_email", length = 255)
+    private String publicEmail;
+
+    @Size(max = 300)
+    @Column(name = "linkedin", length = 300)
+    private String linkedIn;
+
+    @Size(max = 300)
+    @Column(name = "instagram", length = 300)
+    private String instagram;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -81,5 +96,8 @@ public class Profile {
         if (displayName != null) displayName = displayName.trim();
         if (primaryColor != null) primaryColor = primaryColor.trim();
         if (secondaryColor != null) secondaryColor = secondaryColor.trim();
+        if (publicEmail != null) publicEmail = publicEmail.trim().toLowerCase();
+        if (linkedIn != null) linkedIn = linkedIn.trim();
+        if (instagram != null) instagram = instagram.trim();
     }
 }

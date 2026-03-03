@@ -16,24 +16,25 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/photos")
+@RequestMapping("/api/public")
 public class PublicImageController {
 
     private final PhotoService photoService;
 
-    @GetMapping("/{id}")
-    public PhotoResponse get(@PathVariable UUID id) {
-        Photo p = photoService.get(id);
+    @GetMapping("/profiles/{slug}/photos/{id}")
+    public PhotoResponse get(@PathVariable String slug, @PathVariable UUID id) {
+        Photo p = photoService.getPublicPhotoForProfile(id, slug);
         return PhotoResponse.from(p);
     }
 
 
-    @GetMapping("/{id}/file")
+    @GetMapping("/profiles/{slug}/photos/{id}/file")
     public ResponseEntity<Resource> file(
+            @PathVariable String slug,
             @PathVariable UUID id,
             @RequestParam(defaultValue = "MEDIUM") PhotoVariant variant
     ) {
-        Photo photo = photoService.get(id);
+        Photo photo = photoService.getPublicPhotoForProfile(id, slug); // validates access
         Resource resource = photoService.loadFile(id, variant);
 
         String contentType = switch (variant) {

@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface PhotoRepository extends JpaRepository<Photo, UUID> {
@@ -20,6 +21,21 @@ public interface PhotoRepository extends JpaRepository<Photo, UUID> {
 
 
 
+    @Query("""
+        select ph
+        from Photo ph
+        where ph.id = :photoId
+          and exists (
+              select 1
+              from ProfileUser pu
+              join pu.profile p
+              where p.slug = :slug
+                and p.isPublic = true
+                and pu.user = ph.author
+          )
+    """)
+    Optional<Photo> findPublicPhotoForProfile(@Param("photoId") UUID photoId,
+                                              @Param("slug") String slug);
     @Query("""
     select p as photo, pf as photoFeature
     from Photo p
