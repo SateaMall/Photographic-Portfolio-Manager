@@ -21,13 +21,16 @@ public class PublicImageController {
 
     private final PhotoService photoService;
 
+    /** Modified **/
+    /** front-end: fetchAlbumInfo */
     @GetMapping("/profiles/{slug}/photos/{id}")
     public PhotoResponse get(@PathVariable String slug, @PathVariable UUID id) {
         Photo p = photoService.getPublicPhotoForProfile(id, slug);
         return PhotoResponse.from(p);
     }
 
-
+    /** Modified **/
+    /** front-end: photoFileUrl */
     @GetMapping("/profiles/{slug}/photos/{id}/file")
     public ResponseEntity<Resource> file(
             @PathVariable String slug,

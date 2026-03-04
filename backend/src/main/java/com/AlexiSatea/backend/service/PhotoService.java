@@ -9,6 +9,7 @@ import com.AlexiSatea.backend.model.photo.Photo;
 import com.AlexiSatea.backend.model.photo.PhotoVariant;
 import com.AlexiSatea.backend.model.photo.feature.PhotoFeature;
 import com.AlexiSatea.backend.model.photo.Theme;
+import com.AlexiSatea.backend.model.photo.feature.PhotoFeatureType;
 import com.AlexiSatea.backend.repo.AlbumRepository;
 import com.AlexiSatea.backend.repo.PhotoFeatureRepository;
 import com.AlexiSatea.backend.repo.PhotoRepository;
@@ -64,16 +65,16 @@ public class PhotoService {
 
 
     @Transactional(readOnly = true)
-    public Page <PhotoResponse> getPhotos (Owner owner, FeatureContext context,UUID photoId, Pageable pageable){
-        if(photoId == null){
-        return photoRepository.findFeatured(context, owner, pageable)
+    public Page <PhotoResponse> getPhotos (String slug,UUID photoId, Pageable pageable){
+        if (photoId == null){
+            // This is to show photos grid for homepage
+        return photoRepository.findFeaturedForProfile(slug, PhotoFeatureType.HOMEPAGE_GRID, pageable)
                 .map(r-> PhotoResponse.from(r.getPhoto(),r.getPhotoFeature()));}
         else{
-            Photo p= photoRepository.findById(photoId).orElseThrow(() -> new IllegalArgumentException(
-                    "Photo not found for photoId=" + photoId ));
+            // This is to show photo suggestions
+            Photo p= getPublicPhotoForProfile(photoId, slug);
             List<Theme> themes = photoRepository.findThemesByPhotoId(photoId);
-            logger.info(themes.toString());
-            return  photoRepository.findFeaturedPriorityThemes(context, owner,photoId,themes, !(themes.isEmpty()), p.getCountry(),p.getCity(), pageable)
+            return  photoRepository.findFeaturedPriorityThemes(slug,PhotoFeatureType.SUGGESTIONS,photoId,PhotoFeatureType.SUGGESTIONS,themes, !(themes.isEmpty()), p.getCountry(),p.getCity(), pageable)
                     .map(r-> PhotoResponse.from(r.getPhoto(),r.getPhotoFeature()));
         }
     }
@@ -226,13 +227,6 @@ public class PhotoService {
     }
 
 
-
-
-    @Transactional(readOnly = true)
-    public Page<Photo> listByOwner(Owner owner, Pageable pageable) {
-        return photoRepository.findByOwnerOrderByCreatedAtDesc(owner, pageable);
-    }
-
     @Transactional(readOnly = true)
     public Photo getPublicPhotoForProfile(UUID id, String slug) {
         return photoRepository.findPublicPhotoForProfile(id,slug)
@@ -246,9 +240,9 @@ public class PhotoService {
     }
 
     @Transactional(readOnly = true)
-    public MainPhotoResponse getPhoto(UUID id){
-        Optional<Photo> photo= photoRepository.findById(id);
-        return  MainPhotoResponse.from(photo.orElseThrow(() -> new IllegalArgumentException("Photo not found: " + id)));
+    public MainPhotoResponse getPhotoDetails(UUID id, String slug){
+        Photo photo = getPublicPhotoForProfile(id, slug);
+        return  MainPhotoResponse.from(photo);
     }
 
     @Transactional(readOnly = true)
@@ -355,10 +349,6 @@ public class PhotoService {
     }
 
 
-    public List<PhotoResponse> getPhotoSuggestions(UUID photoId, AlbumScope scope) {
-        // Si scope == shared => pas de filtre owner, else owner c'est le filtre
-        return new ArrayList<>(); //TODO complete suggestions with themes
-    }
 }
 
 

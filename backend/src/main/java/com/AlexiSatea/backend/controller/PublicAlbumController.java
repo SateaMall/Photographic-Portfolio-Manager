@@ -19,6 +19,7 @@ public class PublicAlbumController {
     private final AlbumService albumService;
 
     /** OK **/
+    /** front-end: fetchAlbumInfo **/
     @GetMapping("/albums/{albumId}")
     public AlbumViewResponse albumDetails(@PathVariable UUID albumId) {
         return albumService.getAlbumDetails(albumId);
@@ -26,6 +27,8 @@ public class PublicAlbumController {
 
 
     /** OK **/
+    /** front-end: fetchAlbumItems **/
+    /** front-end: fetchAlbumItemsAsPhotos **/
     @GetMapping("/albums/{albumId}/items")
     public Page<AlbumPhotoItem> albumItemsList (
             @PathVariable UUID albumId,
@@ -37,6 +40,7 @@ public class PublicAlbumController {
     }
 
     /** Modified **/
+    /** front-end: fetchAlbums **/
     @GetMapping("/profiles/{profileSlug}/albums")
     public List<AlbumViewResponse> getAlbums(@PathVariable String profileSlug) {
         return albumService.getAlbums(profileSlug);
