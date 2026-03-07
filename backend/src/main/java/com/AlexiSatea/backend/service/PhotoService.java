@@ -1,6 +1,5 @@
 package com.AlexiSatea.backend.service;
 
-
 import com.AlexiSatea.backend.dto.MainPhotoResponse;
 import com.AlexiSatea.backend.dto.PhotoResponse;
 import com.AlexiSatea.backend.model.album.Album;
@@ -74,7 +73,7 @@ public class PhotoService {
             // This is to show photo suggestions
             Photo p= getPublicPhotoForProfile(photoId, slug);
             List<Theme> themes = photoRepository.findThemesByPhotoId(photoId);
-            return  photoRepository.findFeaturedPriorityThemes(slug,PhotoFeatureType.SUGGESTIONS,photoId,PhotoFeatureType.SUGGESTIONS,themes, !(themes.isEmpty()), p.getCountry(),p.getCity(), pageable)
+            return  photoRepository.findFeaturedPriorityThemes(slug,PhotoFeatureType.SUGGESTIONS,photoId,themes, !(themes.isEmpty()), p.getCountry(),p.getCity(), pageable)
                     .map(r-> PhotoResponse.from(r.getPhoto(),r.getPhotoFeature()));
         }
     }
