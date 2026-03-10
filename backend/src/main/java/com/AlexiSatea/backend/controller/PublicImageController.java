@@ -21,7 +21,6 @@ public class PublicImageController {
 
     private final PhotoService photoService;
 
-    /** Modified **/
     /** front-end: fetchAlbumInfo */
     @GetMapping("/profiles/{slug}/photos/{id}")
     public PhotoResponse get(@PathVariable String slug, @PathVariable UUID id) {
@@ -29,7 +28,6 @@ public class PublicImageController {
         return PhotoResponse.from(p);
     }
 
-    /** Modified **/
     /** front-end: photoFileUrl */
     @GetMapping("/profiles/{slug}/photos/{id}/file")
     public ResponseEntity<Resource> file(

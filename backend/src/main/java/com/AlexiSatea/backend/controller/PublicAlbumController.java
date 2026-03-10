@@ -18,15 +18,12 @@ import java.util.UUID;
 public class PublicAlbumController {
     private final AlbumService albumService;
 
-    /** OK **/
     /** front-end: fetchAlbumInfo **/
     @GetMapping("/albums/{albumId}")
     public AlbumViewResponse albumDetails(@PathVariable UUID albumId) {
         return albumService.getAlbumDetails(albumId);
     }
 
-
-    /** OK **/
     /** front-end: fetchAlbumItems **/
     /** front-end: fetchAlbumItemsAsPhotos **/
     @GetMapping("/albums/{albumId}/items")
@@ -39,7 +36,6 @@ public class PublicAlbumController {
         return albumService.getAlbumItems(albumId,pageable);
     }
 
-    /** Modified **/
     /** front-end: fetchAlbums **/
     @GetMapping("/profiles/{profileSlug}/albums")
     public List<AlbumViewResponse> getAlbums(@PathVariable String profileSlug) {

@@ -22,7 +22,6 @@ public class PublicPhotoController {
     final Logger logger = LoggerFactory.getLogger(PublicPhotoController.class);
 
     /** front-end : fetchMainPhoto **/
-    /** Modified **/
     @GetMapping("/profiles/{slug}/photos/{photoId}")
     public MainPhotoResponse photoDetails(@PathVariable String slug,
                                           @PathVariable UUID photoId) {
@@ -30,7 +29,6 @@ public class PublicPhotoController {
     }
 
     /** front-end : fetchPhotos **/
-    /** Modified **/
     @GetMapping("/profiles/{slug}/photos")
     public Page<PhotoResponse> getPhotos(
             @PathVariable String slug,
