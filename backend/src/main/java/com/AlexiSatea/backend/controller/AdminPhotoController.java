@@ -1,8 +1,6 @@
 package com.AlexiSatea.backend.controller;
 
 import com.AlexiSatea.backend.dto.PhotoResponse;
-import com.AlexiSatea.backend.model.Enum.FeatureContext;
-import com.AlexiSatea.backend.model.Enum.Owner;
 import com.AlexiSatea.backend.model.photo.Photo;
 import com.AlexiSatea.backend.model.photo.Theme;
 import com.AlexiSatea.backend.service.PhotoService;
@@ -26,12 +24,13 @@ public class AdminPhotoController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public PhotoResponse upload(
             @RequestPart("file") MultipartFile file,
-            @RequestParam Owner owner,
+            //@RequestParam Owner owner,
             @RequestParam(required = false) UUID albumId,
             @RequestParam(required = false) List<Theme> themes
     ) {
-        Photo photo = photoService.upload(file, owner, albumId,themes);
-        return PhotoResponse.from(photo);
+        throw new UnsupportedOperationException("Endpoint not implemented yet");
+        //Photo photo = photoService.upload(file, owner, albumId,themes);
+        //PhotoResponse.from(photo);
     }
 
     @DeleteMapping("/{id}")
@@ -45,18 +44,20 @@ public class AdminPhotoController {
     @PostMapping("/photo-Feature/{id}")
     public Integer addPhotoFeature(
             @PathVariable UUID id,
-            @RequestParam FeatureContext context,
+            //@RequestParam FeatureContext context,
             @RequestParam(required = false) Integer index,
             @RequestParam(required = false) Boolean enabled
     ) {
-        return photoService.AddUpdatePhotoFeature(id, index, context,enabled);
+        throw new UnsupportedOperationException("Endpoint not implemented yet");
+        //return photoService.AddUpdatePhotoFeature(id, index, context,enabled);
     }
     @DeleteMapping("/photo-Feature/{id}")
     public void deletePhotoFeature(
-            @PathVariable UUID id,
-            @RequestParam FeatureContext context
+            @PathVariable UUID id
+            //@RequestParam FeatureContext context
     ) {
-        photoService.deletePhotoFeature(id, context);
+        throw new UnsupportedOperationException("Endpoint not implemented yet");
+        //photoService.deletePhotoFeature(id, context);
     }
 
 

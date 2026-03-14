@@ -3,7 +3,6 @@ package com.AlexiSatea.backend.service;
 import com.AlexiSatea.backend.dto.AlbumPhotoItem;
 import com.AlexiSatea.backend.dto.AlbumResponse;
 import com.AlexiSatea.backend.dto.AlbumViewResponse;
-import com.AlexiSatea.backend.model.Enum.AlbumScope;
 import com.AlexiSatea.backend.model.Interface.AlbumViewRow;
 import com.AlexiSatea.backend.model.album.Album;
 import com.AlexiSatea.backend.model.album.AlbumPhoto;
@@ -32,7 +31,11 @@ public class AlbumService {
 
     /*********************   Admin   *********************/
     @Transactional
-    public AlbumResponse  createAlbum(String title, AlbumScope scope, String description) {
+    public AlbumResponse  createAlbum(String title,
+                                      //AlbumScope scope,
+                                      String description) {
+        throw new UnsupportedOperationException("Endpoint not implemented yet");
+        /*
         // Check
         if (title == null || title.isBlank()) throw new IllegalArgumentException("Title is required");
         if (scope == null) throw new IllegalArgumentException("Scope is required");
@@ -44,6 +47,7 @@ public class AlbumService {
                 .build();
         album = albumRepository.save(album);
         return AlbumResponse.from(album);
+        */
     }
 
     @Transactional
@@ -67,8 +71,11 @@ public class AlbumService {
     }
 
     @Transactional
-    public AlbumResponse  updateAlbum(UUID id, String title, AlbumScope scope, String description) {
-        Album album = albumRepository.findById(id)
+    public AlbumResponse  updateAlbum(UUID id, String title,
+                                      //AlbumScope scope,
+                                      String description) {
+        throw new UnsupportedOperationException("Endpoint not implemented yet");
+        /*Album album = albumRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Album not found: " + id));
 
         if (title != null && !title.isBlank()) album.setTitle(title.trim());
@@ -80,7 +87,7 @@ public class AlbumService {
                 album.getId(),
                 album.getTitle(),
                 album.getDescription()
-        );
+        );*/
     }
 
     @Transactional

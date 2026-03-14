@@ -78,7 +78,7 @@ public class PhotoService {
         }
     }
 
-
+/*
     @Transactional
     public Photo upload(MultipartFile file, Owner owner, UUID albumId, List<Theme> themes) {
 
@@ -224,7 +224,7 @@ public class PhotoService {
 
         return photo;
     }
-
+*/
 
     @Transactional(readOnly = true)
     public Photo getPublicPhotoForProfile(UUID id, String slug) {
@@ -290,25 +290,11 @@ public class PhotoService {
         return albumPhotoRepository.findAlbumIdsByPhotoId(photo.getId());
     }
 
-    /*
-    public Map<UUID, List<UUID>> albumIdsByPhotoIds(List<UUID> photoIds) {
-        if (photoIds == null || photoIds.isEmpty()) return Map.of();
-        var rows = albumPhotoRepository.findAlbumIdsByPhotoIds(photoIds);
-        // group albumIds by photoId
-        return rows.stream()
-                .collect(Collectors.groupingBy(
-                        AlbumPhotoRepository.PhotoAlbumIdRow::getPhotoId,
-                        Collectors.mapping(
-                                AlbumPhotoRepository.PhotoAlbumIdRow::getAlbumId,
-                                Collectors.collectingAndThen(Collectors.toList(), list -> list.stream().distinct().toList())
-                        )
-                ));
-    }
-*/
-
 
     /**********************************         PhotoFeature APIs         ******************************/
+   /*
     @Transactional
+
     public Integer AddUpdatePhotoFeature(UUID photoId, Integer index, FeatureContext context, Boolean enabled) {
         if (index != null && index < 0) {
             throw new IllegalArgumentException("index must be >= 0");
@@ -346,7 +332,7 @@ public class PhotoService {
                 ));
         photoFeatureRepository.delete(pf);
     }
-
+  */
 
 }
 
