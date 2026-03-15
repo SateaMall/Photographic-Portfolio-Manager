@@ -1,10 +1,14 @@
 package com.AlexiSatea.backend.controller;
 
+import com.AlexiSatea.backend.model.user.AppUser;
+import com.AlexiSatea.backend.model.user.UserRole;
+import com.AlexiSatea.backend.service.TestService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +25,11 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+    private final TestService testService;
+    @PostMapping("/signup")
+    public String signup() throws ServletException {
+        return testService.signUpTest();
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request,
@@ -52,9 +61,14 @@ public class AuthController {
         request.getSession().invalidate();
         return ResponseEntity.ok().build();
     }
+
+
+
     @GetMapping("/me")
     public Map<String, Object> me(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null
+                || !authentication.isAuthenticated()
+                || authentication instanceof AnonymousAuthenticationToken) {
             return Map.of("authenticated", false);
         }
 
