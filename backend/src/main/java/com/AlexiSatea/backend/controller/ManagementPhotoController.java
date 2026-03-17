@@ -17,7 +17,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/manage/photos")
-public class PhotoManagementController {
+public class ManagementPhotoController {
 
     private final PhotoService photoService;
 

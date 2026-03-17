@@ -14,7 +14,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/manage/albums")
-public class AlbumManagementController {
+public class ManagementAlbumController {
 
     private final AlbumService albumService;
 //Done - to test
