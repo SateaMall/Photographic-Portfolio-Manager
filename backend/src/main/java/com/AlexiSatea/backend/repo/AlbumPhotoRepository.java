@@ -5,6 +5,7 @@ import com.AlexiSatea.backend.model.album.AlbumPhotoId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -13,11 +14,9 @@ import java.util.UUID;
 
 public interface AlbumPhotoRepository extends JpaRepository<AlbumPhoto, AlbumPhotoId> {
 
-    @Query("select coalesce(max(ap.position), 0) + 1 from AlbumPhoto ap where ap.album.id = :albumId")
-    int findNextPosition(@Param("albumId") UUID albumId);
 
     boolean existsByAlbum_IdAndPhoto_Id(UUID albumId, UUID photoId);
-
+    int countByAlbum_Id(UUID albumId);
     boolean existsById(AlbumPhotoId id);
 
     @Query("""
@@ -29,6 +28,32 @@ public interface AlbumPhotoRepository extends JpaRepository<AlbumPhoto, AlbumPho
     """)
     Page<AlbumPhoto> findByAlbumIdWithPhoto(@Param("albumId") UUID albumId,
                                             Pageable pageable);
+
+    @Modifying
+    @Query("""
+    update AlbumPhoto ap
+    set ap.position = ap.position + 1
+    where ap.album.id = :albumId
+      and ap.position >= :position
+""")
+    int shiftPositionsRight(UUID albumId, int position);
+
+    @Modifying
+    @Query("""
+    update AlbumPhoto ap
+    set ap.position = ap.position -1
+    where ap.album.id = :albumId
+      and ap.position > :position
+""")
+    int shiftPositionsLeft(UUID albumId, int position);
+
+    @Query("""
+    select coalesce(max(ap.position) + 1, 0)
+    from AlbumPhoto ap
+    where ap.album.id = :albumId
+""")
+    int findNextPosition(UUID albumId);
+
     @Query("""
         select ap
         from AlbumPhoto ap

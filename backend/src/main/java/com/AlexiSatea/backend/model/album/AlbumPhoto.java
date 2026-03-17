@@ -13,7 +13,11 @@ import java.time.Instant;
 @Builder
 @Entity
 @Table(name = "album_photos",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"album_id", "photo_id"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"album_id", "photo_id"}),
+        indexes = {
+                @Index(name = "idx_album_photos_album_position", columnList = "album_id, position"),
+                @Index(name = "idx_album_photos_photo", columnList = "photo_id")
+        })
 public class AlbumPhoto {
     @EmbeddedId
     @Builder.Default

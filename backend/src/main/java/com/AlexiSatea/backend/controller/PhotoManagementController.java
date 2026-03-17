@@ -6,6 +6,8 @@ import com.AlexiSatea.backend.model.photo.Theme;
 import com.AlexiSatea.backend.service.PhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,8 +16,8 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/photos")
-public class AdminPhotoController {
+@RequestMapping("/api/manage/photos")
+public class PhotoManagementController {
 
     private final PhotoService photoService;
 
@@ -24,21 +26,26 @@ public class AdminPhotoController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public PhotoResponse upload(
             @RequestPart("file") MultipartFile file,
-            //@RequestParam Owner owner,
             @RequestParam(required = false) UUID albumId,
-            @RequestParam(required = false) List<Theme> themes
+            @RequestParam(required = false) List<Theme> themes,
+            @RequestParam String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Integer captureYear,
+            Authentication authentication
     ) {
-        throw new UnsupportedOperationException("Endpoint not implemented yet");
-        //Photo photo = photoService.upload(file, owner, albumId,themes);
-        //PhotoResponse.from(photo);
+        Photo photo = photoService.upload(
+                file, albumId, themes, title, description, country, city, captureYear, authentication
+        );
+        return PhotoResponse.from(photo);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
-        photoService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable UUID id, Authentication authentication) {
+        photoService.delete(id, authentication);
+        return ResponseEntity.noContent().build();
     }
-
-
 
     /**********************************         PhotoFeature APIs         ******************************/
     @PostMapping("/photo-Feature/{id}")

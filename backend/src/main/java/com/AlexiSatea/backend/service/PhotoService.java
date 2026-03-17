@@ -6,13 +6,12 @@ import com.AlexiSatea.backend.model.album.Album;
 import com.AlexiSatea.backend.model.album.AlbumPhoto;
 import com.AlexiSatea.backend.model.photo.Photo;
 import com.AlexiSatea.backend.model.photo.PhotoVariant;
-import com.AlexiSatea.backend.model.photo.feature.PhotoFeature;
 import com.AlexiSatea.backend.model.photo.Theme;
 import com.AlexiSatea.backend.model.photo.feature.PhotoFeatureType;
-import com.AlexiSatea.backend.repo.AlbumRepository;
-import com.AlexiSatea.backend.repo.PhotoFeatureRepository;
-import com.AlexiSatea.backend.repo.PhotoRepository;
-import com.AlexiSatea.backend.repo.AlbumPhotoRepository;
+import com.AlexiSatea.backend.model.user.AppUser;
+import com.AlexiSatea.backend.repo.*;
+import com.AlexiSatea.backend.security.AccessService;
+import com.AlexiSatea.backend.security.CurrentUserService;
 import com.AlexiSatea.backend.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
@@ -22,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +46,9 @@ public class PhotoService {
     private final AlbumPhotoRepository albumPhotoRepository;
     private final StorageService storageService;
     private final PhotoFeatureRepository photoFeatureRepository;
+    private final AppUserRepository appUserRepository;
+    private final CurrentUserService currentUserService;
+    private final AccessService accessService;
     private static final Logger logger = LoggerFactory.getLogger(PhotoService.class);
 
     // We can expand later (HEIC, etc.)
@@ -54,10 +58,10 @@ public class PhotoService {
             "image/webp"
     );
     private static final int MEDIUM_MAX_WIDTH = 1600;
-    private static final int THUMB_MAX_WIDTH  = 320;
+    private static final int THUMB_MAX_WIDTH  = 400;
 
     private static final float MEDIUM_QUALITY = 0.85f;
-    private static final float THUMB_QUALITY  = 0.70f;
+    private static final float THUMB_QUALITY  = 0.75f;
 
 
     /**********************************         Photo APIs         ******************************/
@@ -78,153 +82,177 @@ public class PhotoService {
         }
     }
 
-/*
     @Transactional
-    public Photo upload(MultipartFile file, Owner owner, UUID albumId, List<Theme> themes) {
-
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty");
-        }
-
-        String contentType = file.getContentType();
-        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
-            throw new IllegalArgumentException("Unsupported content type: " + contentType);
-        }
-
-        UUID photoID = UUID.randomUUID();
-
-        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-        String basePath = String.format(
-                "owner/%s/%04d/%02d/%s",
-                owner.name(),
-                now.getYear(),
-                now.getMonthValue(),
-                photoID
-        );
-
-        // ----------- Keys -----------
-        String originalKey = basePath + "_org";
-        String mediumKey   = basePath + "_md.jpg";
-        String thumbKey    = basePath + "_th.jpg";
-
-        // ----------- Read original once -----------
-        BufferedImage originalImage;
-        try (InputStream in = file.getInputStream()) {
-            originalImage = ImageIO.read(in);
-            if (originalImage == null) {
-                throw new IllegalArgumentException("File is not a readable image");
+    public Photo upload(
+            MultipartFile file,
+            UUID albumId,
+            List<Theme> themes,
+            String title,
+            String description,
+            String country,
+            String city,
+            Integer captureYear,
+            Authentication authentication
+    ) {
+        //auth
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        String originalKey = null;
+        String mediumKey = null;
+        String thumbKey = null;
+        try {
+            if (file == null || file.isEmpty()) {
+                throw new IllegalArgumentException("File is empty");
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read image", e);
-        }
 
-        int width  = originalImage.getWidth();
-        int height = originalImage.getHeight();
+            String contentType = file.getContentType();
+            if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
+                throw new IllegalArgumentException("Unsupported content type: " + contentType);
+            }
 
-        // ----------- Store original (as-is) -----------
-        try {
-            storageService.store(
-                    originalKey,
-                    file.getInputStream(),
-                    file.getSize(),
-                    contentType
+            UUID photoID = UUID.randomUUID();
+
+            ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+            String basePath = String.format(
+                    "users/%s/%04d/%02d/%s",
+                    currentUser.getId(),
+                    now.getYear(),
+                    now.getMonthValue(),
+                    photoID
             );
-        } catch (IOException e) {
-            throw new RuntimeException("Failed storing original image", e);
-        }
 
-        // ----------- Generate MEDIUM -----------
-        ByteArrayOutputStream mediumOut = new ByteArrayOutputStream();
-        try {
-            Thumbnails.of(originalImage)
-                    .size(MEDIUM_MAX_WIDTH, MEDIUM_MAX_WIDTH)
-                    .outputFormat("jpg")
-                    .outputQuality(MEDIUM_QUALITY)
-                    .toOutputStream(mediumOut);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed generating medium image", e);
-        }
+            // ----------- Keys -----------
+            originalKey = basePath + "_org";
+            mediumKey = basePath + "_md.jpg";
+            thumbKey = basePath + "_th.jpg";
 
-        byte[] mediumBytes = mediumOut.toByteArray();
+            // ----------- Read original once -----------
+            BufferedImage originalImage;
+            try (InputStream in = file.getInputStream()) {
+                originalImage = ImageIO.read(in);
+                if (originalImage == null) {
+                    throw new IllegalArgumentException("File is not a readable image");
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read image", e);
+            }
 
-        storageService.store(
-                mediumKey,
-                new ByteArrayInputStream(mediumBytes),
-                mediumBytes.length,
-                "image/jpeg"
-        );
+            int width = originalImage.getWidth();
+            int height = originalImage.getHeight();
 
-        // ----------- Generate THUMB -----------
-        ByteArrayOutputStream thumbOut = new ByteArrayOutputStream();
-        try {
-            Thumbnails.of(originalImage)
-                    .size(THUMB_MAX_WIDTH, THUMB_MAX_WIDTH)
-                    .outputFormat("jpg")
-                    .outputQuality(THUMB_QUALITY)
-                    .toOutputStream(thumbOut);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed generating thumbnail image", e);
-        }
+            // ----------- Store original (as-is) -----------
+            try {
+                storageService.store(
+                        originalKey,
+                        file.getInputStream(),
+                        file.getSize(),
+                        contentType
+                );
+            } catch (IOException e) {
+                throw new RuntimeException("Failed storing original image", e);
+            }
 
-        byte[] thumbBytes = thumbOut.toByteArray();
+            // ----------- Generate MEDIUM -----------
+            ByteArrayOutputStream mediumOut = new ByteArrayOutputStream();
+            try {
+                Thumbnails.of(originalImage)
+                        .size(MEDIUM_MAX_WIDTH, MEDIUM_MAX_WIDTH)
+                        .outputFormat("jpg")
+                        .outputQuality(MEDIUM_QUALITY)
+                        .toOutputStream(mediumOut);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed generating medium image", e);
+            }
 
-        storageService.store(
-                thumbKey,
-                new ByteArrayInputStream(thumbBytes),
-                thumbBytes.length,
-                "image/jpeg"
-        );
+            byte[] mediumBytes = mediumOut.toByteArray();
 
-        // ----------- Persist Photo -----------
-        Photo photo = Photo.builder()
-                .id(photoID)
-                .owner(owner)
-                .themes(themes == null ? List.of() : themes)
+            storageService.store(
+                    mediumKey,
+                    new ByteArrayInputStream(mediumBytes),
+                    mediumBytes.length,
+                    "image/jpeg"
+            );
 
-                // original
-                .originalKey(originalKey)
-                .originalFilename(safeName(file.getOriginalFilename()))
-                .originalContentType(contentType)
-                .originalSizeBytes(file.getSize())
+            // ----------- Generate THUMB -----------
+            ByteArrayOutputStream thumbOut = new ByteArrayOutputStream();
+            try {
+                Thumbnails.of(originalImage)
+                        .size(THUMB_MAX_WIDTH, THUMB_MAX_WIDTH)
+                        .outputFormat("jpg")
+                        .outputQuality(THUMB_QUALITY)
+                        .toOutputStream(thumbOut);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed generating thumbnail image", e);
+            }
 
-                // medium
-                .mediumKey(mediumKey)
-                .mediumContentType("image/jpeg")
-                .mediumSizeBytes(mediumBytes.length)
+            byte[] thumbBytes = thumbOut.toByteArray();
 
-                // thumb
-                .thumbKey(thumbKey)
-                .thumbContentType("image/jpeg")
-                .thumbSizeBytes(thumbBytes.length)
+            storageService.store(
+                    thumbKey,
+                    new ByteArrayInputStream(thumbBytes),
+                    thumbBytes.length,
+                    "image/jpeg"
+            );
 
-                // meta
-                .width(width)
-                .height(height)
-                .createdAt(Instant.now())
-                .build();
+            // ----------- Persist Photo -----------
+            Photo photo = Photo.builder()
+                    .id(photoID)
+                    .author(currentUser)
+                    .themes(themes == null ? new ArrayList<>() : new ArrayList<>(themes))
 
-        photo = photoRepository.save(photo);
+                    // original
+                    .originalKey(originalKey)
+                    .originalFilename(safeName(file.getOriginalFilename()))
+                    .originalContentType(contentType)
+                    .originalSizeBytes(file.getSize())
 
-        // ----------- Album link (unchanged) -----------
-        if (albumId != null) {
-            Album album = albumRepository.findById(albumId)
-                    .orElseThrow(() -> new IllegalArgumentException("Album not found: " + albumId));
+                    // medium
+                    .mediumKey(mediumKey)
+                    .mediumContentType("image/jpeg")
+                    .mediumSizeBytes(mediumBytes.length)
 
-            int position = albumPhotoRepository.findNextPosition(albumId);
+                    // thumb
+                    .thumbKey(thumbKey)
+                    .thumbContentType("image/jpeg")
+                    .thumbSizeBytes(thumbBytes.length)
 
-            AlbumPhoto relation = AlbumPhoto.builder()
-                    .photo(photo)
-                    .album(album)
-                    .position(position)
-                    .addedAt(Instant.now())
+                    // meta
+                    .title(title)
+                    .description(description)
+                    .country(country)
+                    .city(city)
+                    .captureYear(captureYear)
+
+                    .width(width)
+                    .height(height)
+                    .createdAt(Instant.now())
                     .build();
 
-            albumPhotoRepository.save(relation);
-        }
+            photo = photoRepository.save(photo);
 
-        return photo;
+            // ----------- Album link (unchanged) -----------
+            if (albumId != null) {
+                Album album = accessService.requireManageableAlbum(currentUser, albumId);
+                int position = albumPhotoRepository.findNextPosition(albumId);
+
+                AlbumPhoto relation = AlbumPhoto.builder()
+                        .photo(photo)
+                        .album(album)
+                        .position(position)
+                        .addedAt(Instant.now())
+                        .build();
+
+                albumPhotoRepository.save(relation);
+
+            }
+            return photo;
+        } catch (Exception e) {
+            deleteQuietly(originalKey);
+            deleteQuietly(mediumKey);
+            deleteQuietly(thumbKey);
+            throw e;
+        }
     }
-*/
+
 
     @Transactional(readOnly = true)
     public Photo getPublicPhotoForProfile(UUID id, String slug) {
@@ -259,9 +287,15 @@ public class PhotoService {
 
 
     @Transactional
-    public void delete(UUID id) {
-        Photo photo = get(id);
+    public void delete(UUID id,Authentication authentication) {
+        //auth
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
 
+        //delete
+        Photo photo = get(id);
+        if (!photo.getAuthor().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("You are not allowed to delete this photo");
+        }
         deleteQuietly(photo.getOriginalKey());
         deleteQuietly(photo.getMediumKey());
         deleteQuietly(photo.getThumbKey());
@@ -292,6 +326,7 @@ public class PhotoService {
 
 
     /**********************************         PhotoFeature APIs         ******************************/
+    //TODO
    /*
     @Transactional
 

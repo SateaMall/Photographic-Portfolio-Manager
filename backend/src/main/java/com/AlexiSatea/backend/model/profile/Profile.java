@@ -1,5 +1,6 @@
 package com.AlexiSatea.backend.model.profile;
 
+import com.AlexiSatea.backend.model.user.AppUser;
 import com.AlexiSatea.backend.model.user.ProfileUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.UuidGenerator;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter @Setter
@@ -99,5 +101,18 @@ public class Profile {
         if (publicEmail != null) publicEmail = publicEmail.trim().toLowerCase();
         if (linkedIn != null) linkedIn = linkedIn.trim();
         if (instagram != null) instagram = instagram.trim();
+    }
+
+    //Can trigger lazy loading, try using a query instead
+    public boolean isManagedBy(AppUser user) {
+        if (user == null || user.getId() == null) {
+            return false;
+        }
+
+        return memberships.stream()
+                .map(ProfileUser::getUser)
+                .filter(Objects::nonNull)
+                .map(AppUser::getId)
+                .anyMatch(user.getId()::equals);
     }
 }

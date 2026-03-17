@@ -87,11 +87,11 @@ public class Photo {
 
     // ---- Display metadata ----
 
-    @Column(nullable = false, length = 150)
+    @Column(nullable = true, length = 150)
     private String title;
 
 
-    @Column(nullable = true, length = 255)
+    @Column(nullable = true, length = 2000)
     private String description;
 
     @Column(nullable = true)
@@ -101,12 +101,15 @@ public class Photo {
     private String city;
 
     @Column(nullable = true)
-    @Min(1999)
+    @Min(1800)
     @Max(2100)
     private Integer captureYear;
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     @Column(nullable = false)
     private Integer width;   // original width
@@ -134,7 +137,9 @@ public class Photo {
 
     @PrePersist
     void onCreate() {
-        if (createdAt == null) createdAt = Instant.now();
+        Instant now = Instant.now();
+        if (createdAt == null) createdAt = now;
+        if (updatedAt == null) updatedAt = now;
         this.city = normalizeCity(this.city);
         this.country = normalizeCountryCode(this.country);
 
@@ -143,6 +148,7 @@ public class Photo {
 
     @PreUpdate
     private void OnModification() {
+        updatedAt = Instant.now();
         this.city = normalizeCity(this.city);
         this.country = normalizeCountryCode(this.country);
     }

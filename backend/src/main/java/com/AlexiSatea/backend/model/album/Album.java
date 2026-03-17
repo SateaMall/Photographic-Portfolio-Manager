@@ -16,7 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "albums", indexes = {
+@Table(name = "albums",
+        uniqueConstraints = {
+        @UniqueConstraint(name = "uk_album_profile_title", columnNames = {"owner_profile_id", "title"})
+        },
+        indexes = {
         @Index(name = "idx_albums_profile_public", columnList = "owner_profile_id, is_public"),
         @Index(name = "idx_albums_created_by", columnList = "created_by_user_id"),
         @Index(name = "idx_albums_created_at", columnList = "created_at")
