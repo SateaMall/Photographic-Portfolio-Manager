@@ -30,6 +30,7 @@ public class AccessService {
         }
     }
 
+
     public Photo requireManageablePhoto(UUID userId, UUID photoId) {
         Photo photo = photoRepository.findById(photoId) .orElseThrow(() -> new IllegalArgumentException("Photo not found: " + photoId));
         if (!photo.getAuthor().getId().equals(userId)) {

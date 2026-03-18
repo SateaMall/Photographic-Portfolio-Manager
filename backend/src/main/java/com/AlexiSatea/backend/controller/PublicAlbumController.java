@@ -42,4 +42,5 @@ public class PublicAlbumController {
         return albumService.getAlbums(profileSlug);
     }
 
+
 }

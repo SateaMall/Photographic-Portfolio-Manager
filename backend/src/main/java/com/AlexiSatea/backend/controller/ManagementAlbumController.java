@@ -29,14 +29,14 @@ public class ManagementAlbumController {
     }
 
     //Done - to test
-    @PutMapping("/{id}")
+    @PutMapping("/{albumId}")
     public AlbumResponse  updateAlbum(
-            @PathVariable UUID id,
+            @PathVariable UUID albumId,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
             Authentication authentication
     ) {
-        return albumService.updateAlbum(id, title, description, authentication);
+        return albumService.updateAlbum(albumId, title, description, authentication);
     }
 
     //Done - to test

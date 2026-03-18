@@ -1,5 +1,6 @@
 package com.AlexiSatea.backend.service;
 
+import com.AlexiSatea.backend.dto.AlbumResponse;
 import com.AlexiSatea.backend.dto.MainPhotoResponse;
 import com.AlexiSatea.backend.dto.PhotoResponse;
 import com.AlexiSatea.backend.model.album.Album;
@@ -83,7 +84,7 @@ public class PhotoService {
     }
 
     @Transactional
-    public Photo upload(
+    public Photo uploadPhoto(
             MultipartFile file,
             UUID albumId,
             List<Theme> themes,
@@ -252,7 +253,43 @@ public class PhotoService {
             throw e;
         }
     }
+    //Done - to test
+    @Transactional
+    public Photo updatePhoto (UUID photoId, List<Theme> themes, String title, String description,String country,String city,Integer captureYear, boolean clearCaptureYear,Authentication authentication){
+        if (photoId == null) {
+            throw new IllegalArgumentException("Photo id is required");
+        }
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Photo photo = accessService.requireManageablePhoto(photoId,currentUser.getId());
 
+        if (themes != null) {
+            photo.setThemes(new ArrayList<>(themes));
+        }
+
+        if (title != null) {
+            if (title.isBlank()) {
+                throw new IllegalArgumentException("Title cannot be blank");
+            }
+            photo.setTitle(title.trim());
+        }
+
+        if (description != null) {
+            photo.setDescription(description.isBlank() ? null : description.trim());
+        }
+        if (country != null) {
+            photo.setCountry(country.isBlank() ? null : country.trim());
+        }
+        if (city != null) {
+            photo.setCity(city.isBlank() ? null : city.trim());
+        }
+        if (clearCaptureYear) {
+            photo.setCaptureYear(null);
+        } else if (captureYear != null) {
+            photo.setCaptureYear(captureYear);
+        }
+        photo = photoRepository.save(photo);
+        return photo;
+    }
 
     @Transactional(readOnly = true)
     public Photo getPublicPhotoForProfile(UUID id, String slug) {

@@ -24,7 +24,7 @@ public class ManagementPhotoController {
 
     /**********************************         Photos APIs         ******************************/
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public PhotoResponse upload(
+    public PhotoResponse uploadPhoto(
             @RequestPart("file") MultipartFile file,
             @RequestParam(required = false) UUID albumId,
             @RequestParam(required = false) List<Theme> themes,
@@ -35,11 +35,31 @@ public class ManagementPhotoController {
             @RequestParam(required = false) Integer captureYear,
             Authentication authentication
     ) {
-        Photo photo = photoService.upload(
+        Photo photo = photoService.uploadPhoto(
                 file, albumId, themes, title, description, country, city, captureYear, authentication
         );
         return PhotoResponse.from(photo);
     }
+
+    //Done
+    @PutMapping("/{photoId}")
+    public PhotoResponse updatePhoto(
+            @PathVariable UUID photoId,
+            @RequestParam(required = false) List<Theme> themes,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Integer captureYear,
+            @RequestParam(defaultValue = "false") boolean clearCaptureYear,
+            Authentication authentication
+    ) {
+        Photo photo = photoService.updatePhoto(
+                photoId, themes, title, description, country, city, captureYear, clearCaptureYear, authentication
+        );
+        return PhotoResponse.from(photo);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id, Authentication authentication) {
