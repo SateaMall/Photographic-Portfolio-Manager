@@ -1,0 +1,22 @@
+$kind: http-request
+name: GET Album Items
+method: GET
+url: '{{baseUrl}}/api/public/albums/{{albumId}}/items'
+order: 3000
+queryParams:
+  - key: page
+    value: '0'
+  - key: size
+    value: '20'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status is 200', function () {
+        pm.response.to.have.status(200);
+      });
+      pm.test('Response has content array', function () {
+        var json = pm.response.json();
+        pm.expect(json).to.have.property('content');
+        pm.expect(json.content).to.be.an('array');
+      });

@@ -1,0 +1,18 @@
+$kind: http-request
+name: PUT Update Photo
+method: PUT
+url: '{{baseUrl}}/api/manage/photos/{{photoId}}'
+order: 2000
+queryParams:
+  - key: title
+    value: Updated Title
+  - key: description
+    value: ''
+    description: Optional description
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status is 200', function () {
+        pm.response.to.have.status(200);
+      });

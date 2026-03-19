@@ -1,0 +1,26 @@
+$kind: http-request
+name: POST Create Album
+method: POST
+url: '{{baseUrl}}/api/manage/albums'
+order: 1000
+queryParams:
+  - key: profileId
+    value: ''
+    description: Profile ID
+  - key: title
+    value: My Album
+    description: Album title
+  - key: description
+    value: ''
+    description: Optional description
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status is 200', function () {
+        pm.response.to.have.status(200);
+      });
+      pm.test('Response has id', function () {
+        var json = pm.response.json();
+        pm.expect(json).to.have.property('id');
+      });

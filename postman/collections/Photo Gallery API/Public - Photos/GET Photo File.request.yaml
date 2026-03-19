@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET Photo File
+method: GET
+url: '{{baseUrl}}/api/public/profiles/{{profileSlug}}/photos/{{photoId}}/file'
+order: 3000
+queryParams:
+  - key: variant
+    value: MEDIUM
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status is 200', function () {
+        pm.response.to.have.status(200);
+      });

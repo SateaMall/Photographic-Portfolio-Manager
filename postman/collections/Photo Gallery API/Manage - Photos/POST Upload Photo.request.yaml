@@ -1,0 +1,43 @@
+$kind: http-request
+name: POST Upload Photo
+method: POST
+url: '{{baseUrl}}/api/manage/photos'
+order: 1000
+body:
+  type: formdata
+  content:
+    - key: file
+      type: file
+      src: ''
+      description: Photo file to upload
+    - key: title
+      type: text
+      value: My Photo
+      description: Photo title
+    - key: description
+      type: text
+      value: ''
+      description: Optional description
+    - key: country
+      type: text
+      value: ''
+      description: Optional country
+    - key: city
+      type: text
+      value: ''
+      description: Optional city
+    - key: captureYear
+      type: text
+      value: ''
+      description: Optional capture year
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status is 200', function () {
+        pm.response.to.have.status(200);
+      });
+      pm.test('Response has id', function () {
+        var json = pm.response.json();
+        pm.expect(json).to.have.property('id');
+      });
