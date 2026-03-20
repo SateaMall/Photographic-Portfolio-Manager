@@ -95,77 +95,37 @@ public class PhotoService {
             Integer captureYear,
             Authentication authentication
     ) {
-        //auth
         AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+
         String originalKey = null;
         String mediumKey = null;
         String thumbKey = null;
+
         try {
-            if (file == null || file.isEmpty()) {
-                throw new IllegalArgumentException("File is empty");
-            }
+            validateUploadInputs(file, title, captureYear);
 
-            String contentType = file.getContentType();
-            if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
-                throw new IllegalArgumentException("Unsupported content type: " + contentType);
-            }
+            String originalFilename = safeName(file.getOriginalFilename());
+            String detectedContentType = file.getContentType();
+            String normalizedContentType = normalizeContentType(detectedContentType, originalFilename);
 
-            UUID photoID = UUID.randomUUID();
+            validateSupportedImageType(normalizedContentType, originalFilename);
 
-            ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-            String basePath = String.format(
-                    "users/%s/%04d/%02d/%s",
-                    currentUser.getId(),
-                    now.getYear(),
-                    now.getMonthValue(),
-                    photoID
-            );
+            UUID photoId = UUID.randomUUID();
+            Instant now = Instant.now();
 
-            // ----------- Keys -----------
+            String basePath = buildPhotoBasePath(currentUser.getId(), photoId);
             originalKey = basePath + "_org";
             mediumKey = basePath + "_md.jpg";
             thumbKey = basePath + "_th.jpg";
 
-            // ----------- Read original once -----------
-            BufferedImage originalImage;
-            try (InputStream in = file.getInputStream()) {
-                originalImage = ImageIO.read(in);
-                if (originalImage == null) {
-                    throw new IllegalArgumentException("File is not a readable image");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to read image", e);
-            }
+            BufferedImage originalImage = readImage(file);
 
             int width = originalImage.getWidth();
             int height = originalImage.getHeight();
 
-            // ----------- Store original (as-is) -----------
-            try {
-                storageService.store(
-                        originalKey,
-                        file.getInputStream(),
-                        file.getSize(),
-                        contentType
-                );
-            } catch (IOException e) {
-                throw new RuntimeException("Failed storing original image", e);
-            }
+            storeOriginal(file, originalKey, normalizedContentType);
 
-            // ----------- Generate MEDIUM -----------
-            ByteArrayOutputStream mediumOut = new ByteArrayOutputStream();
-            try {
-                Thumbnails.of(originalImage)
-                        .size(MEDIUM_MAX_WIDTH, MEDIUM_MAX_WIDTH)
-                        .outputFormat("jpg")
-                        .outputQuality(MEDIUM_QUALITY)
-                        .toOutputStream(mediumOut);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed generating medium image", e);
-            }
-
-            byte[] mediumBytes = mediumOut.toByteArray();
-
+            byte[] mediumBytes = generateJpegVariant(originalImage, MEDIUM_MAX_WIDTH, MEDIUM_QUALITY);
             storageService.store(
                     mediumKey,
                     new ByteArrayInputStream(mediumBytes),
@@ -173,20 +133,7 @@ public class PhotoService {
                     "image/jpeg"
             );
 
-            // ----------- Generate THUMB -----------
-            ByteArrayOutputStream thumbOut = new ByteArrayOutputStream();
-            try {
-                Thumbnails.of(originalImage)
-                        .size(THUMB_MAX_WIDTH, THUMB_MAX_WIDTH)
-                        .outputFormat("jpg")
-                        .outputQuality(THUMB_QUALITY)
-                        .toOutputStream(thumbOut);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed generating thumbnail image", e);
-            }
-
-            byte[] thumbBytes = thumbOut.toByteArray();
-
+            byte[] thumbBytes = generateJpegVariant(originalImage, THUMB_MAX_WIDTH, THUMB_QUALITY);
             storageService.store(
                     thumbKey,
                     new ByteArrayInputStream(thumbBytes),
@@ -194,43 +141,38 @@ public class PhotoService {
                     "image/jpeg"
             );
 
-            // ----------- Persist Photo -----------
             Photo photo = Photo.builder()
-                    .id(photoID)
+                    .id(photoId)
                     .author(currentUser)
                     .themes(themes == null ? new ArrayList<>() : new ArrayList<>(themes))
 
-                    // original
                     .originalKey(originalKey)
-                    .originalFilename(safeName(file.getOriginalFilename()))
-                    .originalContentType(contentType)
+                    .originalFilename(originalFilename)
+                    .originalContentType(normalizedContentType)
                     .originalSizeBytes(file.getSize())
 
-                    // medium
                     .mediumKey(mediumKey)
                     .mediumContentType("image/jpeg")
                     .mediumSizeBytes(mediumBytes.length)
 
-                    // thumb
                     .thumbKey(thumbKey)
                     .thumbContentType("image/jpeg")
                     .thumbSizeBytes(thumbBytes.length)
 
-                    // meta
-                    .title(title)
-                    .description(description)
+                    .title(title == null ? null : title.trim())
+                    .description(description == null ? null : description.trim())
                     .country(country)
                     .city(city)
                     .captureYear(captureYear)
 
                     .width(width)
                     .height(height)
-                    .createdAt(Instant.now())
+                    .createdAt(now)
+                    .updatedAt(now)
                     .build();
 
             photo = photoRepository.save(photo);
 
-            // ----------- Album link (unchanged) -----------
             if (albumId != null) {
                 Album album = accessService.requireManageableAlbum(currentUser, albumId);
                 int position = albumPhotoRepository.findNextPosition(albumId);
@@ -239,19 +181,117 @@ public class PhotoService {
                         .photo(photo)
                         .album(album)
                         .position(position)
-                        .addedAt(Instant.now())
+                        .addedAt(now)
                         .build();
 
                 albumPhotoRepository.save(relation);
-
             }
+
             return photo;
+
         } catch (Exception e) {
             deleteQuietly(originalKey);
             deleteQuietly(mediumKey);
             deleteQuietly(thumbKey);
             throw e;
         }
+    }
+    private void validateUploadInputs(MultipartFile file, String title, Integer captureYear) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("File is empty");
+        }
+
+        if (captureYear != null && (captureYear < 1800 || captureYear > 2100)) {
+            throw new IllegalArgumentException("Capture year must be between 1800 and 2100");
+        }
+    }
+    private void validateSupportedImageType(String contentType, String filename) {
+        boolean allowedMimeType = contentType != null && ALLOWED_CONTENT_TYPES.contains(contentType);
+        boolean allowedExtension = hasAllowedImageExtension(filename);
+
+        if (!allowedMimeType && !allowedExtension) {
+            throw new IllegalArgumentException(
+                    "Unsupported file type. Content type: " + contentType + ", filename: " + filename
+            );
+        }
+    }
+    private boolean hasAllowedImageExtension(String filename) {
+        if (filename == null || filename.isBlank()) {
+            return false;
+        }
+
+        String lower = filename.toLowerCase(Locale.ROOT);
+        return lower.endsWith(".jpg")
+                || lower.endsWith(".jpeg")
+                || lower.endsWith(".png")
+                || lower.endsWith(".webp");
+    }
+    private String normalizeContentType(String contentType, String filename) {
+        if (contentType != null && !contentType.isBlank() && !"application/octet-stream".equals(contentType)) {
+            return contentType;
+        }
+
+        if (filename == null || filename.isBlank()) {
+            return "application/octet-stream";
+        }
+
+        String lower = filename.toLowerCase(Locale.ROOT);
+        if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) {
+            return "image/jpeg";
+        }
+        if (lower.endsWith(".png")) {
+            return "image/png";
+        }
+        if (lower.endsWith(".webp")) {
+            return "image/webp";
+        }
+
+        return "application/octet-stream";
+    }
+    private BufferedImage readImage(MultipartFile file) {
+        try (InputStream in = file.getInputStream()) {
+            BufferedImage image = ImageIO.read(in);
+            if (image == null) {
+                throw new IllegalArgumentException("File is not a readable image");
+            }
+            return image;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read image", e);
+        }
+    }
+    private void storeOriginal(MultipartFile file, String originalKey, String contentType) {
+        try (InputStream in = file.getInputStream()) {
+            storageService.store(
+                    originalKey,
+                    in,
+                    file.getSize(),
+                    contentType
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Failed storing original image", e);
+        }
+    }
+    private byte[] generateJpegVariant(BufferedImage source, int maxWidth, double quality) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Thumbnails.of(source)
+                    .size(maxWidth, maxWidth)
+                    .outputFormat("jpg")
+                    .outputQuality(quality)
+                    .toOutputStream(out);
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed generating image variant", e);
+        }
+    }
+    private String buildPhotoBasePath(UUID userId, UUID photoId) {
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+        return String.format(
+                "users/%s/%04d/%02d/%s",
+                userId,
+                now.getYear(),
+                now.getMonthValue(),
+                photoId
+        );
     }
     //Done - to test
     @Transactional
@@ -347,8 +387,6 @@ public class PhotoService {
             // log.warn("Failed to delete file {}", key, e);
         }
     }
-
-
 
     private String safeName(String name) {
         if (name == null) return "unknown";

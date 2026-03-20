@@ -88,4 +88,22 @@ public class AppUser {
         if (firstName != null) firstName = firstName.trim();
         if (lastName != null) lastName = lastName.trim();
     }
+
+    public void addMembership(ProfileUser membership) {
+        if (membership == null) {
+            throw new IllegalArgumentException("Membership cannot be null");
+        }
+
+        memberships.add(membership);
+        membership.setUser(this);
+    }
+
+    public void removeMembership(ProfileUser membership) {
+        if (membership == null) {
+            return;
+        }
+
+        memberships.remove(membership);
+        membership.setUser(null);
+    }
 }
