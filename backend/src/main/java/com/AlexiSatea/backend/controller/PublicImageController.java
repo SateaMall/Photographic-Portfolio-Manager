@@ -22,8 +22,8 @@ public class PublicImageController {
     private final PhotoService photoService;
 
     /** front-end: fetchAlbumInfo */
-    @GetMapping("/profiles/{slug}/photos/{id}")
-    public PhotoResponse get(@PathVariable String slug, @PathVariable UUID id) {
+    @GetMapping("/profiles/{slug}/photos/{id}/summary")
+    public PhotoResponse getPhotoSummary(@PathVariable String slug, @PathVariable UUID id) {
         Photo p = photoService.getPublicPhotoForProfile(id, slug);
         return PhotoResponse.from(p);
     }

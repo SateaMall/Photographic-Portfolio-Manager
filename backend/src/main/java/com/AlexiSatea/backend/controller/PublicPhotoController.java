@@ -22,8 +22,8 @@ public class PublicPhotoController {
     final Logger logger = LoggerFactory.getLogger(PublicPhotoController.class);
 
     /** front-end : fetchMainPhoto **/
-    @GetMapping("/profiles/{slug}/photos/{photoId}")
-    public MainPhotoResponse photoDetails(@PathVariable String slug,
+    @GetMapping("/profiles/{slug}/photos/{photoId}/details")
+    public MainPhotoResponse getPhotoDetails(@PathVariable String slug,
                                           @PathVariable UUID photoId) {
         return photoService.getPhotoDetails(photoId, slug);
     }

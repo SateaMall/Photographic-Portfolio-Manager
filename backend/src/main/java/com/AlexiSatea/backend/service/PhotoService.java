@@ -300,7 +300,7 @@ public class PhotoService {
             throw new IllegalArgumentException("Photo id is required");
         }
         AppUser currentUser = currentUserService.requireCurrentUser(authentication);
-        Photo photo = accessService.requireManageablePhoto(photoId,currentUser.getId());
+        Photo photo = accessService.requireManageablePhoto(currentUser.getId(),photoId);
 
         if (themes != null) {
             photo.setThemes(new ArrayList<>(themes));

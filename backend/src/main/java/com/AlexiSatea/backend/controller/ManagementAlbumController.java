@@ -20,12 +20,12 @@ public class ManagementAlbumController {
 //Done - to test
     @PostMapping
     public AlbumResponse createAlbum(
-            @RequestParam UUID profileId,
+            @RequestParam String slug,
             @RequestParam String title,
             @RequestParam(required = false) String description,
             Authentication authentication
     ) {
-        return albumService.createAlbum(profileId, title, description, authentication);
+        return albumService.createAlbum(slug, title, description, authentication);
     }
 
     //Done - to test

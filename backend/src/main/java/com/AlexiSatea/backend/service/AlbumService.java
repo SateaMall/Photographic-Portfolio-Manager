@@ -38,12 +38,12 @@ public class AlbumService {
     //Done
     @Transactional
     public AlbumResponse createAlbum(
-            UUID profileId,
+            String slug,
             String title,
             String description,
             Authentication authentication
     )  {
-        if (profileId == null) {
+        if (slug == null) {
             throw new IllegalArgumentException("Profile id is required");
         }
 
@@ -51,7 +51,7 @@ public class AlbumService {
             throw new IllegalArgumentException("Title is required");
         }
         AppUser currentUser = currentUserService.requireCurrentUser(authentication);
-        Profile profile = profileRepository.findById(profileId)
+        Profile profile = profileRepository.findBySlug(slug)
                 .orElseThrow(() -> new IllegalArgumentException("Profile not found"));
 
         accessService.checkUserCanManageProfile(currentUser.getId(), profile.getId());
