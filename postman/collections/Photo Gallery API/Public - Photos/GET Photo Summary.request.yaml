@@ -1,0 +1,5 @@
+$kind: http-request
+name: GET Photo Summary
+url: ""
+method: GET
+order: 2079868310259278
