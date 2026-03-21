@@ -4,6 +4,7 @@ import com.AlexiSatea.backend.model.user.AppUser;
 import com.AlexiSatea.backend.model.user.ProfileUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -68,6 +69,13 @@ public class Profile {
     @Size(max = 300)
     @Column(name = "instagram", length = 300)
     private String instagram;
+
+    @Pattern(
+            regexp = "^\\+?[1-9]\\d{1,14}$",
+            message = "Phone number must be a valid international format"
+    )
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

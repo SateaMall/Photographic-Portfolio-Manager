@@ -1,7 +1,10 @@
 package com.AlexiSatea.backend.controller;
 
+import com.AlexiSatea.backend.dto.LoginRequest;
+import com.AlexiSatea.backend.dto.SignupRequest;
 import com.AlexiSatea.backend.model.user.AppUser;
 import com.AlexiSatea.backend.model.user.UserRole;
+import com.AlexiSatea.backend.service.AuthService;
 import com.AlexiSatea.backend.service.TestService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +29,9 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final TestService testService;
-    @PostMapping("/signup")
+    private final AuthService authService;
+
+    @PostMapping("/signupTest")
     public String signup() throws ServletException {
         return testService.signUpTest();
     }
@@ -35,23 +40,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request,
                                    HttpServletRequest httpRequest) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
-        );
-
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
-        SecurityContextHolder.setContext(context);
-
-        HttpSession session = httpRequest.getSession(true);
-        session.setAttribute(
-                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                context
-        );
-
+        authService.login(request, httpRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -62,22 +51,18 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-
-
     @GetMapping("/me")
     public Map<String, Object> me(Authentication authentication) {
-        if (authentication == null
-                || !authentication.isAuthenticated()
-                || authentication instanceof AnonymousAuthenticationToken) {
-            return Map.of("authenticated", false);
-        }
-
-        return Map.of(
-                "authenticated", true,
-                "email", authentication.getName(),
-                "roles", authentication.getAuthorities()
-        );
+        return authService.me(authentication);
     }
 
-    public record LoginRequest(String email, String password) {}
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
+        authService.signup(request);
+        return ResponseEntity.ok(Map.of("message", "User created successfully"));
+    }
+
+
+
+
 }
