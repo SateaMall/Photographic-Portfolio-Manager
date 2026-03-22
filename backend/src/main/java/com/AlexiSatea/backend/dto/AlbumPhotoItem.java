@@ -1,17 +1,17 @@
 package com.AlexiSatea.backend.dto;
 
-import com.AlexiSatea.backend.model.*;
-import com.AlexiSatea.backend.model.Enum.Owner;
+
+import com.AlexiSatea.backend.model.album.AlbumPhoto;
+import com.AlexiSatea.backend.model.photo.Photo;
 import org.springframework.data.domain.Page;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public record AlbumPhotoItem(
         UUID photoId,
-        Owner owner,
+        String ownerFName,
+        String ownerLName,
         String title,
         String description,
         String country,
@@ -21,11 +21,13 @@ public record AlbumPhotoItem(
         Integer width,
         Integer height
 ) {
+    //TODO
     public static AlbumPhotoItem from(AlbumPhoto ap) {
         Photo p = ap.getPhoto();
         return new AlbumPhotoItem(
                 p.getId(),
-                p.getOwner(),
+                "satea",
+                "mall",
                 p.getTitle(),
                 p.getDescription(),
                 p.getCountry(),
@@ -42,7 +44,8 @@ public record AlbumPhotoItem(
             Photo photo = ap.getPhoto();
             return new AlbumPhotoItem(
                     photo.getId(),
-                    photo.getOwner(),
+                    "satea",
+                    "mall",
                     photo.getTitle(),
                     photo.getDescription(),
                     photo.getCountry(),

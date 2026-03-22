@@ -1,20 +1,15 @@
 package com.AlexiSatea.backend.dto;
 
-
-import com.AlexiSatea.backend.model.Enum.Owner;
-import com.AlexiSatea.backend.model.Photo;
-import com.AlexiSatea.backend.model.Enum.Theme;
-import com.AlexiSatea.backend.model.PhotoFeature;
-import jakarta.persistence.Column;
+import com.AlexiSatea.backend.model.photo.Photo;
+import com.AlexiSatea.backend.model.photo.feature.PhotoFeature;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public record PhotoResponse(
         UUID id,
-        Owner owner,
+        String Fname,
+        String Lname,
         Instant createdAt,
         String title,
         String description,
@@ -23,11 +18,12 @@ public record PhotoResponse(
         Integer captureYear
 
 ) {
-
+//TODO correct
     public static PhotoResponse from(Photo p) {
         return new PhotoResponse(
                 p.getId(),
-                p.getOwner(),
+                "satea",
+                "mall",
                 p.getCreatedAt(),
                 p.getTitle(),
                 p.getDescription(),
@@ -41,7 +37,8 @@ public record PhotoResponse(
     public static PhotoResponse from(Photo p, PhotoFeature pf) {
         return new PhotoResponse(
                 p.getId(),
-                p.getOwner(),
+                "satea",
+                "mall",
                 p.getCreatedAt(),
                 p.getTitle(),
                 p.getDescription(),

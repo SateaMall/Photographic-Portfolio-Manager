@@ -1,0 +1,12 @@
+$kind: http-request
+name: DELETE Remove Photo from Album
+method: DELETE
+url: '{{baseUrl}}/api/manage/albums/{{albumId}}/photos/{{photoId}}'
+order: 4000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status is 204', function () {
+        pm.response.to.have.status(204);
+      });

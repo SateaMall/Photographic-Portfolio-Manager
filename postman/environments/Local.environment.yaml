@@ -1,0 +1,26 @@
+name: Local
+values:
+  - key: baseUrl
+    value: 'http://localhost:8080'
+    enabled: true
+    type: default
+  - key: profileSlug
+    value: ''
+    enabled: true
+    type: default
+  - key: albumId
+    value: ''
+    enabled: true
+    type: default
+  - key: photoId
+    value: ''
+    enabled: true
+    type: default
+  - key: email
+    value: 'sate3.mallouhi@gmail.com'
+    enabled: true
+    type: default
+  - key: password
+    value: '00000000'
+    enabled: true
+    type: default

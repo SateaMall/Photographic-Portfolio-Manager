@@ -2,43 +2,40 @@ package com.AlexiSatea.backend.controller;
 
 
 import com.AlexiSatea.backend.dto.PhotoResponse;
-import com.AlexiSatea.backend.model.Enum.Owner;
-import com.AlexiSatea.backend.model.Enum.PhotoVariant;
-import com.AlexiSatea.backend.model.Photo;
+import com.AlexiSatea.backend.model.photo.PhotoVariant;
+import com.AlexiSatea.backend.model.photo.Photo;
 import com.AlexiSatea.backend.service.PhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/photos")
+@RequestMapping("/api/public")
 public class PublicImageController {
 
     private final PhotoService photoService;
 
-    @GetMapping("/{id}")
-    public PhotoResponse get(@PathVariable UUID id) {
-        Photo p = photoService.get(id);
+    /** front-end: fetchAlbumInfo */
+    @GetMapping("/profiles/{slug}/photos/{id}/summary")
+    public PhotoResponse getPhotoSummary(@PathVariable String slug, @PathVariable UUID id) {
+        Photo p = photoService.getPublicPhotoForProfile(id, slug);
         return PhotoResponse.from(p);
     }
 
-
-    @GetMapping("/{id}/file")
+    /** front-end: photoFileUrl */
+    @GetMapping("/profiles/{slug}/photos/{id}/file")
     public ResponseEntity<Resource> file(
+            @PathVariable String slug,
             @PathVariable UUID id,
             @RequestParam(defaultValue = "MEDIUM") PhotoVariant variant
     ) {
-        Photo photo = photoService.get(id);
+        Photo photo = photoService.getPublicPhotoForProfile(id, slug); // validates access
         Resource resource = photoService.loadFile(id, variant);
 
         String contentType = switch (variant) {

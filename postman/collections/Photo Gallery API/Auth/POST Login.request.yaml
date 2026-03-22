@@ -1,0 +1,24 @@
+$kind: http-request
+name: POST Login
+method: POST
+url: "{{baseUrl}}/api/auth/login?email=sate3.mallouhi@gmail.com&password=00000000"
+queryParams:
+  email: sate3.mallouhi@gmail.com
+  password: "00000000"
+order: 1000
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{email}}",
+      "password": "{{password}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', function () {
+        pm.response.to.have.status(200);
+      });
+    language: text/javascript

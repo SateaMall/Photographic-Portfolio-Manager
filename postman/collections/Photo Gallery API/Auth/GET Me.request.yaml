@@ -1,0 +1,16 @@
+$kind: http-request
+name: GET Me
+method: GET
+url: '{{baseUrl}}/api/auth/me'
+order: 3000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status is 200', function () {
+        pm.response.to.have.status(200);
+      });
+      pm.test('Response has authenticated field', function () {
+        var json = pm.response.json();
+        pm.expect(json).to.have.property('authenticated');
+      });

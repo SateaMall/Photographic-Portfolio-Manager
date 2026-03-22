@@ -1,8 +1,7 @@
 package com.AlexiSatea.backend.repo;
 
 
-import com.AlexiSatea.backend.model.Album;
-import com.AlexiSatea.backend.model.Enum.AlbumScope;
+import com.AlexiSatea.backend.model.album.Album;
 import com.AlexiSatea.backend.model.Interface.AlbumViewRow;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,13 +22,14 @@ public interface AlbumRepository extends JpaRepository<Album, UUID> {
         count(*) over (partition by ap.album_id) as numberOfPhotos
     from albums a
     inner join album_photos ap on ap.album_id = a.id
-    where a.scope =  :#{#scope.name()}
+    join profiles p on p.id = a.owner_profile_id AND p.slug = :slug
+    where a.is_public = true
     order by
         ap.album_id,
         ap.position asc nulls last,
         ap.added_at asc
     """, nativeQuery = true)
-    List<AlbumViewRow> findAlbumViews(AlbumScope scope);
+    List<AlbumViewRow> findAlbumViews(String slug);
 
     @Query(value = """
 select distinct on (ap.album_id)

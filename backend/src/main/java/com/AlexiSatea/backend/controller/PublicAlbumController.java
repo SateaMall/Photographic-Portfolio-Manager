@@ -3,7 +3,6 @@ package com.AlexiSatea.backend.controller;
 import com.AlexiSatea.backend.dto.AlbumPhotoItem;
 import com.AlexiSatea.backend.dto.AlbumResponse;
 import com.AlexiSatea.backend.dto.AlbumViewResponse;
-import com.AlexiSatea.backend.model.Enum.AlbumScope;
 import com.AlexiSatea.backend.service.AlbumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,16 +14,19 @@ import java.util.List;
 import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/public")
 public class PublicAlbumController {
     private final AlbumService albumService;
 
-    @GetMapping("/Photobrowser/albumDetails/{albumId}")
+    /** front-end: fetchAlbumInfo **/
+    @GetMapping("/albums/{albumId}")
     public AlbumViewResponse albumDetails(@PathVariable UUID albumId) {
         return albumService.getAlbumDetails(albumId);
     }
 
-    @GetMapping("/Photobrowser/albumItems/{albumId}")
+    /** front-end: fetchAlbumItems **/
+    /** front-end: fetchAlbumItemsAsPhotos **/
+    @GetMapping("/albums/{albumId}/items")
     public Page<AlbumPhotoItem> albumItemsList (
             @PathVariable UUID albumId,
             @RequestParam(defaultValue = "0") int page,
@@ -34,9 +36,11 @@ public class PublicAlbumController {
         return albumService.getAlbumItems(albumId,pageable);
     }
 
-    @GetMapping("/homepage/albums/{scope}")
-    public List<AlbumViewResponse> getAlbums(@PathVariable AlbumScope scope) {
-        return albumService.getAlbums(scope);
+    /** front-end: fetchAlbums **/
+    @GetMapping("/profiles/{profileSlug}/albums")
+    public List<AlbumViewResponse> getAlbums(@PathVariable String profileSlug) {
+        return albumService.getAlbums(profileSlug);
     }
+
 
 }

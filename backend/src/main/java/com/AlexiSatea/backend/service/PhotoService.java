@@ -1,14 +1,18 @@
 package com.AlexiSatea.backend.service;
 
-
+import com.AlexiSatea.backend.dto.AlbumResponse;
 import com.AlexiSatea.backend.dto.MainPhotoResponse;
 import com.AlexiSatea.backend.dto.PhotoResponse;
-import com.AlexiSatea.backend.model.*;
-import com.AlexiSatea.backend.model.Enum.*;
-import com.AlexiSatea.backend.repo.AlbumRepository;
-import com.AlexiSatea.backend.repo.PhotoFeatureRepository;
-import com.AlexiSatea.backend.repo.PhotoRepository;
-import com.AlexiSatea.backend.repo.AlbumPhotoRepository;
+import com.AlexiSatea.backend.model.album.Album;
+import com.AlexiSatea.backend.model.album.AlbumPhoto;
+import com.AlexiSatea.backend.model.photo.Photo;
+import com.AlexiSatea.backend.model.photo.PhotoVariant;
+import com.AlexiSatea.backend.model.photo.Theme;
+import com.AlexiSatea.backend.model.photo.feature.PhotoFeatureType;
+import com.AlexiSatea.backend.model.user.AppUser;
+import com.AlexiSatea.backend.repo.*;
+import com.AlexiSatea.backend.security.AccessService;
+import com.AlexiSatea.backend.security.CurrentUserService;
 import com.AlexiSatea.backend.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
@@ -17,9 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,9 +37,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.AlexiSatea.backend.model.Enum.PhotoVariant.MEDIUM;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +47,9 @@ public class PhotoService {
     private final AlbumPhotoRepository albumPhotoRepository;
     private final StorageService storageService;
     private final PhotoFeatureRepository photoFeatureRepository;
+    private final AppUserRepository appUserRepository;
+    private final CurrentUserService currentUserService;
+    private final AccessService accessService;
     private static final Logger logger = LoggerFactory.getLogger(PhotoService.class);
 
     // We can expand later (HEIC, etc.)
@@ -55,183 +59,282 @@ public class PhotoService {
             "image/webp"
     );
     private static final int MEDIUM_MAX_WIDTH = 1600;
-    private static final int THUMB_MAX_WIDTH  = 320;
+    private static final int THUMB_MAX_WIDTH  = 400;
 
     private static final float MEDIUM_QUALITY = 0.85f;
-    private static final float THUMB_QUALITY  = 0.70f;
+    private static final float THUMB_QUALITY  = 0.75f;
 
 
     /**********************************         Photo APIs         ******************************/
 
 
     @Transactional(readOnly = true)
-    public Page <PhotoResponse> getPhotos (Owner owner, FeatureContext context,UUID photoId, Pageable pageable){
-        if(photoId == null){
-        return photoRepository.findFeatured(context, owner, pageable)
+    public Page <PhotoResponse> getPhotos (String slug,UUID photoId, Pageable pageable){
+        if (photoId == null){
+            // This is to show photos grid for homepage
+        return photoRepository.findFeaturedForProfile(slug, PhotoFeatureType.HOMEPAGE_GRID, pageable)
                 .map(r-> PhotoResponse.from(r.getPhoto(),r.getPhotoFeature()));}
         else{
-            Photo p= photoRepository.findById(photoId).orElseThrow(() -> new IllegalArgumentException(
-                    "Photo not found for photoId=" + photoId ));
+            // This is to show photo suggestions
+            Photo p= getPublicPhotoForProfile(photoId, slug);
             List<Theme> themes = photoRepository.findThemesByPhotoId(photoId);
-            logger.info(themes.toString());
-            return  photoRepository.findFeaturedPriorityThemes(context, owner,photoId,themes,p.getCountry(),p.getCity(), pageable)
+            return  photoRepository.findFeaturedPriorityThemes(slug,PhotoFeatureType.SUGGESTIONS,photoId,themes, !(themes.isEmpty()), p.getCountry(),p.getCity(), pageable)
                     .map(r-> PhotoResponse.from(r.getPhoto(),r.getPhotoFeature()));
         }
     }
 
-
     @Transactional
-    public Photo upload(MultipartFile file, Owner owner, UUID albumId, List<Theme> themes) {
+    public Photo uploadPhoto(
+            MultipartFile file,
+            UUID albumId,
+            List<Theme> themes,
+            String title,
+            String description,
+            String country,
+            String city,
+            Integer captureYear,
+            Authentication authentication
+    ) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
 
+        String originalKey = null;
+        String mediumKey = null;
+        String thumbKey = null;
+
+        try {
+            validateUploadInputs(file, title, captureYear);
+
+            String originalFilename = safeName(file.getOriginalFilename());
+            String detectedContentType = file.getContentType();
+            String normalizedContentType = normalizeContentType(detectedContentType, originalFilename);
+
+            validateSupportedImageType(normalizedContentType, originalFilename);
+
+            UUID photoId = UUID.randomUUID();
+            Instant now = Instant.now();
+
+            String basePath = buildPhotoBasePath(currentUser.getId(), photoId);
+            originalKey = basePath + "_org";
+            mediumKey = basePath + "_md.jpg";
+            thumbKey = basePath + "_th.jpg";
+
+            BufferedImage originalImage = readImage(file);
+
+            int width = originalImage.getWidth();
+            int height = originalImage.getHeight();
+
+            storeOriginal(file, originalKey, normalizedContentType);
+
+            byte[] mediumBytes = generateJpegVariant(originalImage, MEDIUM_MAX_WIDTH, MEDIUM_QUALITY);
+            storageService.store(
+                    mediumKey,
+                    new ByteArrayInputStream(mediumBytes),
+                    mediumBytes.length,
+                    "image/jpeg"
+            );
+
+            byte[] thumbBytes = generateJpegVariant(originalImage, THUMB_MAX_WIDTH, THUMB_QUALITY);
+            storageService.store(
+                    thumbKey,
+                    new ByteArrayInputStream(thumbBytes),
+                    thumbBytes.length,
+                    "image/jpeg"
+            );
+
+            Photo photo = Photo.builder()
+                    .id(photoId)
+                    .author(currentUser)
+                    .themes(themes == null ? new ArrayList<>() : new ArrayList<>(themes))
+
+                    .originalKey(originalKey)
+                    .originalFilename(originalFilename)
+                    .originalContentType(normalizedContentType)
+                    .originalSizeBytes(file.getSize())
+
+                    .mediumKey(mediumKey)
+                    .mediumContentType("image/jpeg")
+                    .mediumSizeBytes(mediumBytes.length)
+
+                    .thumbKey(thumbKey)
+                    .thumbContentType("image/jpeg")
+                    .thumbSizeBytes(thumbBytes.length)
+
+                    .title(title == null ? null : title.trim())
+                    .description(description == null ? null : description.trim())
+                    .country(country)
+                    .city(city)
+                    .captureYear(captureYear)
+
+                    .width(width)
+                    .height(height)
+                    .createdAt(now)
+                    .updatedAt(now)
+                    .build();
+
+            photo = photoRepository.save(photo);
+
+            if (albumId != null) {
+                Album album = accessService.requireManageableAlbum(currentUser, albumId);
+                int position = albumPhotoRepository.findNextPosition(albumId);
+
+                AlbumPhoto relation = AlbumPhoto.builder()
+                        .photo(photo)
+                        .album(album)
+                        .position(position)
+                        .addedAt(now)
+                        .build();
+
+                albumPhotoRepository.save(relation);
+            }
+
+            return photo;
+
+        } catch (Exception e) {
+            deleteQuietly(originalKey);
+            deleteQuietly(mediumKey);
+            deleteQuietly(thumbKey);
+            throw e;
+        }
+    }
+    private void validateUploadInputs(MultipartFile file, String title, Integer captureYear) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File is empty");
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
-            throw new IllegalArgumentException("Unsupported content type: " + contentType);
+        if (captureYear != null && (captureYear < 1800 || captureYear > 2100)) {
+            throw new IllegalArgumentException("Capture year must be between 1800 and 2100");
+        }
+    }
+    private void validateSupportedImageType(String contentType, String filename) {
+        boolean allowedMimeType = contentType != null && ALLOWED_CONTENT_TYPES.contains(contentType);
+        boolean allowedExtension = hasAllowedImageExtension(filename);
+
+        if (!allowedMimeType && !allowedExtension) {
+            throw new IllegalArgumentException(
+                    "Unsupported file type. Content type: " + contentType + ", filename: " + filename
+            );
+        }
+    }
+    private boolean hasAllowedImageExtension(String filename) {
+        if (filename == null || filename.isBlank()) {
+            return false;
         }
 
-        UUID photoID = UUID.randomUUID();
+        String lower = filename.toLowerCase(Locale.ROOT);
+        return lower.endsWith(".jpg")
+                || lower.endsWith(".jpeg")
+                || lower.endsWith(".png")
+                || lower.endsWith(".webp");
+    }
+    private String normalizeContentType(String contentType, String filename) {
+        if (contentType != null && !contentType.isBlank() && !"application/octet-stream".equals(contentType)) {
+            return contentType;
+        }
 
-        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-        String basePath = String.format(
-                "owner/%s/%04d/%02d/%s",
-                owner.name(),
-                now.getYear(),
-                now.getMonthValue(),
-                photoID
-        );
+        if (filename == null || filename.isBlank()) {
+            return "application/octet-stream";
+        }
 
-        // ----------- Keys -----------
-        String originalKey = basePath + "_org";
-        String mediumKey   = basePath + "_md.jpg";
-        String thumbKey    = basePath + "_th.jpg";
+        String lower = filename.toLowerCase(Locale.ROOT);
+        if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) {
+            return "image/jpeg";
+        }
+        if (lower.endsWith(".png")) {
+            return "image/png";
+        }
+        if (lower.endsWith(".webp")) {
+            return "image/webp";
+        }
 
-        // ----------- Read original once -----------
-        BufferedImage originalImage;
+        return "application/octet-stream";
+    }
+    private BufferedImage readImage(MultipartFile file) {
         try (InputStream in = file.getInputStream()) {
-            originalImage = ImageIO.read(in);
-            if (originalImage == null) {
+            BufferedImage image = ImageIO.read(in);
+            if (image == null) {
                 throw new IllegalArgumentException("File is not a readable image");
             }
+            return image;
         } catch (IOException e) {
             throw new RuntimeException("Failed to read image", e);
         }
-
-        int width  = originalImage.getWidth();
-        int height = originalImage.getHeight();
-
-        // ----------- Store original (as-is) -----------
-        try {
+    }
+    private void storeOriginal(MultipartFile file, String originalKey, String contentType) {
+        try (InputStream in = file.getInputStream()) {
             storageService.store(
                     originalKey,
-                    file.getInputStream(),
+                    in,
                     file.getSize(),
                     contentType
             );
         } catch (IOException e) {
             throw new RuntimeException("Failed storing original image", e);
         }
-
-        // ----------- Generate MEDIUM -----------
-        ByteArrayOutputStream mediumOut = new ByteArrayOutputStream();
-        try {
-            Thumbnails.of(originalImage)
-                    .size(MEDIUM_MAX_WIDTH, MEDIUM_MAX_WIDTH)
+    }
+    private byte[] generateJpegVariant(BufferedImage source, int maxWidth, double quality) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Thumbnails.of(source)
+                    .size(maxWidth, maxWidth)
                     .outputFormat("jpg")
-                    .outputQuality(MEDIUM_QUALITY)
-                    .toOutputStream(mediumOut);
+                    .outputQuality(quality)
+                    .toOutputStream(out);
+            return out.toByteArray();
         } catch (IOException e) {
-            throw new RuntimeException("Failed generating medium image", e);
+            throw new RuntimeException("Failed generating image variant", e);
+        }
+    }
+    private String buildPhotoBasePath(UUID userId, UUID photoId) {
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+        return String.format(
+                "users/%s/%04d/%02d/%s",
+                userId,
+                now.getYear(),
+                now.getMonthValue(),
+                photoId
+        );
+    }
+    //Done - to test
+    @Transactional
+    public Photo updatePhoto (UUID photoId, List<Theme> themes, String title, String description,String country,String city,Integer captureYear, boolean clearCaptureYear,Authentication authentication){
+        if (photoId == null) {
+            throw new IllegalArgumentException("Photo id is required");
+        }
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Photo photo = accessService.requireManageablePhoto(currentUser.getId(),photoId);
+
+        if (themes != null) {
+            photo.setThemes(new ArrayList<>(themes));
         }
 
-        byte[] mediumBytes = mediumOut.toByteArray();
-
-        storageService.store(
-                mediumKey,
-                new ByteArrayInputStream(mediumBytes),
-                mediumBytes.length,
-                "image/jpeg"
-        );
-
-        // ----------- Generate THUMB -----------
-        ByteArrayOutputStream thumbOut = new ByteArrayOutputStream();
-        try {
-            Thumbnails.of(originalImage)
-                    .size(THUMB_MAX_WIDTH, THUMB_MAX_WIDTH)
-                    .outputFormat("jpg")
-                    .outputQuality(THUMB_QUALITY)
-                    .toOutputStream(thumbOut);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed generating thumbnail image", e);
+        if (title != null) {
+            if (title.isBlank()) {
+                throw new IllegalArgumentException("Title cannot be blank");
+            }
+            photo.setTitle(title.trim());
         }
 
-        byte[] thumbBytes = thumbOut.toByteArray();
-
-        storageService.store(
-                thumbKey,
-                new ByteArrayInputStream(thumbBytes),
-                thumbBytes.length,
-                "image/jpeg"
-        );
-
-        // ----------- Persist Photo -----------
-        Photo photo = Photo.builder()
-                .id(photoID)
-                .owner(owner)
-                .themes(themes == null ? List.of() : themes)
-
-                // original
-                .originalKey(originalKey)
-                .originalFilename(safeName(file.getOriginalFilename()))
-                .originalContentType(contentType)
-                .originalSizeBytes(file.getSize())
-
-                // medium
-                .mediumKey(mediumKey)
-                .mediumContentType("image/jpeg")
-                .mediumSizeBytes(mediumBytes.length)
-
-                // thumb
-                .thumbKey(thumbKey)
-                .thumbContentType("image/jpeg")
-                .thumbSizeBytes(thumbBytes.length)
-
-                // meta
-                .width(width)
-                .height(height)
-                .createdAt(Instant.now())
-                .build();
-
+        if (description != null) {
+            photo.setDescription(description.isBlank() ? null : description.trim());
+        }
+        if (country != null) {
+            photo.setCountry(country.isBlank() ? null : country.trim());
+        }
+        if (city != null) {
+            photo.setCity(city.isBlank() ? null : city.trim());
+        }
+        if (clearCaptureYear) {
+            photo.setCaptureYear(null);
+        } else if (captureYear != null) {
+            photo.setCaptureYear(captureYear);
+        }
         photo = photoRepository.save(photo);
-
-        // ----------- Album link (unchanged) -----------
-        if (albumId != null) {
-            Album album = albumRepository.findById(albumId)
-                    .orElseThrow(() -> new IllegalArgumentException("Album not found: " + albumId));
-
-            int position = albumPhotoRepository.findNextPosition(albumId);
-
-            AlbumPhoto relation = AlbumPhoto.builder()
-                    .photo(photo)
-                    .album(album)
-                    .position(position)
-                    .addedAt(Instant.now())
-                    .build();
-
-            albumPhotoRepository.save(relation);
-        }
-
         return photo;
     }
 
-
-
-
     @Transactional(readOnly = true)
-    public Page<Photo> listByOwner(Owner owner, Pageable pageable) {
-        return photoRepository.findByOwnerOrderByCreatedAtDesc(owner, pageable);
+    public Photo getPublicPhotoForProfile(UUID id, String slug) {
+        return photoRepository.findPublicPhotoForProfile(id,slug)
+                .orElseThrow(() -> new IllegalArgumentException("Photo not found: " + id));
     }
 
     @Transactional(readOnly = true)
@@ -241,9 +344,9 @@ public class PhotoService {
     }
 
     @Transactional(readOnly = true)
-    public MainPhotoResponse getPhoto(UUID id){
-        Optional<Photo> photo= photoRepository.findById(id);
-        return  MainPhotoResponse.from(photo.orElseThrow(() -> new IllegalArgumentException("Photo not found: " + id)));
+    public MainPhotoResponse getPhotoDetails(UUID id, String slug){
+        Photo photo = getPublicPhotoForProfile(id, slug);
+        return  MainPhotoResponse.from(photo);
     }
 
     @Transactional(readOnly = true)
@@ -261,9 +364,15 @@ public class PhotoService {
 
 
     @Transactional
-    public void delete(UUID id) {
-        Photo photo = get(id);
+    public void delete(UUID id,Authentication authentication) {
+        //auth
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
 
+        //delete
+        Photo photo = get(id);
+        if (!photo.getAuthor().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("You are not allowed to delete this photo");
+        }
         deleteQuietly(photo.getOriginalKey());
         deleteQuietly(photo.getMediumKey());
         deleteQuietly(photo.getThumbKey());
@@ -279,8 +388,6 @@ public class PhotoService {
         }
     }
 
-
-
     private String safeName(String name) {
         if (name == null) return "unknown";
         // remove path parts, keep it simple
@@ -292,25 +399,12 @@ public class PhotoService {
         return albumPhotoRepository.findAlbumIdsByPhotoId(photo.getId());
     }
 
-    /*
-    public Map<UUID, List<UUID>> albumIdsByPhotoIds(List<UUID> photoIds) {
-        if (photoIds == null || photoIds.isEmpty()) return Map.of();
-        var rows = albumPhotoRepository.findAlbumIdsByPhotoIds(photoIds);
-        // group albumIds by photoId
-        return rows.stream()
-                .collect(Collectors.groupingBy(
-                        AlbumPhotoRepository.PhotoAlbumIdRow::getPhotoId,
-                        Collectors.mapping(
-                                AlbumPhotoRepository.PhotoAlbumIdRow::getAlbumId,
-                                Collectors.collectingAndThen(Collectors.toList(), list -> list.stream().distinct().toList())
-                        )
-                ));
-    }
-*/
-
 
     /**********************************         PhotoFeature APIs         ******************************/
+    //TODO
+   /*
     @Transactional
+
     public Integer AddUpdatePhotoFeature(UUID photoId, Integer index, FeatureContext context, Boolean enabled) {
         if (index != null && index < 0) {
             throw new IllegalArgumentException("index must be >= 0");
@@ -348,12 +442,8 @@ public class PhotoService {
                 ));
         photoFeatureRepository.delete(pf);
     }
+  */
 
-
-    public List<PhotoResponse> getPhotoSuggestions(UUID photoId, AlbumScope scope) {
-        // Si scope == shared => pas de filtre owner, else owner c'est le filtre
-        return new ArrayList<>(); //TODO complete suggestions with themes
-    }
 }
 
 

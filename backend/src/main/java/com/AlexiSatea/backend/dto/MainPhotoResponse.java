@@ -1,8 +1,7 @@
 package com.AlexiSatea.backend.dto;
 
-import com.AlexiSatea.backend.model.Enum.Owner;
-import com.AlexiSatea.backend.model.Enum.Theme;
-import com.AlexiSatea.backend.model.Photo;
+import com.AlexiSatea.backend.model.photo.Theme;
+import com.AlexiSatea.backend.model.photo.Photo;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.UUID;
 
 public record MainPhotoResponse(
             UUID id,
-            Owner owner,
+            String name,
             Instant createdAt,
             String title,
             String description,
@@ -21,13 +20,13 @@ public record MainPhotoResponse(
             List<Theme> themes,
             Integer width,
             Integer height
-
+//TODO Correct
     ) {
         //For single photo (photo's page)
         public static MainPhotoResponse from(Photo p) {
             return new MainPhotoResponse(
                     p.getId(),
-                    p.getOwner(),
+                    "Satea",
                     p.getCreatedAt(),
                     p.getTitle(),
                     p.getDescription(),
