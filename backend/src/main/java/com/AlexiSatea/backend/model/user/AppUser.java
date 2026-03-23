@@ -49,7 +49,7 @@ public class AppUser {
 
     @Builder.Default
     @Column(nullable = false)
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     @Column(name = "email_verified_at")
     private Instant emailVerifiedAt;

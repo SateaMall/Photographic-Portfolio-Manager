@@ -30,113 +30,70 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final AuthenticationManager authenticationManager;
     private final AppUserRepository appUserRepository;
     private final ProfileRepository profileRepository;
     private final ProfileUserRepository profileUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SlugService slugService;
+    private final EmailVerificationService emailVerificationService;
+    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public void signup(SignupRequest request) {
-        if (request == null) {
-            throw new IllegalArgumentException("Request is required");
-        }
-
-        String email = normalizeEmail(request.email());
-        String password = request.password();
-        String firstName = trimToNull(request.firstName());
-        String lastName = trimToNull(request.lastName());
-
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email is required");
-        }
-
-        if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Password is required");
-        }
-
-        if (password.length() < 8) {
-            throw new IllegalArgumentException("Password must contain at least 8 characters");
-        }
+        String email = normalize(request.email());
 
         if (appUserRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email is already used");
+            throw new IllegalArgumentException("Email already exists");
         }
+
+        String firstName = clean(request.firstName());
+        String lastName = clean(request.lastName());
 
         AppUser user = AppUser.builder()
                 .email(email)
-                .passwordHash(passwordEncoder.encode(password))
+                .passwordHash(passwordEncoder.encode(request.password()))
                 .firstName(firstName)
                 .lastName(lastName)
-                .enabled(true)
-                .role(UserRole.PHOTOGRAPH)
+                .enabled(false)
+                .role(UserRole.PHOTOGRAPH) // replace if your enum is named differently
                 .build();
 
         appUserRepository.save(user);
 
         Profile profile = Profile.builder()
-                .slug(generateUniqueSlug(firstName, lastName, email))
-                .displayName(buildDisplayName(firstName, lastName, email))
+                .slug(slugService.generateUniqueSlug(firstName, lastName))
+                .displayName(buildDisplayName(firstName, lastName))
                 .isPublic(true)
                 .build();
 
         profileRepository.save(profile);
 
         ProfileUser membership = ProfileUser.builder()
-                .user(user)
                 .profile(profile)
-                .role(ProfileRole.OWNER)
+                .user(user)
+                .role(ProfileRole.OWNER) // replace if your enum uses another name
                 .build();
+
+        membership.getId().setProfileId(profile.getId());
+        membership.getId().setUserId(user.getId());
 
         profileUserRepository.save(membership);
 
-        user.addMembership(membership);
-        profile.getMemberships().add(membership);
+        emailVerificationService.createAndSendVerificationCode(user);
     }
 
-    private String normalizeEmail(String email) {
+    private String normalize(String email) {
         return email == null ? null : email.trim().toLowerCase();
     }
 
-    private String trimToNull(String value) {
-        if (value == null) return null;
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
+    private String clean(String value) {
+        return value == null ? null : value.trim();
     }
 
-    private String buildDisplayName(String firstName, String lastName, String email) {
-        String fullName = ((firstName == null ? "" : firstName) + " " + (lastName == null ? "" : lastName)).trim();
-        if (!fullName.isBlank()) {
-            return fullName;
-        }
-        return email.substring(0, email.indexOf('@'));
+    private String buildDisplayName(String firstName, String lastName) {
+        String fullName = (clean(firstName) + " " + clean(lastName)).trim();
+        return fullName.isBlank() ? "Photographer" : fullName;
     }
-
-    private String generateUniqueSlug(String firstName, String lastName, String email) {
-        String base = ((firstName == null ? "" : firstName) + "-" + (lastName == null ? "" : lastName))
-                .toLowerCase()
-                .trim()
-                .replaceAll("[^a-z0-9]+", "-")
-                .replaceAll("^-|-$", "");
-
-        if (base.isBlank()) {
-            base = email.substring(0, email.indexOf('@'))
-                    .toLowerCase()
-                    .replaceAll("[^a-z0-9]+", "-")
-                    .replaceAll("^-|-$", "");
-        }
-
-        String slug = base;
-        int counter = 1;
-
-        while (profileRepository.existsBySlug(slug)) {
-            slug = base + "-" + counter;
-            counter++;
-        }
-
-        return slug;
-    }
-
 
     public void login(LoginRequest request, HttpServletRequest httpRequest) {
         Authentication authentication = authenticationManager.authenticate(

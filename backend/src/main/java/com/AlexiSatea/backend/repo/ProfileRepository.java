@@ -10,4 +10,7 @@ import java.util.UUID;
 public interface ProfileRepository  extends JpaRepository<Profile, UUID> {
     Optional<Profile> findBySlug(String slug);
     boolean existsBySlug(String slug);
+    Optional<Profile> findFirstByMemberships_User_IdOrderByCreatedAtAsc(UUID userId);
+
+    Optional<Profile> findBySlugAndMemberships_User_Id(String slug, UUID userId);
 }
