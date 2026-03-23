@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -79,6 +80,7 @@ public class EmailVerificationService {
         user.setEmailVerifiedAt(Instant.now());
 
         appUserRepository.save(user);
+        emailVerificationCodeRepository.deleteByUser_Id(user.getId());
     }
 
     @Transactional

@@ -1,7 +1,6 @@
 package com.AlexiSatea.backend.model.user;
 
 import com.AlexiSatea.backend.model.profile.Profile;
-import com.AlexiSatea.backend.model.profile.ProfileRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,16 +34,11 @@ public class ProfileUser {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 16)
-    private ProfileRole role;
-
     @Column(name = "added_at", nullable = false, updatable = false)
     private Instant addedAt;
 
     @PrePersist
     void onCreate() {
         if (addedAt == null) addedAt = Instant.now();
-        if (role == null) role = ProfileRole.VIEWER;
     }
 }

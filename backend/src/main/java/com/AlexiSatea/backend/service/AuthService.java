@@ -4,7 +4,6 @@ import com.AlexiSatea.backend.controller.AuthController;
 import com.AlexiSatea.backend.dto.LoginRequest;
 import com.AlexiSatea.backend.dto.SignupRequest;
 import com.AlexiSatea.backend.model.profile.Profile;
-import com.AlexiSatea.backend.model.profile.ProfileRole;
 import com.AlexiSatea.backend.model.user.AppUser;
 import com.AlexiSatea.backend.model.user.ProfileUser;
 import com.AlexiSatea.backend.model.user.UserRole;
@@ -55,7 +54,7 @@ public class AuthService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .enabled(false)
-                .role(UserRole.PHOTOGRAPH) // replace if your enum is named differently
+                .role(UserRole.PHOTOGRAPH)
                 .build();
 
         appUserRepository.save(user);
@@ -71,7 +70,6 @@ public class AuthService {
         ProfileUser membership = ProfileUser.builder()
                 .profile(profile)
                 .user(user)
-                .role(ProfileRole.OWNER) // replace if your enum uses another name
                 .build();
 
         membership.getId().setProfileId(profile.getId());
