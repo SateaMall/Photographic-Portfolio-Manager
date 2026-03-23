@@ -1,7 +1,6 @@
 package com.AlexiSatea.backend.service;
 
 import com.AlexiSatea.backend.model.profile.Profile;
-import com.AlexiSatea.backend.model.profile.ProfileRole;
 import com.AlexiSatea.backend.model.user.AppUser;
 import com.AlexiSatea.backend.model.user.ProfileUser;
 import com.AlexiSatea.backend.model.user.ProfileUserId;
@@ -48,7 +47,6 @@ public class TestService {
                 .id(new ProfileUserId(profile.getId(), appUser.getId()))
                 .profile(profile)
                 .user(appUser)
-                .role(ProfileRole.OWNER)
                 .build();
 
         profileUserRepository.save(profileUser);

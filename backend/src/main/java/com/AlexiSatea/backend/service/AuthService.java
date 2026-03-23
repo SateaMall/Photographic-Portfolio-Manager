@@ -122,8 +122,7 @@ public class AuthService {
 
         return Map.of(
                 "authenticated", true,
-                "email", authentication.getName(),
-                "roles", authentication.getAuthorities()
+                "email", authentication.getName()
         );
     }
 }
