@@ -36,7 +36,7 @@ public interface AlbumPhotoRepository extends JpaRepository<AlbumPhoto, AlbumPho
     where ap.album.id = :albumId
       and ap.position >= :position
 """)
-    int shiftPositionsRight(UUID albumId, int position);
+    void shiftPositionsRight(UUID albumId, int position);
 
     @Modifying
     @Query("""
@@ -45,7 +45,7 @@ public interface AlbumPhotoRepository extends JpaRepository<AlbumPhoto, AlbumPho
     where ap.album.id = :albumId
       and ap.position > :position
 """)
-    int shiftPositionsLeft(UUID albumId, int position);
+    void shiftPositionsLeft(UUID albumId, int position);
 
     @Query("""
     select coalesce(max(ap.position) + 1, 0)

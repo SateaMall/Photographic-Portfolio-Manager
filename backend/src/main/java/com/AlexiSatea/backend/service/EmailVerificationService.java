@@ -96,7 +96,7 @@ public class EmailVerificationService {
     }
 
     private String generateCode() {
-        int value = 100000 + RANDOM.nextInt(900000);
+        int value = 1000 + RANDOM.nextInt(9000);
         return String.valueOf(value);
     }
 

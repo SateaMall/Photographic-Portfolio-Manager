@@ -62,4 +62,8 @@ public class PhotoFeature {
     void onCreate() {
         if (featuredAt == null) featuredAt = Instant.now();
     }
+    @PreUpdate
+    void onUpdate() {
+        featuredAt = Instant.now();
+    }
 }
