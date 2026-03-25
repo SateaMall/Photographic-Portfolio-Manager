@@ -16,6 +16,22 @@ values:
     value: ''
     enabled: true
     type: default
+  - key: featureType
+    value: 'HOMEPAGE_GRID'
+    enabled: true
+    type: default
+  - key: featureIndex
+    value: '0'
+    enabled: true
+    type: default
+  - key: featureEnabled
+    value: 'true'
+    enabled: true
+    type: default
+  - key: lastFeatureIndex
+    value: ''
+    enabled: true
+    type: default
   - key: email
     value: 'sate3.mallouhi@gmail.com'
     enabled: true

@@ -1,0 +1,30 @@
+$kind: http-request
+name: POST Add or Update Photo Feature
+method: POST
+url: '{{baseUrl}}/api/manage/photos/photo-Feature/{{photoId}}'
+order: 3500
+queryParams:
+  slug: '{{profileSlug}}'
+  type: '{{featureType}}'
+  index: '{{featureIndex}}'
+  enabled: '{{featureEnabled}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status is 200', function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Response returns an integer index', function () {
+        var text = pm.response.text().trim();
+        pm.expect(text).to.match(/^\d+$/);
+      });
+
+      pm.test('Required variables are set', function () {
+        pm.expect(pm.environment.get('photoId'), 'photoId').to.not.be.empty;
+        pm.expect(pm.environment.get('profileSlug'), 'profileSlug').to.not.be.empty;
+        pm.expect(pm.environment.get('featureType'), 'featureType').to.not.be.empty;
+      });
+
+      pm.environment.set('lastFeatureIndex', pm.response.text().trim());
