@@ -3,6 +3,7 @@ package com.AlexiSatea.backend.controller;
 import com.AlexiSatea.backend.dto.PhotoResponse;
 import com.AlexiSatea.backend.model.photo.Photo;
 import com.AlexiSatea.backend.model.photo.Theme;
+import com.AlexiSatea.backend.model.photo.feature.PhotoFeatureType;
 import com.AlexiSatea.backend.service.PhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -71,20 +72,22 @@ public class ManagementPhotoController {
     @PostMapping("/photo-Feature/{id}")
     public Integer addPhotoFeature(
             @PathVariable UUID id,
-            //@RequestParam FeatureContext context,
             @RequestParam(required = false) Integer index,
-            @RequestParam(required = false) Boolean enabled
+            @RequestParam(required = false) Boolean enabled,
+            @RequestParam(required = false) String slug,
+            @RequestParam(required = false) PhotoFeatureType type,
+            Authentication authentication
     ) {
-        throw new UnsupportedOperationException("Endpoint not implemented yet");
-        //return photoService.AddUpdatePhotoFeature(id, index, context,enabled);
+        return photoService.addUpdatePhotoFeature(id, index,enabled, type, slug, authentication);
     }
     @DeleteMapping("/photo-Feature/{id}")
     public void deletePhotoFeature(
-            @PathVariable UUID id
-            //@RequestParam FeatureContext context
+            @PathVariable UUID id,
+            @RequestParam(required = false) String slug,
+            @RequestParam(required = false) PhotoFeatureType type,
+            Authentication authentication
     ) {
-        throw new UnsupportedOperationException("Endpoint not implemented yet");
-        //photoService.deletePhotoFeature(id, context);
+        photoService.deletePhotoFeature(id, type, slug, authentication);
     }
 
 

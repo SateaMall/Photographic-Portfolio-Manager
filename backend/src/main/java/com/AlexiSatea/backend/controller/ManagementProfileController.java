@@ -15,9 +15,11 @@ import java.util.Map;
 public class ManagementProfileController {
     private final AuthService authService;
     private final ProfileUserService profileService;
+
+
     @PostMapping("/initprofile")
     public ResponseEntity<?> initProfile(@RequestBody ProfileRequest request,
-                                         Authentication authentication) {
+                                      Authentication authentication) {
         profileService.initProfile(request, authentication);
         return ResponseEntity.ok(Map.of("message", "Profile initialized successfully"));
     }

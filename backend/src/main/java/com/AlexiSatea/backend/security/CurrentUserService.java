@@ -29,15 +29,4 @@ public class CurrentUserService {
                 ));
     }
 
-    public String requireCurrentUserEmail(Authentication authentication) {
-        if (authentication == null
-                || !authentication.isAuthenticated()
-                || authentication instanceof AnonymousAuthenticationToken) {
-            throw new AccessDeniedException("Unauthenticated user");
-        }
-
-        return authentication.getName();
-    }
-
-
 }

@@ -4,10 +4,7 @@ import com.AlexiSatea.backend.model.album.Album;
 import com.AlexiSatea.backend.model.photo.Photo;
 import com.AlexiSatea.backend.model.profile.Profile;
 import com.AlexiSatea.backend.model.user.AppUser;
-import com.AlexiSatea.backend.repo.AlbumRepository;
-import com.AlexiSatea.backend.repo.AppUserRepository;
-import com.AlexiSatea.backend.repo.PhotoRepository;
-import com.AlexiSatea.backend.repo.ProfileUserRepository;
+import com.AlexiSatea.backend.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -23,13 +20,7 @@ public class AccessService {
     private final AppUserRepository userRepository;
     private final ProfileUserRepository profileUserRepository;
     private final PhotoRepository photoRepository;
-
-    public void checkUserCanManagePhoto(AppUser user, Photo photo) {
-        if (!photo.getAuthor().getId().equals(user.getId())) {
-            throw new AccessDeniedException("You are not allowed to manage this photo");
-        }
-    }
-
+    private final ProfileRepository profileRepository;
 
     public Photo requireManageablePhoto(UUID userId, UUID photoId) {
         Photo photo = photoRepository.findById(photoId) .orElseThrow(() -> new IllegalArgumentException("Photo not found: " + photoId));
@@ -61,21 +52,6 @@ public class AccessService {
     }
 
 
-
-    public void checkAuthCanManageProfile(Authentication authentication, UUID profileId) {
-        String email = authentication.getName();
-
-        AppUser user = userRepository.findByEmail(email)
-                .orElseThrow();
-
-        boolean allowed = profileUserRepository
-                .existsByProfile_IdAndUser_Id(profileId, user.getId());
-
-        if (!allowed) {
-            throw new AccessDeniedException("You cannot manage this profile");
-        }
-    }
-
     public void checkUserCanManageProfile(UUID userId, UUID profileId) {
 
         boolean allowed = profileUserRepository
@@ -85,4 +61,11 @@ public class AccessService {
             throw new AccessDeniedException("You cannot manage this profile");
         }
     }
+
+    public Profile requireManageableProfile(UUID userId, String slug) {
+        Profile profile= profileRepository.findBySlug(slug).orElseThrow(() -> new IllegalArgumentException("Profile not found: " + slug));
+        checkUserCanManageProfile(userId, profile.getId());
+        return profile;
+    }
+
 }

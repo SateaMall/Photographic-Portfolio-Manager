@@ -8,7 +8,9 @@ import com.AlexiSatea.backend.model.album.AlbumPhoto;
 import com.AlexiSatea.backend.model.photo.Photo;
 import com.AlexiSatea.backend.model.photo.PhotoVariant;
 import com.AlexiSatea.backend.model.photo.Theme;
+import com.AlexiSatea.backend.model.photo.feature.PhotoFeature;
 import com.AlexiSatea.backend.model.photo.feature.PhotoFeatureType;
+import com.AlexiSatea.backend.model.profile.Profile;
 import com.AlexiSatea.backend.model.user.AppUser;
 import com.AlexiSatea.backend.repo.*;
 import com.AlexiSatea.backend.security.AccessService;
@@ -50,6 +52,7 @@ public class PhotoService {
     private final AppUserRepository appUserRepository;
     private final CurrentUserService currentUserService;
     private final AccessService accessService;
+    private final ProfileRepository profileRepository;
     private static final Logger logger = LoggerFactory.getLogger(PhotoService.class);
 
     // We can expand later (HEIC, etc.)
@@ -401,23 +404,24 @@ public class PhotoService {
 
 
     /**********************************         PhotoFeature APIs         ******************************/
-    //TODO
-   /*
+
     @Transactional
 
-    public Integer AddUpdatePhotoFeature(UUID photoId, Integer index, FeatureContext context, Boolean enabled) {
+    public Integer addUpdatePhotoFeature(UUID photoId, Integer index, Boolean enabled, PhotoFeatureType type, String slug, Authentication authentication) {
+        AppUser user = currentUserService.requireCurrentUser(authentication);
+        Photo photo = accessService.requireManageablePhoto(user.getId(),photoId);
+        Profile profile = accessService.requireManageableProfile(user.getId(), slug );
+
         if (index != null && index < 0) {
             throw new IllegalArgumentException("index must be >= 0");
         }
 
-        Photo photo = photoRepository.findById(photoId)
-                .orElseThrow(() -> new IllegalArgumentException("Photo not found: " + photoId));
-
         PhotoFeature pf = photoFeatureRepository
-                .findByPhotoIdAndContext(photoId, context)
+                .findByPhoto_IdAndTypeAndProfile(photoId, type,profile)
                 .orElseGet(() -> PhotoFeature.builder()
                         .photo(photo)
-                        .context(context)
+                        .profile(profile)
+                        .type(type)
                         .build()
                 );
 
@@ -427,22 +431,24 @@ public class PhotoService {
         // if index param not sent => keep null or set null if you want to "clear" ordering
         pf.setOrderIndex(index);
 
-        // update timestamp when (re)featured or modified
-        pf.setFeaturedAt(Instant.now());
-
         photoFeatureRepository.save(pf);
 
         return pf.getOrderIndex();
     }
 
-    public void deletePhotoFeature(UUID photoId, FeatureContext context) {
-        PhotoFeature pf = photoFeatureRepository.findByPhotoIdAndContext(photoId, context)
+    public void deletePhotoFeature(UUID photoId, PhotoFeatureType type, String slug, Authentication authentication) {
+        AppUser user = currentUserService.requireCurrentUser(authentication);
+        accessService.requireManageablePhoto(user.getId(),photoId);
+        Profile profile = accessService.requireManageableProfile(user.getId(), slug );
+
+        PhotoFeature pf = photoFeatureRepository
+                .findByPhoto_IdAndTypeAndProfile(photoId, type,profile)
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "PhotoFeature not found for photoId=" + photoId + ", context=" + context
+                        "PhotoFeature not found for photoId=" + photoId + ", type=" + type + ", profileSlug=" + slug
                 ));
         photoFeatureRepository.delete(pf);
     }
-  */
+
 
 }
 

@@ -40,4 +40,5 @@ scripts:
       pm.test('Response has id', function () {
         var json = pm.response.json();
         pm.expect(json).to.have.property('id');
+        pm.environment.set('photoId', json.id);
       });
