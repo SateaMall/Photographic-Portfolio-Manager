@@ -1,6 +1,6 @@
 # photo_gallery
 
-Portofolio Photographique multi-users built with Typescript React and Java Spring Boot
+Portofolio Photographique multi-users built with Typescript React, Java Spring Boot, PostgreSQL database and Docker.
 
 # Important
 
