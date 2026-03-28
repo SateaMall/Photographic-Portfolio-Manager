@@ -73,6 +73,11 @@ public class AuthController {
         emailVerificationService.verifyEmail(request);
         return ResponseEntity.ok(Map.of("message", "Email verified successfully"));
     }
+    @PostMapping("/resend-code")
+    public ResponseEntity<?> resendVerificationMail(@RequestParam String email) {
+        emailVerificationService.resendVerificationCode(email);
+        return ResponseEntity.ok().build();
+    }
 /*
     @DeleteMapping("/me")
     public ResponseEntity<?> deleteCurrentUser(Authentication authentication) {

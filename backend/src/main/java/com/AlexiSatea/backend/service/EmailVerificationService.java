@@ -87,7 +87,6 @@ public class EmailVerificationService {
     public void resendVerificationCode(String email) {
         AppUser user = appUserRepository.findByEmail(normalize(email))
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
         if (user.isEnabled()) {
             return;
         }

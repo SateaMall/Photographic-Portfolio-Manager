@@ -25,6 +25,7 @@ replay_pid*
 
 # frontend
 frontend/node_modules
+node_modules
 frontend/dist
 
 # backend
