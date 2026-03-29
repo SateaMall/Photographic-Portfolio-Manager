@@ -1,7 +1,6 @@
 # photo_gallery
 
-Portofolio Photographique multi-users built with Typescript React, Java Spring Boot, PostgreSQL database and Docker.
-
+Portofolio Photographique multi-users built with Typescript React, Java Spring Boot and PostgreSQL database.
 # Important
 
 .env is added in the .getignore for privacy reasons
