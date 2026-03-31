@@ -1,6 +1,6 @@
 package com.AlexiSatea.backend.service;
 
-import com.AlexiSatea.backend.controller.AuthController;
+import com.AlexiSatea.backend.dto.AuthMeResponse;
 import com.AlexiSatea.backend.dto.LoginRequest;
 import com.AlexiSatea.backend.dto.SignupRequest;
 import com.AlexiSatea.backend.model.profile.Profile;
@@ -23,8 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -113,16 +111,21 @@ public class AuthService {
 
     }
 
-    public Map<String, Object> me(Authentication authentication) {
+    @Transactional(readOnly = true)
+    public AuthMeResponse me(Authentication authentication) {
         if (authentication == null
                 || !authentication.isAuthenticated()
                 || authentication instanceof AnonymousAuthenticationToken) {
-            return Map.of("authenticated", false);
+            return AuthMeResponse.anonymous();
         }
 
-        return Map.of(
-                "authenticated", true,
-                "email", authentication.getName()
-        );
+        String email = normalize(authentication.getName());
+        AppUser user = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("Authenticated user not found: " + email));
+
+        Profile profile = profileRepository.findFirstByMemberships_User_IdOrderByCreatedAtAsc(user.getId())
+                .orElseThrow(() -> new IllegalStateException("No profile found for authenticated user: " + email));
+
+        return AuthMeResponse.authenticated(user.getEmail(), profile.getSlug(), profile.getDisplayName());
     }
 }

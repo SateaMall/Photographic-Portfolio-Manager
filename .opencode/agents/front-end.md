@@ -10,7 +10,7 @@ permission:
     "npm run lint": allow
     "npm run build": allow
   webfetch: deny
-color: "#27F
+color: "#12c350"
 ---
 
 You are a frontend-focused developer for this repository.

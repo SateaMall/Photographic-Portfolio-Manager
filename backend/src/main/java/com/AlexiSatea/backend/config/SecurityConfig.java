@@ -35,8 +35,7 @@ public class SecurityConfig {
                                 "/api/public/**"
                         ).permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("OWNER")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/manage/**").authenticated()
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());
