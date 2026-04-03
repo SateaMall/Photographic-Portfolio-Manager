@@ -1,24 +1,26 @@
-import { httpJson,logger } from "./http";
-import type {AlbumViewResponse, PhotoResponse, Scope} from "../types/types";
-import type { PageResponse } from "../types/types";
+import { httpJson } from "./http";
+import type { AlbumViewResponse, PageResponse, PhotoResponse } from "../types/types";
 
-
-export async function fetchAlbums(scope: Scope) {
-  const data = await httpJson<AlbumViewResponse[]>(`/api/homepage/albums/${scope}`);
-  //logger(data, "Albums");
-  return data;
+function toProfileSlug(profileSlug: string) {
+  return encodeURIComponent(profileSlug.toLowerCase());
 }
 
-export async function fetchPhotos(scope: Scope, page = 0, size = 20,photoId?: string) {
-  var data;
-  //logger(photoId, "id")
-  if(photoId){
-    data = await httpJson<PageResponse<PhotoResponse>>( `/api/homepage/photos/${scope}?photoId=${photoId}&page=${page}&size=${size}`);
-  }
-  else{
 
-    data = await httpJson<PageResponse<PhotoResponse>>( `/api/homepage/photos/${scope}?page=${page}&size=${size}`);
+export async function fetchAlbums(profileSlug: string) {
+  return httpJson<AlbumViewResponse[]>(`/api/public/profiles/${toProfileSlug(profileSlug)}/albums`);
+}
+
+export async function fetchPhotos(profileSlug: string, page = 0, size = 20, photoId?: string) {
+  const params = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+  });
+
+  if (photoId) {
+    params.set("photoId", photoId);
   }
-  //logger(data, "Photos");
-  return data;
+
+  return httpJson<PageResponse<PhotoResponse>>(
+    `/api/public/profiles/${toProfileSlug(profileSlug)}/photos?${params.toString()}`
+  );
 }

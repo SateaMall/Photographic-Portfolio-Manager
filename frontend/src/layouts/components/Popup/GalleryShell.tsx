@@ -7,13 +7,13 @@ import {PhotoModal} from "./PhotoModal";
 
 export function GalleryShell() {
   
-  const { context } = useParams();          // ✅ needed for absolute paths
+  const { slug } = useParams();          // ✅ needed for absolute paths
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location } | null;
   const backgroundLocation = state?.backgroundLocation;
   console.log("GalleryShell location:", location.pathname, { backgroundLocation });
 
-  if (!context) return null;
+  if (!slug) return null;
 
   return (
       <>

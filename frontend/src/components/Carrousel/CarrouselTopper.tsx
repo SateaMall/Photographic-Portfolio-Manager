@@ -3,10 +3,12 @@ import { useCallback, useEffect, useState } from "react";
 import type { PhotoResponse } from "../../types/types";
 import { photoFileUrl } from "../../api/photos";
 import "./CarrouselTopper.css";
+import { useParams } from "react-router-dom";
 
 
 
 export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoResponse[] }) {
+  const { slug } = useParams();
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start",   /* loop: true,*/   }); 
       //Left-Right buttons state
@@ -19,6 +21,7 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
   //const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   //const [selectedIndex, setSelectedIndex] = useState(0);
 
+  if(!slug) return null;
   const update = useCallback(() => {
     if (!emblaApi) return;
     //Left-Right buttons state
@@ -83,7 +86,7 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
           {carrouselPhotos.map((c,i) => (
             <div className="embla__slide_topper " key={c.id}>
               <img
-                src={photoFileUrl(c.id)}
+                src={photoFileUrl(c.id, slug)}
                 className={`embla-img_topper embla__img ${i === selectedIndex ? "is-active" : ""}`}
                 alt={c.title ?? ""}
                 loading="lazy"

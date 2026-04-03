@@ -1,10 +1,9 @@
 import type { PhotoResponse } from "../types/types";
 import { photoFileUrl } from "../api/photos";
 import "./PhotoCard.css";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { useState } from "react";
-import { PROFILE_BY_ID } from "../constants/constants";
-import { BsPersonFill, BsLink45Deg, BsGeoAltFill } from "react-icons/bs";
+import { BsLink45Deg, BsGeoAltFill } from "react-icons/bs";
 
 type PhotoCardProps = {
   photo: PhotoResponse;
@@ -12,21 +11,23 @@ type PhotoCardProps = {
 };
 
 export function PhotoCard({ photo, onClick }: PhotoCardProps) {
-  const navigate = useNavigate();
-  const { context } = useParams();
-  const image = photoFileUrl(photo.id);
+  /*const navigate = useNavigate();*/
+  const { slug } = useParams();
+
+  if (!slug) return ;
+  const image = photoFileUrl(photo.id, slug);
   const [copied, setCopied] = useState(false);
 
-  function onOwnerClick(e: React.MouseEvent<HTMLButtonElement>) {
+  /*function onOwnerClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();     // prevents the article onClick
     navigate(`/${photo.owner}`);
-  }
+  }*/
 
 
   async function onShare(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
 
-    const urlToCopy = `${window.location.origin}/${context}/photo/${photo.id}`;
+    const urlToCopy = `${window.location.origin}/${slug}/photo/${photo.id}`;
 
     try {
       await navigator.clipboard.writeText(urlToCopy);
@@ -36,8 +37,6 @@ export function PhotoCard({ photo, onClick }: PhotoCardProps) {
     setCopied(true); 
   }
   
-  const p = PROFILE_BY_ID[photo.owner];
-
   return (
     <article
       className="photo-card"
@@ -81,7 +80,7 @@ export function PhotoCard({ photo, onClick }: PhotoCardProps) {
           </span>
           <span className="photo-location-name">{photo.city}, {photo.country}</span>
         </button>
-
+        {/*
         <button
           type="button"
           className="photo-owner"
@@ -95,6 +94,7 @@ export function PhotoCard({ photo, onClick }: PhotoCardProps) {
             <span className="photo-owner-name"> {p.label}</span>
           
         </button>
+        */}
       </div>
     </article>
   );

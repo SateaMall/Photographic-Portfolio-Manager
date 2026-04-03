@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { fetchPublicProfile } from "../../api/profiles";
 import { fetchAlbumItemsAsPhotos, fetchMainPhoto } from "../../api/photoBrowse";
-import type { MainPhotoResponse, PhotoResponse, Profile } from "../../types/types";
+import type { MainPhotoResponse, PhotoResponse, PublicProfileResponse } from "../../types/types";
 import { PhotosGrid } from "../../components/PhotosGrid";
 import "./PhotoPage.css"
-import { PROFILE_BY_ID } from "../../constants/constants";
 import { Navbar } from "../../components/NavigationBar/Navbar";
 import PhotoInfo from "./components/PhotoInfo";
 import PhotoViewer from "./components/PhotoViewer";
@@ -13,16 +13,16 @@ type PhotoPageProps = {
   lightboxPortalContainer?: HTMLElement | null;
   lightboxKey?: string; // used to force remount when photoId changes, ensuring correct portal behavior
 };
-type Params = { photoId: string; albumId?: string };
+type Params = { slug?: string; photoId: string; albumId?: string };
 
 export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: PhotoPageProps) {
-  const [mainProfile, setMainProfile] = useState<Profile | null>(null);
+  const [mainProfile, setMainProfile] = useState<PublicProfileResponse | null>(null);
   const [mainPhoto, setMainPhoto] = useState<MainPhotoResponse | null>(null);
 
    // The album swipe list for PhotoViewer:
   const [photos, setPhotos] = useState<PhotoResponse[] | null>([]);
 
-  const { photoId, albumId } = useParams<Params>();
+  const { slug, photoId, albumId } = useParams<Params>();
   const inAlbum = Boolean(albumId);
 
   const uselocation = useLocation();
@@ -33,34 +33,38 @@ export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: Pho
 
 
       useEffect(() => {
-        if (!photoId) return;
+        if (!photoId || !slug) return;
     
         setLoading(true);
         setError(null);
     
         (async () => {
           try {
-            const photo = await fetchMainPhoto(photoId);
+            const [photo, profile] = await Promise.all([
+              fetchMainPhoto(slug, photoId),
+              fetchPublicProfile(slug),
+            ]);
+
             setMainPhoto(photo);
-            setMainProfile(PROFILE_BY_ID[photo.owner]);
+            setMainProfile(profile);
             if (inAlbum && albumId) {
               // load album photos for swipe
               const albumPhotos = await fetchAlbumItemsAsPhotos(albumId); // you implement
               setPhotos(albumPhotos.content);
             } else {
-              // home context: keep photos empty or set to something relevant
+              // home slug: keep photos empty or set to something relevant
               setPhotos([]);
             }
-          } catch (e) {
+          } catch {
             setError("Failed to load photo.");
           } finally {
             setLoading(false);
           }
         })();
-      }, [photoId, inAlbum, albumId]);
+      }, [slug, photoId, inAlbum, albumId]);
     
 
-  if (!photoId) return null;
+  if (!photoId || !slug) return null;
 
   return (
     <section className={`photo-page ${!isModalOpen ? "background__noModule" : ""}`}>
@@ -72,7 +76,7 @@ export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: Pho
             {/* Main viewer + metadata */}
             <div className="photo-page__hero">
               <div className="photo-page__viewer">
-                <PhotoViewer photoId={photoId} mainPhoto={mainPhoto} photos={photos} lightboxPortalContainer={lightboxPortalContainer} lightboxKey={lightboxKey} />
+                <PhotoViewer photoId={photoId} profileSlug={slug} mainPhoto={mainPhoto} photos={photos} lightboxPortalContainer={lightboxPortalContainer} lightboxKey={lightboxKey} />
               </div>
 
               <div className="photo-page__meta" aria-label="Photo details">

@@ -1,15 +1,15 @@
-import { useMemo, useState } from "react";
-import "./ProfilesPage.css";
-import { useNavigate } from "react-router-dom";
 
-import { BsPersonFill, BsLink45Deg } from "react-icons/bs";
-import type { Profile } from "../../types/types";
-import { PROFILES, BG_BY_ID } from "../../constants/constants";
+import "./ProfilesPage.css";
+
 
 export default function ProfilesPages() {
- const navigate = useNavigate();
 
-/* Background switcher */
+ return <div className="profiles-page">
+   <h1>Profiles</h1>
+   <p>Choose a profile to view its gallery:</p>
+   </div>
+
+/* const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState<Profile["id"] | null>(null);
 
   const currentBg = useMemo(() => {
@@ -17,7 +17,7 @@ export default function ProfilesPages() {
   }, [hoveredId]);
 
  async function onPickProfile(p: Profile) {
-    const routeContext = p.id; // "SATEA" | "ALEXIS" | "SHARED"
+    const routeContext = p.id; 
     navigate(`/${routeContext}`);
   }
 
@@ -56,4 +56,5 @@ export default function ProfilesPages() {
     </div>
 
   );
+  */
 }

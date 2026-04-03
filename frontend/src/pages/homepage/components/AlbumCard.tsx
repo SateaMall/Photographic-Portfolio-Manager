@@ -1,13 +1,15 @@
 import type { AlbumViewResponse } from "../../../types/types";
 import { photoFileUrl } from "../../../api/photos";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 import "./AlbumCard.css";
 
 export function AlbumCard({ album }: { album: AlbumViewResponse }) {
   const navigate = useNavigate();
-  const cover = album.firstPhotoId ? photoFileUrl(album.firstPhotoId) : null;
+  const { slug } = useParams();
+  if (!slug) return null;
+  const cover = album.firstPhotoId ? photoFileUrl(album.firstPhotoId, slug) : null;
 
   function onClickAlbum (){
     

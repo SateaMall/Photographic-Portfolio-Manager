@@ -1,15 +1,16 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BsLinkedin, BsInstagram, BsEnvelope } from "react-icons/bs";
-import { PROFILE_BY_ID } from "../../../constants/constants";
+
+import { fetchPublicProfile } from "../../../api/profiles";
+import type { PublicProfileResponse } from "../../../types/types";
 import "./SocialBioSection.css";
 
-type ContextId = "SATEA" | "ALEXIS" | "SHARED";
 
 function buildLinks(profile: {
   linkedIn?: string | null;
   instagram?: string | null;
-  email?: string | null;
+  publicEmail?: string | null;
 }) {
   const linkedInUrl = profile.linkedIn?.trim()
     ? `https://www.linkedin.com/in/${profile.linkedIn.trim()}`
@@ -25,93 +26,101 @@ function buildLinks(profile: {
 }
 
 export function SocialBioSection() {
-  const { context } = useParams();
-  const ctx = (context?.toUpperCase() as ContextId) ?? "SHARED";
+  const { slug } = useParams();
+  const profileSlug = slug?.trim().toLowerCase() ?? "";
+  const [profile, setProfile] = useState<PublicProfileResponse | null>(null);
 
-  const profilesToShow = useMemo(() => {
-    if (ctx === "SHARED") {
-      return [PROFILE_BY_ID["SATEA"], PROFILE_BY_ID["ALEXIS"]].filter(Boolean);
+  useEffect(() => {
+    let active = true;
+
+    if (!profileSlug) {
+      return () => {
+        active = false;
+      };
     }
-    const p = PROFILE_BY_ID[ctx];
-    return p ? [p] : [];
-  }, [ctx]);
 
-  const hasAny = profilesToShow.some((profile) => {
-    const { linkedInUrl, instagramUrl } = buildLinks(profile);
-    return Boolean(linkedInUrl || instagramUrl || profile.bio || profile.email);
-  });
+    fetchPublicProfile(profileSlug)
+      .then((result) => {
+        if (active) {
+          setProfile(result);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setProfile(null);
+        }
+      });
 
-  if (!hasAny) return null;
+    return () => {
+      active = false;
+    };
+  }, [profileSlug]);
+
+  if (!profile) return null;
+
+  const { linkedInUrl, instagramUrl } = buildLinks(profile);
+  const hasLinks = Boolean(linkedInUrl || instagramUrl || profile.publicEmail);
+  const hasBio = Boolean(profile.bio?.trim());
+
+  if (!hasLinks && !hasBio) return null;
 
   return (
     <section className="hero-bio" aria-label="Bio and social links">
-      <div className={profilesToShow.length===1 
-      ? "hero-bio__inner"
-      : "hearo-bio_ineer_two-columns"}>
-        {profilesToShow.map((profile) => {
-          const { linkedInUrl, instagramUrl } = buildLinks(profile);
+      <div className="hero-bio__inner">
+        <article className="hero-bio__card" key={profile.slug}>
+          <h2 className="hero-bio__name">{profile.displayName}</h2>
 
-          const hasLinks = Boolean(linkedInUrl || instagramUrl || profile.email);
-          const hasBio = Boolean(profile.bio?.trim());
+          {profile.bio?.trim() ? (
+            <p className="hero-bio__text">{profile.bio.trim()}</p>
+          ) : (
+            <div className="hero-bio__text hero-bio__text--empty" />
+          )}
 
-          if (!hasLinks && !hasBio) return null;
-
-          return (
-            <article className="hero-bio__card" key={profile.id}>
-              <h2 className="hero-bio__name">{profile.label}</h2>
-
-              {profile.bio?.trim() ? (
-                <p className="hero-bio__text">{profile.bio.trim()}</p>
-              ) : (
-                <div className="hero-bio__text hero-bio__text--empty" />
-              )}
-
-              <div className="hero-bio__icons" 
-                aria-label={`${profile.label} social links`}
+          <div className="hero-bio__icons" 
+            aria-label={`${profile.displayName} social links`}
+          >
+            {linkedInUrl && (
+              <a
+                className="hero-bio__icon"
+                href={linkedInUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${profile.displayName} LinkedIn`}
+                title="LinkedIn"
               >
-                {linkedInUrl && (
-                  <a
-                    className="hero-bio__icon"
-                    href={linkedInUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`${profile.label} LinkedIn`}
-                    title="LinkedIn"
-                  >
-                    <BsLinkedin />
-                  </a>
-                )}
+                <BsLinkedin />
+              </a>
+            )}
 
-                {instagramUrl && (
-                  <a
-                    className="hero-bio__icon"
-                    href={instagramUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`${profile.label} Instagram`}
-                    title="Instagram"
-                  >
-                    <BsInstagram />
-                  </a>
-                )}
+            {instagramUrl && (
+              <a
+                className="hero-bio__icon"
+                href={instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${profile.displayName} Instagram`}
+                title="Instagram"
+              >
+                <BsInstagram />
+              </a>
+            )}
 
-                {profile.email && (
-                  <a
-                    className="hero-bio__icon"
-                    aria-label={`${profile.label} Email`}
-                    title="Email"
-                    onClick={() => {
-                      navigator.clipboard.writeText(profile.email!);
-                      alert("Email copied!");
-                    }}
-                  >
-                    <BsEnvelope />
-                  </a>
-                )}
-              </div>
-            </article>
-          );
-        })}
+            {profile.publicEmail && (
+              <button
+                className="hero-bio__icon"
+                type="button"
+                aria-label={`${profile.displayName} Email`}
+                title="Email"
+                onClick={() => {
+                  navigator.clipboard.writeText(profile.publicEmail!);
+                  alert("Email copied!");
+                }}
+              >
+                <BsEnvelope />
+              </button>
+            )}
+          </div>
+        </article>
       </div>
     </section>
   );

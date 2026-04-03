@@ -5,18 +5,16 @@ import ProfilesPage from "./pages/ProfilesPage/ProfilesPage.tsx";
 import GalleryLayout from "./layouts/GalleryLayout";
 import RootLayout from "./layouts/RootLayout.tsx";
 import NotFound from "./pages/NotFound";
-import AdminPage from "./AdminSection/admin_upload";
 import { GalleryShell } from "./layouts/components/Popup/GalleryShell.tsx";
 
 
 export const router = createBrowserRouter([
   { path: "/",  element: <RootLayout />, children: [
   { index : true, element: <Navigate to="/profiles" /> },
-  { path: "admin", element: <AdminPage /> },
   { path: "profiles", element: <ProfilesPage /> },
 
 {
-  path: ":context/*",
+  path: ":slug/*",
   element: (
   <GalleryLayout />),
   children: [

@@ -13,9 +13,7 @@ type PhotosGridProps = {
   onPhotosChange?: (photos: PhotoResponse[]) => void;
 }
 export function PhotosGrid(PhotosGridProps: PhotosGridProps) {
-  const { context } = useParams(); // "satea" | "alexis" | "shared"
-  const scope = context?.toUpperCase() as "SATEA" | "ALEXIS" | "SHARED";
-
+  const { slug } = useParams(); 
   const PAGE_SIZE = PhotosGridProps.photoId? 8 : 20;
   const FIRST_VISIBLE = 12;
   const [photos, setPhotos] = useState<PhotoResponse[]>([]);
@@ -37,15 +35,15 @@ useEffect(() => {
   setVisibleCount(FIRST_VISIBLE);
   setHasMorePages(true);
   setInitialRevealDone(false);
-}, [context,PhotosGridProps.photoId, PhotosGridProps.albumId]);
+}, [slug,PhotosGridProps.photoId, PhotosGridProps.albumId]);
 
 useEffect(() => {
   
   let cancelled = false;
-
+  if (!slug) return;
   setPhotosLoading(true);
   (PhotosGridProps.albumId?fetchAlbumItemsAsPhotos(PhotosGridProps.albumId): 
-  fetchPhotos(scope, page, PAGE_SIZE, PhotosGridProps.photoId))
+  fetchPhotos(slug, page, PAGE_SIZE, PhotosGridProps.photoId))
     .then((res) => {
       if (cancelled) return;
 
@@ -67,7 +65,7 @@ useEffect(() => {
   return () => {
     cancelled = true;
   };
-}, [scope, page, PhotosGridProps.photoId, PhotosGridProps.albumId]);
+}, [slug, page, PhotosGridProps.photoId, PhotosGridProps.albumId]);
 
 
 useEffect(() => {

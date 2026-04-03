@@ -11,8 +11,7 @@ import { Navbar } from "../../components/NavigationBar/Navbar";
 import { ScrollIndicator } from "../../components/Indicator/ScrollIndicator";
 export default function Homepage() {
 
-const { context } = useParams(); // "satea" | "alexis" | "shared"
-const scope = context?.toUpperCase() as "SATEA" | "ALEXIS" | "SHARED";
+const { slug } = useParams() 
 const [error, setError] = useState<string | null>(null);
 
 
@@ -25,11 +24,15 @@ const [error, setError] = useState<string | null>(null);
   const [photos, setPhotos] = useState<PhotoResponse[]>([]);
   useEffect(() => {
      setAlbumsLoading(true);
-    fetchAlbums(scope)
+          if (!slug) {
+      return () => {};
+    }
+
+    fetchAlbums(slug)
       .then(setAlbums)
       .catch((e) => setError(e.message))
       .finally(() => setAlbumsLoading(false));
-  }, [context]);
+  }, [slug]);
 
 
   

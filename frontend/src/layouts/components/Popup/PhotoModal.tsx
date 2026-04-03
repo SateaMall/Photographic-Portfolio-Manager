@@ -1,20 +1,82 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
+import { fetchPublicProfile } from "../../../api/profiles";
 import PhotoPage from "../../../pages/PhotoBrowser/PhotoPage"
 import "./PhotoModal.css"
-import { useState } from "react";
-import { PROFILE_BY_ID } from "../../../constants/constants";
 
+type ThemeStyle = CSSProperties & {
+  "--primaryColor": string;
+  "--secondaryColor": string;
+};
 
 export function PhotoModal() {
   const navigate = useNavigate();
-  const { context } = useParams();
-  const profile = context ? PROFILE_BY_ID[context.toUpperCase() as keyof typeof PROFILE_BY_ID] : null;
+  const { slug } = useParams();
   const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
+  const [resolvedProfile, setResolvedProfile] = useState<{
+    slug: string;
+    primaryColor: string | null;
+    secondaryColor: string | null;
+    failed: boolean;
+  } | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    const profileSlug = slug?.trim().toLowerCase() ?? "";
+
+    if (!profileSlug) {
+      return () => {
+        active = false;
+      };
+    }
+
+    fetchPublicProfile(profileSlug)
+      .then((profile) => {
+        if (active) {
+          setResolvedProfile({
+            slug: profileSlug,
+            primaryColor: profile.primaryColor,
+            secondaryColor: profile.secondaryColor,
+            failed: false,
+          });
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setResolvedProfile({
+            slug: profileSlug,
+            primaryColor: null,
+            secondaryColor: null,
+            failed: true,
+          });
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [slug]);
+
+  const profileSlug = slug?.trim().toLowerCase() ?? "";
+
+  if (!profileSlug || resolvedProfile?.slug === profileSlug && resolvedProfile.failed) {
+    return <Navigate to="/profiles" replace />;
+  }
+
+  if (!resolvedProfile || resolvedProfile.slug !== profileSlug) {
+    return <div>Loading photo…</div>;
+  }
+
+  const themeStyle: ThemeStyle = {
+    "--primaryColor": resolvedProfile.primaryColor ?? "#111827",
+    "--secondaryColor": resolvedProfile.secondaryColor ?? "#886c4e",
+  };
+
   return (
-    <div style={{ ["--primaryColor" as any]: profile?.avatar?.primaryColor  ?? "#111827" ,
-      ["--secondaryColor" as any]: profile?.avatar?.secondaryColor}}>
+    <div style={themeStyle}>
     <Dialog.Root open onOpenChange={(open) => !open && navigate(-1)}>
       <Dialog.Portal>
         <Dialog.Overlay className="modal-overlay-popup" />

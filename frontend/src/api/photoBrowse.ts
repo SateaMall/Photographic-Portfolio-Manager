@@ -1,23 +1,26 @@
-import type { AlbumViewResponse ,AlbumPhotoItem, MainPhotoResponse, PhotoResponse, Scope, PageResponse} from "../types/types";
-import { httpJson, logger } from "./http";
+import type { AlbumPhotoItem, AlbumViewResponse, MainPhotoResponse, PageResponse, PhotoResponse } from "../types/types";
+import { httpJson } from "./http";
+
+function toProfileSlug(profileSlug: string) {
+  return encodeURIComponent(profileSlug.toLowerCase());
+}
 
 
 export async function fetchAlbumInfo (albumId: string) {
-    const data = await httpJson<AlbumViewResponse>(`/api/Photobrowser/albumDetails/${albumId}`);
-    //logger(data, "Album Info");
-    return data;
+    return httpJson<AlbumViewResponse>(`/api/public/albums/${encodeURIComponent(albumId)}`);
 }
 
 export async function fetchAlbumItems (albumId: string, page = 0, size = 20) {
-    const data = await httpJson<PageResponse<AlbumPhotoItem>>(`/api/Photobrowser/albumItems/${albumId}?page=${page}&size=${size}`); //It's easier to pass the AlbumPhotoItem as PhotoResponse to reuse the PhotoCard component, since they have mostly the same fields
-    //logger(data, "Album Items");
-    return data;
+    const params = new URLSearchParams({ page: String(page), size: String(size) });
+    return httpJson<PageResponse<AlbumPhotoItem>>(
+      `/api/public/albums/${encodeURIComponent(albumId)}/items?${params.toString()}`
+    ); //It's easier to pass the AlbumPhotoItem as PhotoResponse to reuse the PhotoCard component, since they have mostly the same fields
 }
 
-export async function fetchMainPhoto (photoId: string){
-    const data = await httpJson<MainPhotoResponse>(`/api/Photobrowser/mainPhoto/${photoId}`)
-    //logger(data, "Main Photo");
-    return data;
+export async function fetchMainPhoto (profileSlug: string, photoId: string){
+    return httpJson<MainPhotoResponse>(
+      `/api/public/profiles/${toProfileSlug(profileSlug)}/photos/${encodeURIComponent(photoId)}/details`
+    );
 }
 
 export async function fetchAlbumItemsAsPhotos(albumId: string, page = 0, size = 20) {

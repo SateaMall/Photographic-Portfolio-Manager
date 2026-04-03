@@ -6,13 +6,14 @@ import "react-photo-view/dist/react-photo-view.css";
 import { useMemo } from "react";
 type PhotoViewerProps = {
   photoId: string;
+  profileSlug: string;
   mainPhoto: MainPhotoResponse | null;
   photos: PhotoResponse[] | null | [];
   lightboxPortalContainer?: HTMLElement | null;
   lightboxKey?: string; // used to force remount when photoId changes, ensuring correct portal behavior
 };
 
-export default function PhotoViewer({ photoId, mainPhoto,photos, lightboxPortalContainer, lightboxKey }: PhotoViewerProps) {
+export default function PhotoViewer({ photoId, profileSlug, mainPhoto,photos, lightboxPortalContainer, lightboxKey }: PhotoViewerProps) {
 
     const ordered = useMemo(() => {
         const list = (photos ?? []).slice(); // copy
@@ -37,9 +38,8 @@ export default function PhotoViewer({ photoId, mainPhoto,photos, lightboxPortalC
       >
         {/* Render ALL PhotoViews in the correct order */}
         {ordered.map((p) => {
-          const src = photoFileUrl(p.id);
-
           const isCurrent = p.id === photoId;
+          const src = photoFileUrl(p.id, profileSlug, isCurrent ? "ORIGINAL" : "MEDIUM");
           if (isCurrent) {
             return (
                 <div key={p.id} className="photo-page__mainPhotoWrapper">

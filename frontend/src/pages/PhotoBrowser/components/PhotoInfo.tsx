@@ -1,15 +1,16 @@
+import type { MainPhotoResponse, PublicProfileResponse } from "../../../types/types";
+import "./PhotoInfo.css";
+
 type Props = {
   mainPhoto: MainPhotoResponse | null;
-  mainProfile: Profile | null;
+  mainProfile: PublicProfileResponse | null;
 }
-import type { MainPhotoResponse, Profile } from "../../../types/types";
-import "./PhotoInfo.css";
 
 export default function PhotoInfo({ mainPhoto, mainProfile }: Props){
   const title = mainPhoto?.title?.trim() || "Untitled";
   const description = mainPhoto?.description?.trim?.() || mainPhoto?.description ;
-  const owner = mainProfile?.label ;
-  const themes = mainPhoto?.themes ?? (mainPhoto as any)?.themeNames ?? [];
+  const owner = mainProfile?.displayName;
+  const themes = mainPhoto?.themes ?? [];
   const location = [mainPhoto?.city, mainPhoto?.country].filter(Boolean).join(", ") ;
   const captureYear = mainPhoto?.captureYear;
 
