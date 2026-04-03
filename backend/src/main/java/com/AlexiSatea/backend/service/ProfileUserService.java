@@ -1,5 +1,6 @@
 package com.AlexiSatea.backend.service;
 
+import com.AlexiSatea.backend.dto.PublicProfileResponse;
 import com.AlexiSatea.backend.dto.ProfileRequest;
 import com.AlexiSatea.backend.model.profile.Profile;
 import com.AlexiSatea.backend.model.user.AppUser;
@@ -10,12 +11,29 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProfileUserService {
 
     private final ProfileRepository profileRepository;
     private final CurrentUserService currentUserService;
+
+    @Transactional(readOnly = true)
+    public Optional<PublicProfileResponse> getPublicProfile(String slug) {
+        if (slug == null) {
+            return Optional.empty();
+        }
+
+        String normalizedSlug = slug.trim().toLowerCase();
+        if (normalizedSlug.isBlank()) {
+            return Optional.empty();
+        }
+
+        return profileRepository.findBySlugAndIsPublicTrue(normalizedSlug)
+                .map(PublicProfileResponse::from);
+    }
 
     @Transactional
     public void initProfile(ProfileRequest request, Authentication authentication) {

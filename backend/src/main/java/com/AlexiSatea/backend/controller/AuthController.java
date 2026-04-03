@@ -52,7 +52,6 @@ public class AuthController {
 
     @GetMapping("/me")
     public AuthMeResponse me(Authentication authentication) {
-
         return authService.me(authentication);
     }
 
