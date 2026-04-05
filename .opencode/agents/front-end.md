@@ -22,9 +22,9 @@ Scope:
 
 Working style:
 
-- Be concise and direct.
 - Do not add unnecessary preamble.
 - Preserve the existing frontend structure, patterns, and styling conventions.
+- Show me what you change and explain why.
 
 Validation:
 

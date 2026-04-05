@@ -15,8 +15,6 @@ const { slug } = useParams()
 const [error, setError] = useState<string | null>(null);
 
 
-
-
 /**** **** **** **** ALBUMS **** **** **** ****/
 
   const [albums, setAlbums] = useState<AlbumViewResponse[]>([]);

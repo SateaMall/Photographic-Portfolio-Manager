@@ -1,33 +1,54 @@
 import { Link, NavLink, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import "./Navbar.css";
+import { fetchPublicProfile } from "../../api/profiles";
+import type { PublicProfileResponse } from "../../types/types";
 
 export function Navbar() {
-  const { context } = useParams(); // "satea" | "alexis" | "shared" | undefined
+  const { slug } = useParams() 
   const [open, setOpen] = useState(false);
+  const [profile, setProfile] = useState<PublicProfileResponse | null>(null);
 
-  // "shared mode" when:
-  // - we are on /profiles
-  // - OR context is shared
-
-  const brandText =  context === "SHARED"
-    ? "Almallouhi &  Cordier"
-    : context === "ALEXIS"
-      ? "Alexis Cordier"
-      : "Mohamad Satea Almallouhi";
-
+  useEffect(() => {
+      let active = true;
+  
+      if (!slug) {
+        return () => {
+          active = false;
+        };
+      }
+  
+      fetchPublicProfile(slug)
+        .then((result) => {
+          if (active) {
+            setProfile(result);
+          }
+        })
+        .catch(() => {
+          if (active) {
+            setProfile(null);
+          }
+        });
+  
+      return () => {
+        active = false;
+      };
+    }, [slug]);
+  
+    if (!profile) return null;
+    
   // Base for albums/photos links and brand
-  const base = `/${context}`;
+  const base = `/${slug}`;
 
   return (
     <header className="rg-nav">
       <div className="rg-nav__inner">
         {/* Brand */}
         <Link className="rg-brand" to={base} >
-          {brandText}
+          {profile?.displayName || slug}
         </Link>
 
         {/* Mobile toggle */}
