@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
-import Homepage from "../../../pages/homepage/Homepage";
+import Homepage from "../../../pages/profilePage/ProfilePage";
 import AlbumPage from "../../../pages/PhotoBrowser/AlbumPage";
 import PhotoPage from "../../../pages/PhotoBrowser/PhotoPage";
 import {PhotoModal} from "./PhotoModal";

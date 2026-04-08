@@ -21,7 +21,6 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
   //const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   //const [selectedIndex, setSelectedIndex] = useState(0);
 
-  if(!slug) return null;
   const update = useCallback(() => {
     if (!emblaApi) return;
     //Left-Right buttons state
@@ -35,12 +34,13 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
 
   useEffect(() => {
     if (!emblaApi) return;
-    update();
+    const frameId = window.requestAnimationFrame(update);
   
     emblaApi.on("select", update);
     emblaApi.on("reInit", update);
 
     return () => {
+      window.cancelAnimationFrame(frameId);
       emblaApi.off("select", update);
       emblaApi.off("reInit", update);
     };
@@ -48,8 +48,14 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
 
   useEffect(() => {
     if (!emblaApi) return;
-    emblaApi.reInit();
-    update();
+    const frameId = window.requestAnimationFrame(() => {
+      emblaApi.reInit();
+      update();
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
   }, [emblaApi, carrouselPhotos.length, update]);
 
   //AUTOPLAY
@@ -68,6 +74,8 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
   const id = window.setInterval(tick, 5000);
   return () => window.clearInterval(id);
   }, [emblaApi]);
+
+  if (!slug) return null;
 
   return (
     <div className="carousel_topper">

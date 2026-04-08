@@ -13,10 +13,10 @@ type PhotoCardProps = {
 export function PhotoCard({ photo, onClick }: PhotoCardProps) {
   /*const navigate = useNavigate();*/
   const { slug } = useParams();
-
-  if (!slug) return ;
-  const image = photoFileUrl(photo.id, slug);
   const [copied, setCopied] = useState(false);
+
+  if (!slug) return null;
+  const image = photoFileUrl(photo.id, slug);
 
   /*function onOwnerClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();     // prevents the article onClick

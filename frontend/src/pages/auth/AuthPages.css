@@ -1,0 +1,244 @@
+.auth-page {
+  min-height: 100vh;
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at top, rgba(240, 190, 120, 0.14), transparent 30%),
+    linear-gradient(180deg, #101625 0%, #162038 50%, #0d1320 100%);
+  color: #f6f4ef;
+}
+
+.auth-shell {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+}
+
+.auth-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.auth-brand,
+.auth-link,
+.auth-inline-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.auth-brand {
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.auth-topbar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.auth-link,
+.auth-inline-link {
+  opacity: 0.84;
+}
+
+.auth-link:hover,
+.auth-inline-link:hover {
+  opacity: 1;
+}
+
+.auth-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: 28px;
+}
+
+.auth-panel {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  padding: 28px;
+  background: rgba(8, 12, 21, 0.64);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+}
+
+.auth-panel--accent {
+  background:
+    linear-gradient(160deg, rgba(206, 142, 67, 0.18), rgba(255, 255, 255, 0.03)),
+    rgba(8, 12, 21, 0.76);
+}
+
+.auth-eyebrow {
+  margin: 0 0 12px;
+  color: #f1c98b;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+}
+
+.auth-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  line-height: 0.98;
+}
+
+.auth-copy,
+.auth-list,
+.auth-meta,
+.auth-hint,
+.auth-message,
+.auth-error,
+.auth-success {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.auth-copy,
+.auth-meta,
+.auth-hint {
+  margin: 16px 0 0;
+  color: rgba(246, 244, 239, 0.78);
+}
+
+.auth-list {
+  margin: 24px 0 0;
+  padding-left: 18px;
+  color: rgba(246, 244, 239, 0.84);
+}
+
+.auth-list li + li {
+  margin-top: 10px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 16px;
+}
+
+.auth-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.auth-field {
+  display: grid;
+  gap: 8px;
+}
+
+.auth-label {
+  font-size: 0.9rem;
+  color: rgba(246, 244, 239, 0.86);
+}
+
+.auth-input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  padding: 14px 16px;
+  font-size: 1rem;
+}
+
+.auth-input:focus {
+  outline: 2px solid rgba(241, 201, 139, 0.4);
+  outline-offset: 2px;
+}
+
+.auth-actions,
+.auth-secondary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.auth-primary-btn,
+.auth-secondary-btn,
+.auth-ghost-btn {
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-size: 0.98rem;
+  cursor: pointer;
+  transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+}
+
+.auth-primary-btn:hover,
+.auth-secondary-btn:hover,
+.auth-ghost-btn:hover {
+  transform: translateY(-1px);
+}
+
+.auth-primary-btn:disabled,
+.auth-secondary-btn:disabled,
+.auth-ghost-btn:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+.auth-primary-btn {
+  border: 0;
+  background: linear-gradient(135deg, #f0ba71, #c67339);
+  color: #11151f;
+  font-weight: 700;
+}
+
+.auth-secondary-btn,
+.auth-ghost-btn {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: #f6f4ef;
+}
+
+.auth-message,
+.auth-error,
+.auth-success {
+  margin: 0;
+  border-radius: 18px;
+  padding: 12px 14px;
+}
+
+.auth-message {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(246, 244, 239, 0.88);
+}
+
+.auth-error {
+  background: rgba(145, 39, 39, 0.28);
+  color: #ffd9d9;
+}
+
+.auth-success {
+  background: rgba(29, 111, 70, 0.3);
+  color: #d9ffed;
+}
+
+@media (max-width: 860px) {
+  .auth-grid,
+  .auth-row {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-panel {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-page {
+    padding: 20px 14px;
+  }
+
+  .auth-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .auth-panel {
+    border-radius: 22px;
+    padding: 20px;
+  }
+}

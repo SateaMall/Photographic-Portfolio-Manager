@@ -1,49 +1,59 @@
 import { useEffect, useRef, useState } from "react";
 import type { PhotoResponse } from "../types/types";
-import { fetchPhotos } from "../api/homepage";
+import { fetchPhotos } from "../api/profilepage";
 import { useParams } from "react-router-dom";
 import { PhotoCard } from "./PhotoCard";
 
 import "./PhotosGrid.css"
 import {fetchAlbumItemsAsPhotos } from "../api/photoBrowse";
-import { useOpenPhoto } from "../layouts/components/Popup/useOpenPhoto";
+import { useOpenPhoto } from "../layouts/components/popup/useOpenPhoto";
+
 type PhotosGridProps = {
   photoId?: string;
   albumId?: string;
   onPhotosChange?: (photos: PhotoResponse[]) => void;
-}
-export function PhotosGrid(PhotosGridProps: PhotosGridProps) {
+};
+
+export function PhotosGrid({ photoId, albumId, onPhotosChange }: PhotosGridProps) {
   const { slug } = useParams(); 
-  const PAGE_SIZE = PhotosGridProps.photoId? 8 : 20;
-  const FIRST_VISIBLE = 12;
+  const pageSize = photoId ? 8 : 20;
+  const firstVisible = 12;
   const [photos, setPhotos] = useState<PhotoResponse[]>([]);
   const [page, setPage] = useState(0); // backend page index
-  const [error, setError] = useState(); 
-  const [visibleCount, setVisibleCount] = useState(FIRST_VISIBLE);
+  const [error, setError] = useState<string | null>(null); 
+  const [visibleCount, setVisibleCount] = useState(firstVisible);
   const [hasMorePages, setHasMorePages] = useState(true);
   const [initialRevealDone, setInitialRevealDone] = useState(false);
   const hasHiddenInCurrent = !initialRevealDone && visibleCount < photos.length;
   const restoreScrollYRef = useRef<number | null>(null);
   const [photosLoading, setPhotosLoading] = useState(false);
-  const OpenPhoto = useOpenPhoto();
+  const openPhoto = useOpenPhoto();
 
 
 // Context can change (via routing), we need to reset when that happens
 useEffect(() => {
-  setPhotos([]);
-  setPage(0);
-  setVisibleCount(FIRST_VISIBLE);
-  setHasMorePages(true);
-  setInitialRevealDone(false);
-}, [slug,PhotosGridProps.photoId, PhotosGridProps.albumId]);
+  const frameId = window.requestAnimationFrame(() => {
+    setPhotos([]);
+    setPage(0);
+    setVisibleCount(firstVisible);
+    setHasMorePages(true);
+    setInitialRevealDone(false);
+    setError(null);
+  });
+
+  return () => {
+    window.cancelAnimationFrame(frameId);
+  };
+}, [albumId, firstVisible, photoId, slug]);
 
 useEffect(() => {
   
   let cancelled = false;
   if (!slug) return;
-  setPhotosLoading(true);
-  (PhotosGridProps.albumId?fetchAlbumItemsAsPhotos(PhotosGridProps.albumId): 
-  fetchPhotos(slug, page, PAGE_SIZE, PhotosGridProps.photoId))
+  const loadingFrameId = window.requestAnimationFrame(() => {
+    setPhotosLoading(true);
+  });
+  (albumId ? fetchAlbumItemsAsPhotos(albumId) : fetchPhotos(slug, page, pageSize, photoId))
     .then((res) => {
       if (cancelled) return;
 
@@ -64,13 +74,14 @@ useEffect(() => {
 
   return () => {
     cancelled = true;
+    window.cancelAnimationFrame(loadingFrameId);
   };
-}, [slug, page, PhotosGridProps.photoId, PhotosGridProps.albumId]);
+}, [albumId, page, pageSize, photoId, slug]);
 
 
 useEffect(() => {
-  loadCarrouselPhotos(photos);
-}, [photos]);
+  onPhotosChange?.(photos);
+}, [onPhotosChange, photos]);
 
 useEffect(() => {
   if (restoreScrollYRef.current == null) return;
@@ -83,13 +94,6 @@ useEffect(() => {
     });
   });
 }, [photos.length]);
-
-  // Loading carrousel photos
-  const loadCarrouselPhotos = (photos: PhotoResponse[]) => {
-    if(PhotosGridProps.onPhotosChange)
-      {PhotosGridProps.onPhotosChange(photos);}
-
-  };
 
 function revealHidden() {
   setVisibleCount(photos.length);
@@ -108,7 +112,7 @@ return (
      <div className={`photos-preview ${hasHiddenInCurrent ? "is-clamped" : ""}`}>
     <div className="photos-masonry">
       {photos.slice(0, visibleCount).map((p) => (
-        <PhotoCard key={p.id} photo={p} onClick={() => OpenPhoto(p.id,"modal",PhotosGridProps?.albumId)}/>
+        <PhotoCard key={p.id} photo={p} onClick={() => openPhoto(p.id, "modal", albumId)}/>
       ))}
     </div>
 
@@ -117,7 +121,7 @@ return (
       <>
         <div className="photos-fade" />
         <div className="photos-more">
-          <button className="hp-more-btn" onClick={revealHidden}>
+          <button className="hp-more-btn" type="button" onClick={revealHidden}>
             See more
           </button>
         </div>
@@ -126,9 +130,9 @@ return (
   </div>
 
   {/* SECOND SEE MORE (pagination) */}
-  {!hasHiddenInCurrent && hasMorePages && !PhotosGridProps.photoId && !PhotosGridProps.albumId &&(
+  {!hasHiddenInCurrent && hasMorePages && !photoId && !albumId &&(
     <div style={{ textAlign: "center", marginTop: 20 }} >
-      <button className="hp-more-btn" onClick={loadMore}>
+      <button className="hp-more-btn" type="button" onClick={loadMore}>
         Load more photos
       </button>
     </div>

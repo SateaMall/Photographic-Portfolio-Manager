@@ -12,7 +12,7 @@ export function ScrollToHash() {
   requestAnimationFrame(go);
   setTimeout(go, 150);
 
-  }, [pathname,hash]);
+  }, [hash, navType, pathname]);
 
 
   return null;

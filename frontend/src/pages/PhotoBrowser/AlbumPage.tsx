@@ -1,8 +1,8 @@
 
 import { useParams } from "react-router-dom";
-import { CarrouselTopper } from "../../components/Carrousel/CarrouselTopper";
-import { ScrollIndicator } from "../../components/Indicator/ScrollIndicator";
-import { Navbar } from "../../components/NavigationBar/Navbar";
+import { CarrouselTopper } from "../../components/carrousel/CarrouselTopper";
+import { ScrollIndicator } from "../../components/indicator/ScrollIndicator";
+import { Navbar } from "../../components/navigationBar/Navbar";
 import { PhotosGrid } from "../../components/PhotosGrid";
 
 import "./AlbumPage.css"

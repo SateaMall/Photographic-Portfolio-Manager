@@ -2,6 +2,8 @@ import { httpJson} from "./http";
 export type AuthMeResponse = {
   authenticated: boolean;
   email?: string;
+  profileSlug?: string;
+  displayName?: string;
 };
 
 export type LoginInput = {

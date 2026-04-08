@@ -1,83 +1,187 @@
-import { useEffect, useState } from "react";
-import { fetchAlbums} from "../../api/homepage";
-import type { AlbumViewResponse, PhotoResponse } from "../../types/types";
-import {AlbumsRow} from "./components/AlbumsRow"
+import { Link } from "react-router-dom";
+
+import { useAuth } from "../../auth/AuthContext";
 import "./HomePage.css";
-import { useParams } from "react-router-dom";
-import { SocialBioSection } from "./components/SocialBioSection";
-import { PhotosGrid } from "../../components/PhotosGrid";
-import { CarrouselTopper } from "../../components/Carrousel/CarrouselTopper";
-import { Navbar } from "../../components/NavigationBar/Navbar";
-import { ScrollIndicator } from "../../components/Indicator/ScrollIndicator";
-export default function Homepage() {
 
-const { slug } = useParams() 
-const [error, setError] = useState<string | null>(null);
+const HOME_FEATURES = [
+  {
+    title: "Public galleries",
+    copy: "Keep the work front and center with pages designed for browsing, albums, and direct sharing.",
+  },
+  {
+    title: "Private ownership",
+    copy: "Sign in with a verified account so the right photographer stays in control of the profile and its edits.",
+  },
+  {
+    title: "Portfolio momentum",
+    copy: "Move from signup to a live public space quickly, then refine sequencing, storytelling, and contact details over time.",
+  },
+];
 
+const HOME_STEPS = [
+  "Create an account and receive a verification code.",
+  "Confirm your email, then sign in to your gallery space.",
+  "Share your public profile and grow the portfolio from there.",
+];
 
-/**** **** **** **** ALBUMS **** **** **** ****/
+export default function HomePage() {
+  const { error, isAuthenticated, loading, session, signOut } = useAuth();
 
-  const [albums, setAlbums] = useState<AlbumViewResponse[]>([]);
-  const [albumsLoading, setAlbumsLoading] = useState(false);
-  const [photos, setPhotos] = useState<PhotoResponse[]>([]);
-  useEffect(() => {
-     setAlbumsLoading(true);
-          if (!slug) {
-      return () => {};
-    }
+  return (
+    <main className="home-page">
+      <section className="home-hero">
+        <header className="home-nav">
+          <Link className="home-brand" to="/">
+            Photo Gallery
+          </Link>
 
-    fetchAlbums(slug)
-      .then(setAlbums)
-      .catch((e) => setError(e.message))
-      .finally(() => setAlbumsLoading(false));
-  }, [slug]);
+          <nav className="home-nav-links" aria-label="Primary">
+            <a className="home-nav-link" href="#features">
+              Features
+            </a>
+            <a className="home-nav-link" href="#flow">
+              Auth flow
+            </a>
+            <Link className="home-nav-link" to="/profiles">
+              Profiles
+            </Link>
+            {isAuthenticated ? (
+              <button className="home-nav-button" type="button" onClick={() => void signOut()}>
+                Sign out
+              </button>
+            ) : (
+              <>
+                <Link className="home-nav-link" to="/login">
+                  Sign in
+                </Link>
+                <Link className="home-nav-cta" to="/signup">
+                  Create account
+                </Link>
+              </>
+            )}
+          </nav>
+        </header>
 
+        <div className="home-hero-body">
+          <div className="home-hero-copy">
+            <p className="home-eyebrow">Portfolio Platform</p>
+            <h1 className="home-title">Build a public photography home with a clean auth flow behind it.</h1>
+            <p className="home-subtitle">
+              This app now has a dedicated landing page plus account creation, email verification, and sign-in routes wired to the existing backend auth API.
+            </p>
 
-  
-  if (error) return <div className="hp hp-error">{error}</div>;
+            <div className="home-actions">
+              {isAuthenticated ? (
+                <>
+                  <Link className="home-primary-btn" to={session.profileSlug ? `/${session.profileSlug}` : "/profiles"}>
+                    Open your gallery
+                  </Link>
+                  <Link className="home-secondary-btn" to="/profiles">
+                    Browse public profiles
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link className="home-primary-btn" to="/signup">
+                    Start with signup
+                  </Link>
+                  <Link className="home-secondary-btn" to="/login">
+                    I already have an account
+                  </Link>
+                </>
+              )}
+            </div>
 
+            <div className="home-status-row">
+              <article className="home-status-card">
+                <span className="home-status-label">Session</span>
+                <strong>{loading ? "Checking current login" : isAuthenticated ? "Authenticated" : "Not signed in"}</strong>
+              </article>
+              <article className="home-status-card">
+                <span className="home-status-label">Profile</span>
+                <strong>{session.displayName ?? session.email ?? "Create or sign in to continue"}</strong>
+              </article>
+            </div>
 
-return (
-  <div className="homepage">
+            {error && <p className="home-error">Session check failed: {error}</p>}
+          </div>
 
-    <div className="Topper">
-      <div className="navbar-container">
-        <Navbar />
-      </div>
-      
-      <div className="carrousel-container">
-        <CarrouselTopper carrouselPhotos={photos.slice(0,5)} />
-      </div>
-      <div className="bio-container">
-        <SocialBioSection />
-      </div>
-      <div className="scroll-indicator">
-        <ScrollIndicator targetId={["albums", "photos"]} />
-      </div>
-    </div>
-  
-  <div className="content">
-      {/* Albums */}
-    {albums.length!==0 && (
-      <section className="hp-section-album"  id="albums">
-      <header className="hp-head-album">
-        <h1 className="hp-title">Albums</h1>
-      </header>
-      {albumsLoading && (<div className="hp">Albums Loading…</div>)}
-       <AlbumsRow albums={albums} />
-    </section> 
-    )}
+          <aside className="home-hero-panel">
+            <p className="home-panel-kicker">What ships with this setup</p>
+            <div className="home-panel-list">
+              <div className="home-panel-item">
+                <span className="home-panel-step">01</span>
+                <div>
+                  <h2>Dedicated homepage</h2>
+                  <p>A real landing route at `/` instead of an automatic redirect.</p>
+                </div>
+              </div>
+              <div className="home-panel-item">
+                <span className="home-panel-step">02</span>
+                <div>
+                  <h2>End-to-end auth</h2>
+                  <p>Signup, verification, sign-in, session refresh, and sign-out are connected to the Spring backend.</p>
+                </div>
+              </div>
+              <div className="home-panel-item">
+                <span className="home-panel-step">03</span>
+                <div>
+                  <h2>Session-aware UI</h2>
+                  <p>The landing page adapts based on whether the current visitor already has an authenticated session.</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
 
-    {/* Photos */}
-    <section className="hp-section"  id="photos">
-      <header className="hp-head">
-        <h1 className="hp-title ">Photos</h1>
-      </header>
-      <PhotosGrid onPhotosChange={setPhotos}/>
-    </section>
-  </div>
+      <section className="home-section" id="features">
+        <div className="home-section-head">
+          <p className="home-eyebrow">Features</p>
+          <h2>Built for photographers who need both a portfolio surface and simple account ownership.</h2>
+        </div>
 
-  </div>
-);
+        <div className="home-feature-grid">
+          {HOME_FEATURES.map((feature) => (
+            <article className="home-feature-card" key={feature.title}>
+              <h3>{feature.title}</h3>
+              <p>{feature.copy}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
+      <section className="home-section home-section--flow" id="flow">
+        <div className="home-section-head">
+          <p className="home-eyebrow">Auth Flow</p>
+          <h2>The account path now matches the backend behavior instead of stopping at a placeholder form.</h2>
+        </div>
+
+        <div className="home-flow-grid">
+          {HOME_STEPS.map((step, index) => (
+            <article className="home-flow-card" key={step}>
+              <span className="home-flow-number">0{index + 1}</span>
+              <p>{step}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="home-cta-strip">
+        <div>
+          <p className="home-eyebrow">Next Step</p>
+          <h2>{isAuthenticated ? "Continue refining your public gallery." : "Create the account that will own your gallery."}</h2>
+        </div>
+
+        <div className="home-actions home-actions--compact">
+          <Link className="home-primary-btn" to={isAuthenticated && session.profileSlug ? `/${session.profileSlug}` : "/signup"}>
+            {isAuthenticated ? "Go to your gallery" : "Create account"}
+          </Link>
+          <Link className="home-secondary-btn" to="/profiles">
+            Browse profiles
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
 }

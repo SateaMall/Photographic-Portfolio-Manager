@@ -5,7 +5,7 @@ import { fetchAlbumItemsAsPhotos, fetchMainPhoto } from "../../api/photoBrowse";
 import type { MainPhotoResponse, PhotoResponse, PublicProfileResponse } from "../../types/types";
 import { PhotosGrid } from "../../components/PhotosGrid";
 import "./PhotoPage.css"
-import { Navbar } from "../../components/NavigationBar/Navbar";
+import { Navbar } from "../../components/navigationBar/Navbar";
 import PhotoInfo from "./components/PhotoInfo";
 import PhotoViewer from "./components/PhotoViewer";
 
