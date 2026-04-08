@@ -1,11 +1,47 @@
 export const API_BASE =
   import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080";
 
+type ErrorResponse = {
+  message?: string;
+};
+
+export class HttpError extends Error {
+  status: number;
+  statusText: string;
+  body: string;
+
+  constructor(status: number, statusText: string, message: string, body: string) {
+    super(message);
+    this.name = "HttpError";
+    this.status = status;
+    this.statusText = statusText;
+    this.body = body;
+  }
+}
+
 async function readJsonSafe<T>(res: Response): Promise<T | null> {
   const text = await res.text();
   if (!text) return null;
   return JSON.parse(text) as T;
 }
+
+function readErrorMessage(status: number, statusText: string, body: string) {
+  if (!body) {
+    return `${status} ${statusText}`;
+  }
+
+  try {
+    const parsed = JSON.parse(body) as ErrorResponse;
+    if (typeof parsed.message === "string" && parsed.message.trim()) {
+      return parsed.message;
+    }
+  } catch {
+    // Fall back to the raw text body when the response is not JSON.
+  }
+
+  return body;
+}
+
 export async function httpJson<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     credentials: "include",
@@ -18,7 +54,12 @@ export async function httpJson<T>(path: string, init?: RequestInit): Promise<T> 
   });
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`${res.status} ${res.statusText} ${text}`);
+    throw new HttpError(
+      res.status,
+      res.statusText,
+      readErrorMessage(res.status, res.statusText, text),
+      text,
+    );
   }
   const data = await readJsonSafe<T>(res);
   return data as T;

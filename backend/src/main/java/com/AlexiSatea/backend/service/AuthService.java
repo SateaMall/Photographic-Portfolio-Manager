@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class AuthService {
     private final SlugService slugService;
     private final EmailVerificationService emailVerificationService;
     private final AuthenticationManager authenticationManager;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Transactional
     public void signup(SignupRequest request) {
@@ -98,17 +100,17 @@ public class AuthService {
                         request.password()
                 )
         );
-
+        establishSession(authentication, httpRequest);
+    }
+    public void establishSession(Authentication authentication, HttpServletRequest httpRequest) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
-
         HttpSession session = httpRequest.getSession(true);
         session.setAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 context
         );
-
     }
 
     @Transactional(readOnly = true)
@@ -127,5 +129,14 @@ public class AuthService {
                 .orElseThrow(() -> new IllegalStateException("No profile found for authenticated user: " + email));
 
         return AuthMeResponse.authenticated(user.getEmail(), profile.getSlug(), profile.getDisplayName());
+    }
+    public void loginVerifiedUser(String email, HttpServletRequest httpRequest) {
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(normalize(email));
+        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+        establishSession(authentication, httpRequest);
     }
 }

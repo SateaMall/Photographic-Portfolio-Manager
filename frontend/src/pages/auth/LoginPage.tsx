@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import { login } from "../../api/auth";
@@ -24,7 +24,7 @@ export default function LoginPage() {
     return <Navigate to={session.profileSlug ? `/${session.profileSlug}` : "/profiles"} replace />;
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setSubmitting(true);
@@ -38,49 +38,39 @@ export default function LoginPage() {
       const nextSession = await refreshSession();
       navigate(nextSession.profileSlug ? `/${nextSession.profileSlug}` : "/profiles", { replace: true });
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Unable to sign in.");
-    } finally {
-      setSubmitting(false);
+    const message = caughtError instanceof Error ? caughtError.message : "Unable to sign in.";
+    if (message === "Please verify your email before signing in.") {
+      navigate(`/verify-email?email=${encodeURIComponent(form.email.trim())}`, {
+        replace: true,
+        state: {
+          message: "Please verify your email to continue.",
+        },
+      });
+      return;
     }
-  }
+  setError(message);
+}}
 
   return (
-    <main className="auth-page">
+    <main className="auth-page auth-page--minimal">
       <div className="auth-shell">
         <div className="auth-topbar">
           <Link className="auth-brand" to="/">
-            Photo Gallery
+            Let me Lens
           </Link>
           <div className="auth-topbar-links">
-            <Link className="auth-link" to="/profiles">
-              Explore galleries
-            </Link>
             <Link className="auth-link" to="/signup">
               Create account
             </Link>
           </div>
         </div>
 
-        <div className="auth-grid">
-          <section className="auth-panel auth-panel--accent">
-            <p className="auth-eyebrow">Sign In</p>
-            <h1 className="auth-title">Return to your photography space.</h1>
-            <p className="auth-copy">
-              Sign in to manage your gallery, keep your portfolio current, and share the work you want people to remember.
-            </p>
-            <ul className="auth-list">
-              <li>Upload and organize new work.</li>
-              <li>Keep albums, profile details, and contact links in sync.</li>
-              <li>Jump back into your public gallery in one click.</li>
-            </ul>
-          </section>
-
-          <section className="auth-panel">
+        <div className="auth-grid auth-grid--single">
+          <section className="auth-panel auth-panel--minimal">
             <form className="auth-form" onSubmit={handleSubmit}>
               <div>
-                <p className="auth-eyebrow">Account Access</p>
                 <h2 className="auth-title">Welcome back</h2>
-                <p className="auth-meta">Use the email and password linked to your gallery account.</p>
+                <p className="auth-meta">Sign in with the email and password linked to your gallery account.</p>
               </div>
 
               {new URLSearchParams(location.search).get("verified") === "1" && (
@@ -117,9 +107,6 @@ export default function LoginPage() {
                 <button className="auth-primary-btn" type="submit" disabled={submitting}>
                   {submitting ? "Signing in..." : "Sign in"}
                 </button>
-                <Link className="auth-inline-link" to="/verify-email">
-                  Verify your email
-                </Link>
               </div>
 
               <p className="auth-hint">

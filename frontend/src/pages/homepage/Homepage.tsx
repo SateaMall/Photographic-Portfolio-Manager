@@ -18,12 +18,6 @@ const HOME_FEATURES = [
   },
 ];
 
-const HOME_STEPS = [
-  "Create an account and receive a verification code.",
-  "Confirm your email, then sign in to your gallery space.",
-  "Share your public profile and grow the portfolio from there.",
-];
-
 export default function HomePage() {
   const { error, isAuthenticated, loading, session, signOut } = useAuth();
 
@@ -39,11 +33,8 @@ export default function HomePage() {
             <a className="home-nav-link" href="#features">
               Features
             </a>
-            <a className="home-nav-link" href="#flow">
-              Auth flow
-            </a>
-            <Link className="home-nav-link" to="/profiles">
-              Profiles
+            <Link className="auth-link" to="/satea">
+              Exemple
             </Link>
             {isAuthenticated ? (
               <button className="home-nav-button" type="button" onClick={() => void signOut()}>
@@ -65,10 +56,7 @@ export default function HomePage() {
         <div className="home-hero-body">
           <div className="home-hero-copy">
             <p className="home-eyebrow">Portfolio Platform</p>
-            <h1 className="home-title">Build a public photography home with a clean auth flow behind it.</h1>
-            <p className="home-subtitle">
-              This app now has a dedicated landing page plus account creation, email verification, and sign-in routes wired to the existing backend auth API.
-            </p>
+            <h1 className="home-title">Build a public photography portofolio.</h1>
 
             <div className="home-actions">
               {isAuthenticated ? (
@@ -151,21 +139,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="home-section home-section--flow" id="flow">
-        <div className="home-section-head">
-          <p className="home-eyebrow">Auth Flow</p>
-          <h2>The account path now matches the backend behavior instead of stopping at a placeholder form.</h2>
-        </div>
-
-        <div className="home-flow-grid">
-          {HOME_STEPS.map((step, index) => (
-            <article className="home-flow-card" key={step}>
-              <span className="home-flow-number">0{index + 1}</span>
-              <p>{step}</p>
-            </article>
-          ))}
-        </div>
-      </section>
 
       <section className="home-cta-strip">
         <div>
@@ -177,8 +150,8 @@ export default function HomePage() {
           <Link className="home-primary-btn" to={isAuthenticated && session.profileSlug ? `/${session.profileSlug}` : "/signup"}>
             {isAuthenticated ? "Go to your gallery" : "Create account"}
           </Link>
-          <Link className="home-secondary-btn" to="/profiles">
-            Browse profiles
+          <Link className="home-secondary-btn" to="/satea">
+            Exemple
           </Link>
         </div>
       </section>

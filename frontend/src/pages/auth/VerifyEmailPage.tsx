@@ -1,8 +1,9 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState, type SubmitEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { resendVerificationCode, verifyEmail } from "../../api/auth";
 import "./AuthPages.css";
+import { useAuth } from "../../auth/AuthContext";
 
 function readEmailFromSearch(search: string) {
   return new URLSearchParams(search).get("email") ?? "";
@@ -28,8 +29,9 @@ export default function VerifyEmailPage() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(signupMessage);
   const [success, setSuccess] = useState<string | null>(null);
+  const { refreshSession } = useAuth();
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setSuccess(null);
@@ -40,9 +42,9 @@ export default function VerifyEmailPage() {
         email: form.email.trim(),
         code: form.code.trim(),
       });
-
       setSuccess(response.message);
-      navigate(`/login?verified=1&email=${encodeURIComponent(form.email.trim())}`, { replace: true });
+      const session = await refreshSession();
+      navigate(session.profileSlug ? `/${session.profileSlug}` : "/profiles", { replace: true });
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Unable to verify this email.");
     } finally {
@@ -66,42 +68,25 @@ export default function VerifyEmailPage() {
   }
 
   return (
-    <main className="auth-page">
+    <main className="auth-page auth-page--minimal">
       <div className="auth-shell">
         <div className="auth-topbar">
           <Link className="auth-brand" to="/">
-            Photo Gallery
+            Let me Lens
           </Link>
           <div className="auth-topbar-links">
-            <Link className="auth-link" to="/signup">
-              Create account
-            </Link>
             <Link className="auth-link" to="/login">
               Sign in
             </Link>
           </div>
         </div>
 
-        <div className="auth-grid">
-          <section className="auth-panel auth-panel--accent">
-            <p className="auth-eyebrow">Email Verification</p>
-            <h1 className="auth-title">Confirm ownership before publishing further.</h1>
-            <p className="auth-copy">
-              Enter the six-digit code sent to your inbox. Once verified, you can sign in and continue building your gallery.
-            </p>
-            <ul className="auth-list">
-              <li>Verification activates the account created during signup.</li>
-              <li>You can request another code if the first email did not arrive.</li>
-              <li>After verification, head straight to sign in.</li>
-            </ul>
-          </section>
-
-          <section className="auth-panel">
+        <div className="auth-grid auth-grid--single">
+          <section className="auth-panel auth-panel--minimal">
             <form className="auth-form" onSubmit={handleSubmit}>
               <div>
-                <p className="auth-eyebrow">Verify Account</p>
-                <h2 className="auth-title">Enter your code</h2>
-                <p className="auth-meta">The backend expects a six-digit verification code tied to your email address.</p>
+                <h2 className="auth-title">Verify your email</h2>
+                <p className="auth-meta">Enter the code we sent to your email to finish setting up your account.</p>
               </div>
 
               {message && <p className="auth-message">{message}</p>}
@@ -129,8 +114,8 @@ export default function VerifyEmailPage() {
                   onChange={(event) => setForm((current) => ({ ...current, code: event.target.value.replace(/\D/g, "").slice(0, 6) }))}
                   inputMode="numeric"
                   autoComplete="one-time-code"
-                  maxLength={6}
-                  minLength={6}
+                  maxLength={4}
+                  minLength={4}
                   required
                 />
               </label>

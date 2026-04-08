@@ -62,8 +62,9 @@ public class AuthController {
     }
 
     @PostMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
+    public ResponseEntity<?> verifyEmail(@Valid @RequestBody VerifyEmailRequest request,HttpServletRequest httpRequest) {
         emailVerificationService.verifyEmail(request);
+        authService.loginVerifiedUser(request.email(), httpRequest);
         return ResponseEntity.ok(Map.of("message", "Email verified successfully"));
     }
     @PostMapping("/resend-code")
