@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { Navigate, Outlet, useParams } from "react-router-dom";
 
-import { fetchPublicProfile } from "../api/profiles";
+import { fetchPublicProfile } from "../api/profile";
 import type { PublicProfileResponse } from "../types/types";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { ScrollToHash } from "./components/ScrollToHash";

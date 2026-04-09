@@ -3,8 +3,8 @@ import type { CSSProperties } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
-import { fetchPublicProfile } from "../../../api/profiles";
-import PhotoPage from "../../../pages/PhotoBrowser/PhotoPage"
+import { fetchPublicProfile } from "../../../api/profile";
+import PhotoPage from "../../../pages/gallery/photo-album/PhotoPage"
 import "./PhotoModal.css"
 
 type ThemeStyle = CSSProperties & {

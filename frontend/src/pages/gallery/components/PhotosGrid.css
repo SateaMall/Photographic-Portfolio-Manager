@@ -1,0 +1,92 @@
+
+/* ----------------------------- */
+/* PHOTOS */
+/* ----------------------------- */
+
+/* Masonry using CSS columns  */
+
+.photos-masonry {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+/* ≥ 600px */
+@media (min-width: 500px) {
+  .photos-masonry {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+@media (min-width: 800px) {
+  .photos-masonry {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+@media (min-width: 1000px) {
+.photos-masonry {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+}
+
+
+
+/* PHOTOS PREVIEW: clamp + fade + button */
+.photos-preview {
+  position: relative;
+  margin-bottom: 5%;;
+}
+
+/* clamp only when there are more photos */
+.photos-preview.is-clamped {
+  max-height: 900px;      /* <-- change this height to whatever you want */
+  overflow: hidden;
+}
+
+/* fading overlay at the bottom */
+.photos-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100px;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgb(255, 255, 255)
+  );
+}
+
+/* button container sits on top of fade */
+.photos-more {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* so only button catches clicks */
+
+}
+
+.hp-more-btn {
+  pointer-events: auto;
+  border: 2px solid rgba(72, 66, 66, 0);
+  background: rgba(201, 199, 193, 0.46);
+  backdrop-filter: blur(6px);
+  color: inherit;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.hp-more-btn:hover {
+  color: rgb(254, 254, 254); ;
+  background: var(--primaryColor, rgba(0, 0, 0, 0.967));
+}
+
+

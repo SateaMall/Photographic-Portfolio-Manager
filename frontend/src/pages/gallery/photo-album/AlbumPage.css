@@ -1,0 +1,51 @@
+.AlbumPage {
+  font-family: "Roboto Condensed", "Roboto", sans-serif;
+  padding: 0px;
+}
+
+/** Topper **/
+.Topper{
+ font-family:inherit;
+  position: relative;
+  width: 100%;
+  height: 95vh;
+}
+.navbar-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10; /* Ensure it stays above the carousel */
+}
+.carrousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Hide any overflow from the carousel */
+}
+.scroll-indicator {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+}
+
+
+/** Content **/
+.content {
+  padding: 40px 30px 30px 30px;
+}
+
+.hp-head__album {
+  margin: 30px 25px 20px;
+  padding-bottom: 20px;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.hp-title__album {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+  text-transform: lowercase; /* matches your "photos" sketch vibe */
+}

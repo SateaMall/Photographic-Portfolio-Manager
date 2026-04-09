@@ -1,0 +1,52 @@
+/* Put this section inside your HERO wrapper (position: absolute over carousel) */
+.hero-album-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: clamp(90px, 14vh, 160px); /* moves it down under navbar */
+  z-index: 0;
+
+  padding: 0 clamp(12px, 3vw, 28px);
+  color: #fff;
+}
+
+.album-info__inner {
+  max-width: 1000px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 26px);
+  text-align: center;
+  padding: clamp(14px, 2vw, 22px);
+}
+
+.hero-info__background {
+  /* subtle glass look on top of photos */
+  background: rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+}
+
+.album-info__title {
+  margin: 0;
+  margin-top: clamp(12px, 2vw, 20px);
+  font-size: clamp(30px, 3.9vw, 42px);
+  font-weight: 550;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+    font-family:  var(--font-copperplate);
+}
+
+.album-info__description {
+  margin: 2vh auto clamp(12px, 2vw, 20px) auto;
+  max-width: 55ch;
+  font-size: clamp(19px, 1.6vw, 21px);
+  line-height: 1.45;
+  opacity: 0.95;
+}
+
+.album-description--empty {
+  height: 18px; /* keeps layout stable if description is null */
+}
+

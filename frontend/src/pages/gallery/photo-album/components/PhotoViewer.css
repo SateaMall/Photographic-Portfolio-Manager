@@ -1,0 +1,39 @@
+
+.photo-page__imageBtn {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.photo-page__image {
+  width: 100%;
+  min-height: 50vh;
+  max-height: 80vh;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  background: #0b0b0c;
+}
+
+.photo-page__hint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+}
+
+/* Add space so toolbar doesn't overlap the image */
+.PhotoView__PhotoWrap {
+  margin-top: 20px ; /* same height as toolbar */
+  box-sizing: border-box;
+}
+

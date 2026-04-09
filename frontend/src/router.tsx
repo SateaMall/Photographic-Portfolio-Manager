@@ -1,15 +1,15 @@
 // src/router.tsx
 import { createBrowserRouter } from "react-router-dom";
 
-import ProfilesPage from "./pages/profilesPage/ProfilesPage.tsx";
+import WelcomePage from "./pages/gallery/welcome/WelcomePage.tsx";
 import GalleryLayout from "./layouts/GalleryLayout";
 import RootLayout from "./layouts/RootLayout.tsx";
-import NotFound from "./pages/notFound.tsx";
+import NotFound from "./pages/home/notFound.tsx";
 import { GalleryShell } from "./layouts/components/popup/GalleryShell.tsx";
-import HomePage from "./pages/homePage/HomePage.tsx";
-import LoginPage from "./pages/auth/LoginPage.tsx";
-import SignupPage from "./pages/auth/SignupPage.tsx";
-import VerifyEmailPage from "./pages/auth/VerifyEmailPage.tsx";
+import HomePage from "./pages/home/HomePage.tsx";
+import LoginPage from "./pages/home/auth/LoginPage.tsx";
+import SignupPage from "./pages/home/auth/SignupPage.tsx";
+import VerifyEmailPage from "./pages/home/auth/VerifyEmailPage.tsx";
 
 
 export const router = createBrowserRouter([
@@ -18,7 +18,7 @@ export const router = createBrowserRouter([
   { path: "login", element: <LoginPage /> },
   { path: "signup", element: <SignupPage /> },
   { path: "verify-email", element: <VerifyEmailPage /> },
-  { path: "profiles", element: <ProfilesPage /> },
+  { path: "profiles", element: <WelcomePage /> },
 
 {
   path: ":slug/*",
