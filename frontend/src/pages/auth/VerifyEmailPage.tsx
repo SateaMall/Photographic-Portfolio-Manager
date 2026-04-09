@@ -2,8 +2,9 @@ import { useMemo, useState, type SubmitEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { resendVerificationCode, verifyEmail } from "../../api/auth";
-import "./AuthPages.css";
 import { useAuth } from "../../auth/AuthContext";
+import { MarketingNavbar } from "../../components/marketing/MarketingNavbar";
+import "./AuthPages.css";
 
 function readEmailFromSearch(search: string) {
   return new URLSearchParams(search).get("email") ?? "";
@@ -12,9 +13,18 @@ function readEmailFromSearch(search: string) {
 export default function VerifyEmailPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const signupMessage = useMemo(() => {
-    if (typeof location.state === "object" && location.state && "signupMessage" in location.state) {
+  const pageMessage = useMemo(() => {
+    if (typeof location.state !== "object" || !location.state) {
+      return null;
+    }
+
+    if ("signupMessage" in location.state) {
       const value = location.state.signupMessage;
+      return typeof value === "string" ? value : null;
+    }
+
+    if ("message" in location.state) {
+      const value = location.state.message;
       return typeof value === "string" ? value : null;
     }
 
@@ -27,7 +37,7 @@ export default function VerifyEmailPage() {
   const [submitting, setSubmitting] = useState(false);
   const [resending, setResending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(signupMessage);
+  const [message, setMessage] = useState<string | null>(pageMessage);
   const [success, setSuccess] = useState<string | null>(null);
   const { refreshSession } = useAuth();
 
@@ -44,7 +54,7 @@ export default function VerifyEmailPage() {
       });
       setSuccess(response.message);
       const session = await refreshSession();
-      navigate(session.profileSlug ? `/${session.profileSlug}` : "/profiles", { replace: true });
+      navigate(session.authenticated ? (session.profileSlug ? `/${session.profileSlug}` : "/profiles") : `/login?verified=1&email=${encodeURIComponent(form.email.trim())}`, { replace: true });
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Unable to verify this email.");
     } finally {
@@ -69,18 +79,8 @@ export default function VerifyEmailPage() {
 
   return (
     <main className="auth-page auth-page--minimal">
+      <MarketingNavbar />
       <div className="auth-shell">
-        <div className="auth-topbar">
-          <Link className="auth-brand" to="/">
-            Let me Lens
-          </Link>
-          <div className="auth-topbar-links">
-            <Link className="auth-link" to="/login">
-              Sign in
-            </Link>
-          </div>
-        </div>
-
         <div className="auth-grid auth-grid--single">
           <section className="auth-panel auth-panel--minimal">
             <form className="auth-form" onSubmit={handleSubmit}>
@@ -110,11 +110,11 @@ export default function VerifyEmailPage() {
                 <input
                   className="auth-input"
                   type="text"
-                  value={form.code}
-                  onChange={(event) => setForm((current) => ({ ...current, code: event.target.value.replace(/\D/g, "").slice(0, 6) }))}
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  maxLength={4}
+                   value={form.code}
+                   onChange={(event) => setForm((current) => ({ ...current, code: event.target.value.replace(/\D/g, "").slice(0, 4) }))}
+                   inputMode="numeric"
+                   autoComplete="one-time-code"
+                   maxLength={4}
                   minLength={4}
                   required
                 />

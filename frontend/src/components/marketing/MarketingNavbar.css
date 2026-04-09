@@ -1,0 +1,150 @@
+.marketing-nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  color: #111827;
+  transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease, backdrop-filter 180ms ease;
+}
+
+.marketing-nav--overlay {
+  color: #fff;
+}
+
+.marketing-nav--scrolled,
+.marketing-nav:not(.marketing-nav--overlay) {
+  background: rgba(255, 255, 255, 0.94);
+  color: #111827;
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.08);
+  backdrop-filter: blur(16px);
+}
+
+.marketing-nav__inner {
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 0;
+}
+
+.marketing-nav__brand,
+.marketing-nav__link,
+.marketing-nav__action {
+  color: inherit;
+  text-decoration: none;
+}
+
+.marketing-nav__brand {
+  font-size: 0.92rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.marketing-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex: 1;
+}
+
+.marketing-nav__link {
+  opacity: 0.84;
+  transition: opacity 180ms ease;
+}
+
+.marketing-nav__link:hover {
+  opacity: 1;
+}
+
+.marketing-nav__action {
+  margin-left: auto;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 10px 18px;
+  transition: transform 180ms ease, background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.marketing-nav--overlay:not(.marketing-nav--scrolled) .marketing-nav__action {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.36);
+}
+
+.marketing-nav--scrolled .marketing-nav__action,
+.marketing-nav:not(.marketing-nav--overlay) .marketing-nav__action {
+  background: #111827;
+  border-color: #111827;
+  color: #fff;
+}
+
+.marketing-nav__action:hover {
+  transform: translateY(-1px);
+}
+
+.marketing-nav__toggle {
+  display: none;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 0;
+  cursor: pointer;
+}
+
+.marketing-nav--scrolled .marketing-nav__toggle,
+.marketing-nav:not(.marketing-nav--overlay) .marketing-nav__toggle {
+  background: #f3f4f6;
+}
+
+.marketing-nav__toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  margin: 4px auto;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+@media (max-width: 760px) {
+  .marketing-nav__inner {
+    width: min(100%, calc(100% - 24px));
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 14px 0;
+  }
+
+  .marketing-nav__toggle {
+    display: inline-block;
+  }
+
+  .marketing-nav__links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .marketing-nav__links--open {
+    display: flex;
+    background: rgba(17, 24, 39, 0.72);
+    color: #fff;
+    backdrop-filter: blur(16px);
+  }
+
+  .marketing-nav--scrolled .marketing-nav__links--open,
+  .marketing-nav:not(.marketing-nav--overlay) .marketing-nav__links--open {
+    background: #fff;
+    color: #111827;
+    box-shadow: 0 18px 40px rgba(17, 24, 39, 0.08);
+  }
+
+  .marketing-nav__action {
+    margin-left: 0;
+    text-align: center;
+  }
+}

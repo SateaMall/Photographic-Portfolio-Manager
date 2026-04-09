@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import { login } from "../../api/auth";
 import { useAuth } from "../../auth/AuthContext";
+import { MarketingNavbar } from "../../components/marketing/MarketingNavbar";
 import "./AuthPages.css";
 
 function readEmailFromSearch(search: string) {
@@ -38,33 +39,28 @@ export default function LoginPage() {
       const nextSession = await refreshSession();
       navigate(nextSession.profileSlug ? `/${nextSession.profileSlug}` : "/profiles", { replace: true });
     } catch (caughtError) {
-    const message = caughtError instanceof Error ? caughtError.message : "Unable to sign in.";
-    if (message === "Please verify your email before signing in.") {
-      navigate(`/verify-email?email=${encodeURIComponent(form.email.trim())}`, {
-        replace: true,
-        state: {
-          message: "Please verify your email to continue.",
-        },
-      });
-      return;
+      const message = caughtError instanceof Error ? caughtError.message : "Unable to sign in.";
+
+      if (message === "Please verify your email before signing in.") {
+        navigate(`/verify-email?email=${encodeURIComponent(form.email.trim())}`, {
+          replace: true,
+          state: {
+            message: "Please verify your email to continue.",
+          },
+        });
+        return;
+      }
+
+      setError(message);
+    } finally {
+      setSubmitting(false);
     }
-  setError(message);
-}}
+  }
 
   return (
     <main className="auth-page auth-page--minimal">
+      <MarketingNavbar />
       <div className="auth-shell">
-        <div className="auth-topbar">
-          <Link className="auth-brand" to="/">
-            Let me Lens
-          </Link>
-          <div className="auth-topbar-links">
-            <Link className="auth-link" to="/signup">
-              Create account
-            </Link>
-          </div>
-        </div>
-
         <div className="auth-grid auth-grid--single">
           <section className="auth-panel auth-panel--minimal">
             <form className="auth-form" onSubmit={handleSubmit}>

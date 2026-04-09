@@ -74,11 +74,13 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
   const id = window.setInterval(tick, 5000);
   return () => window.clearInterval(id);
   }, [emblaApi]);
-
+const hasPhotos = carrouselPhotos.length > 0;
   if (!slug) return null;
 
   return (
-    <div className="carousel_topper">
+    <div className={`carousel_topper ${hasPhotos ? "" : "carousel_topper--empty"}`}>
+    {hasPhotos ? (
+      <>
       {/* Left-Right navigation buttons */}
       <button
         type="button"
@@ -129,7 +131,12 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
     />
   ))}
 </div>*/}
-
-    </div>
-  );
+  </>
+    ) : (
+      <div className="carousel_topper__empty">
+        
+      </div>
+    )}
+  </div>
+);
 }

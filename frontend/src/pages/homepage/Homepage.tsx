@@ -1,158 +1,51 @@
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../auth/AuthContext";
+import { MarketingNavbar } from "../../components/marketing/MarketingNavbar";
 import "./HomePage.css";
 
-const HOME_FEATURES = [
-  {
-    title: "Public galleries",
-    copy: "Keep the work front and center with pages designed for browsing, albums, and direct sharing.",
-  },
-  {
-    title: "Private ownership",
-    copy: "Sign in with a verified account so the right photographer stays in control of the profile and its edits.",
-  },
-  {
-    title: "Portfolio momentum",
-    copy: "Move from signup to a live public space quickly, then refine sequencing, storytelling, and contact details over time.",
-  },
-];
-
 export default function HomePage() {
-  const { error, isAuthenticated, loading, session, signOut } = useAuth();
+  const { isAuthenticated, loading, session } = useAuth();
+  const primaryTarget = !loading && isAuthenticated
+    ? (session.profileSlug ? `/${session.profileSlug}` : "/profiles")
+    : "/signup";
 
   return (
     <main className="home-page">
+      <MarketingNavbar overlay />
+
       <section className="home-hero">
-        <header className="home-nav">
-          <Link className="home-brand" to="/">
-            Photo Gallery
+        <div className="home-hero__content">
+          <p className="home-hero__eyebrow">Prepare your photography portfolio in 5 minutes.</p>
+          <h1 className="home-hero__title">A calm first screen built for the photograph you will choose later.</h1>
+          <p className="home-hero__subtitle">
+            Start with a full-screen image, keep the interface quiet, and let the work speak first.
+          </p>
+          <Link className="home-hero__cta" to={primaryTarget}>
+            Start the journey
           </Link>
+        </div>
+      </section>
 
-          <nav className="home-nav-links" aria-label="Primary">
-            <a className="home-nav-link" href="#features">
-              Features
-            </a>
-            <Link className="auth-link" to="/satea">
-              Exemple
-            </Link>
-            {isAuthenticated ? (
-              <button className="home-nav-button" type="button" onClick={() => void signOut()}>
-                Sign out
-              </button>
-            ) : (
-              <>
-                <Link className="home-nav-link" to="/login">
-                  Sign in
-                </Link>
-                <Link className="home-nav-cta" to="/signup">
-                  Create account
-                </Link>
-              </>
-            )}
-          </nav>
-        </header>
+      <section className="home-section" id="about">
+        <div className="home-section__inner">
+          <p className="home-section__label">About Us</p>
+          <h2 className="home-section__title">The homepage now starts with the image instead of the interface.</h2>
+          <p className="home-section__copy">
+            This version keeps the first impression minimal, with a full-screen hero and quiet navigation so you can swap in a single photograph or a slideshow later without changing the structure.
+          </p>
+        </div>
+      </section>
 
-        <div className="home-hero-body">
-          <div className="home-hero-copy">
-            <p className="home-eyebrow">Portfolio Platform</p>
-            <h1 className="home-title">Build a public photography portofolio.</h1>
-
-            <div className="home-actions">
-              {isAuthenticated ? (
-                <>
-                  <Link className="home-primary-btn" to={session.profileSlug ? `/${session.profileSlug}` : "/profiles"}>
-                    Open your gallery
-                  </Link>
-                  <Link className="home-secondary-btn" to="/profiles">
-                    Browse public profiles
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link className="home-primary-btn" to="/signup">
-                    Start with signup
-                  </Link>
-                  <Link className="home-secondary-btn" to="/login">
-                    I already have an account
-                  </Link>
-                </>
-              )}
-            </div>
-
-            <div className="home-status-row">
-              <article className="home-status-card">
-                <span className="home-status-label">Session</span>
-                <strong>{loading ? "Checking current login" : isAuthenticated ? "Authenticated" : "Not signed in"}</strong>
-              </article>
-              <article className="home-status-card">
-                <span className="home-status-label">Profile</span>
-                <strong>{session.displayName ?? session.email ?? "Create or sign in to continue"}</strong>
-              </article>
-            </div>
-
-            {error && <p className="home-error">Session check failed: {error}</p>}
+      <section className="home-section home-section--muted" id="contact">
+        <div className="home-section__inner home-section__inner--split">
+          <div>
+            <p className="home-section__label">Contact Us</p>
+            <h2 className="home-section__title">The white section after the hero is ready for your next content decisions.</h2>
           </div>
-
-          <aside className="home-hero-panel">
-            <p className="home-panel-kicker">What ships with this setup</p>
-            <div className="home-panel-list">
-              <div className="home-panel-item">
-                <span className="home-panel-step">01</span>
-                <div>
-                  <h2>Dedicated homepage</h2>
-                  <p>A real landing route at `/` instead of an automatic redirect.</p>
-                </div>
-              </div>
-              <div className="home-panel-item">
-                <span className="home-panel-step">02</span>
-                <div>
-                  <h2>End-to-end auth</h2>
-                  <p>Signup, verification, sign-in, session refresh, and sign-out are connected to the Spring backend.</p>
-                </div>
-              </div>
-              <div className="home-panel-item">
-                <span className="home-panel-step">03</span>
-                <div>
-                  <h2>Session-aware UI</h2>
-                  <p>The landing page adapts based on whether the current visitor already has an authenticated session.</p>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section className="home-section" id="features">
-        <div className="home-section-head">
-          <p className="home-eyebrow">Features</p>
-          <h2>Built for photographers who need both a portfolio surface and simple account ownership.</h2>
-        </div>
-
-        <div className="home-feature-grid">
-          {HOME_FEATURES.map((feature) => (
-            <article className="home-feature-card" key={feature.title}>
-              <h3>{feature.title}</h3>
-              <p>{feature.copy}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-
-      <section className="home-cta-strip">
-        <div>
-          <p className="home-eyebrow">Next Step</p>
-          <h2>{isAuthenticated ? "Continue refining your public gallery." : "Create the account that will own your gallery."}</h2>
-        </div>
-
-        <div className="home-actions home-actions--compact">
-          <Link className="home-primary-btn" to={isAuthenticated && session.profileSlug ? `/${session.profileSlug}` : "/signup"}>
-            {isAuthenticated ? "Go to your gallery" : "Create account"}
-          </Link>
-          <Link className="home-secondary-btn" to="/satea">
-            Exemple
-          </Link>
+          <p className="home-section__copy">
+            You can place contact details, a short studio introduction, or a booking call to action here later. For now, the layout stays intentionally light.
+          </p>
         </div>
       </section>
     </main>

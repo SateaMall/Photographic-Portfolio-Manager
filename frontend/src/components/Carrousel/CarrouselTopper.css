@@ -14,7 +14,13 @@
   flex: 0 0  100%; 
   overflow: hidden; /* important so zoom doesn't spill outside */
 }
-
+.carousel_topper--empty {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(12, 18, 28, 0.24) 0%, rgba(12, 18, 28, 0.48) 100%),
+    radial-gradient(circle at 20% 20%, rgba(250, 250, 250, 0.18), transparent 30%),
+    linear-gradient(135deg, #69727d 0%, #303640 45%, #12161c 100%);
+}
 /* LIMIT “long” photos: fixed height (responsive) + cover */
 .embla-img_topper {
   width: 100%;

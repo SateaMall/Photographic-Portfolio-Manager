@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import { signup } from "../../api/auth";
 import { useAuth } from "../../auth/AuthContext";
+import { MarketingNavbar } from "../../components/marketing/MarketingNavbar";
 import "./AuthPages.css";
 
 function isStepOneValid(email: string, password: string) {
@@ -72,18 +73,8 @@ export default function SignupPage() {
 
   return (
     <main className="auth-page auth-page--minimal">
+      <MarketingNavbar />
       <div className="auth-shell">
-        <div className="auth-topbar">
-          <Link className="auth-brand" to="/">
-            Let me Lens
-          </Link>
-          <div className="auth-topbar-links">
-            <Link className="auth-link" to="/login">
-              Sign in
-            </Link>
-          </div>
-        </div>
-
         <div className="auth-grid auth-grid--single">
           <section className="auth-panel auth-panel--minimal auth-panel--signup">
             <form className="auth-form" onSubmit={handleSubmit}>
