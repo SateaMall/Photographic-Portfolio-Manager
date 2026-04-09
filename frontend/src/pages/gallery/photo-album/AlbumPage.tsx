@@ -32,8 +32,10 @@ export default function AlbumPage() {
   };
   }, [albumId])
 
-useEffect(() => {
-  console.log(photos)}, [photos])
+      useEffect(() => {
+      if (!album) return;
+      document.title = album.title?.trim() || "Let Me Lens";
+    }, [album]);
 
   return (
     <div className="AlbumPage">

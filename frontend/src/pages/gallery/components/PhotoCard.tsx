@@ -2,7 +2,7 @@ import type { PhotoResponse } from "../../../types/types";
 import { photoFileUrl } from "../../../api/photos";
 import "./PhotoCard.css";
 import {  useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsLink45Deg, BsGeoAltFill } from "react-icons/bs";
 
 type PhotoCardProps = {
@@ -23,7 +23,6 @@ export function PhotoCard({ photo, onClick }: PhotoCardProps) {
     navigate(`/${photo.owner}`);
   }*/
 
-
   async function onShare(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
 
@@ -36,6 +35,7 @@ export function PhotoCard({ photo, onClick }: PhotoCardProps) {
     }
     setCopied(true); 
   }
+
   
   return (
     <article

@@ -64,6 +64,11 @@ export default function PhotoPage({ lightboxPortalContainer , lightboxKey }: Pho
       }, [slug, photoId, inAlbum, albumId]);
     
 
+    useEffect(() => {
+      if (!mainPhoto) return;
+      document.title = mainPhoto.title?.trim() || "Let Me Lens";
+    }, [mainPhoto]);
+
   if (!photoId || !slug) return null;
 
   return (

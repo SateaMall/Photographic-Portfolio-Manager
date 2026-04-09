@@ -33,15 +33,24 @@ export function Navbar() {
           }
         });
   
+        document.title = profile?.displayName?.trim() || "Let Me Lens";
+        
       return () => {
         active = false;
       };
     }, [slug]);
-  
+
+      useEffect(() => {
+      if (!profile) return;
+      document.title = profile?.displayName?.trim() || "Let Me Lens";
+    }, [profile]);
+    
     if (!profile) return null;
     
   // Base for albums/photos links and brand
   const base = `/${slug}`;
+
+
 
   return (
     <header className="rg-nav">
