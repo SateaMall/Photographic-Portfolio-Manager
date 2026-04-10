@@ -1,7 +1,7 @@
 import { useState, type SubmitEvent } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
-import { login } from "../../../api/auth";
+import { getGoogleLoginUrl, login } from "../../../api/auth";
 import { useAuth } from "../../../auth/AuthContext";
 import { MarketingNavbar } from "../components/navigation/MarketingNavbar";
 import "./AuthPages.css";
@@ -14,12 +14,14 @@ export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, loading, refreshSession, session } = useAuth();
+  const searchParams = new URLSearchParams(location.search);
   const [form, setForm] = useState({
     email: readEmailFromSearch(location.search),
     password: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const oauthError = searchParams.get("oauthError");
 
   if (!loading && isAuthenticated) {
     return <Navigate to={session.profileSlug ? `/${session.profileSlug}` : "/profiles"} replace />;
@@ -57,6 +59,10 @@ export default function LoginPage() {
     }
   }
 
+  function handleGoogleSignIn() {
+    window.location.assign(getGoogleLoginUrl());
+  }
+
   return (
     <main className="auth-page auth-page--minimal">
       <MarketingNavbar />
@@ -69,11 +75,17 @@ export default function LoginPage() {
                 <p className="auth-meta">Sign in with the email and password linked to your gallery account.</p>
               </div>
 
-              {new URLSearchParams(location.search).get("verified") === "1" && (
+              {searchParams.get("verified") === "1" && (
                 <p className="auth-success">Email verified. You can sign in now.</p>
               )}
 
-              {error && <p className="auth-error">{error}</p>}
+              {(error ?? oauthError) && <p className="auth-error">{error ?? oauthError}</p>}
+
+              <button className="auth-provider-btn" type="button" onClick={handleGoogleSignIn} disabled={submitting}>
+                Continue with Google
+              </button>
+
+              <div className="auth-divider">or continue with email</div>
 
               <label className="auth-field">
                 <span className="auth-label">Email</span>

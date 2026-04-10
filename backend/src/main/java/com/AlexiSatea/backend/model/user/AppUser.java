@@ -19,10 +19,12 @@ import java.util.UUID;
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_users_email", columnNames = "email")
+                @UniqueConstraint(name = "uk_users_email", columnNames = "email"),
+                @UniqueConstraint(name = "uk_users_google_subject", columnNames = "google_subject")
         },
         indexes = {
-                @Index(name = "idx_users_email", columnList = "email")
+                @Index(name = "idx_users_email", columnList = "email"),
+                @Index(name = "idx_users_google_subject", columnList = "google_subject")
         }
 )
 public class AppUser {
@@ -38,8 +40,11 @@ public class AppUser {
     private String email;
 
     @JsonIgnore
-    @Column(name = "password_hash", nullable = false, length = 255)
+    @Column(name = "password_hash", length = 255)
     private String passwordHash;
+
+    @Column(name = "google_subject", length = 255)
+    private String googleSubject;
 
     @Column(name = "first_name", length = 80)
     private String firstName;
@@ -85,6 +90,7 @@ public class AppUser {
 
     private void normalize() {
         if (email != null) email = email.trim().toLowerCase();
+        if (googleSubject != null) googleSubject = googleSubject.trim();
         if (firstName != null) firstName = firstName.trim();
         if (lastName != null) lastName = lastName.trim();
     }

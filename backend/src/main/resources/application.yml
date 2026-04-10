@@ -2,6 +2,18 @@ spring:
   application:
     name: backend
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: "849153694603-rsb2si66hi2vu6cqpftu7tffdrhsmlif.apps.googleusercontent.com"
+            client-secret: "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"
+            scope:
+              - openid
+              - profile
+              - email
+
   datasource:
     url: jdbc:postgresql://localhost:5432/photo_gallery
     username: photo
@@ -33,6 +45,8 @@ server:
   port: 8080
 
 app:
+  frontend:
+    base-url: http://localhost:5173
   storage:
     type: local
     local:

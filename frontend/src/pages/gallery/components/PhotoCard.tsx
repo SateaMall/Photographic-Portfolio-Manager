@@ -2,7 +2,7 @@ import type { PhotoResponse } from "../../../types/types";
 import { photoFileUrl } from "../../../api/photos";
 import "./PhotoCard.css";
 import {  useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BsLink45Deg, BsGeoAltFill } from "react-icons/bs";
 
 type PhotoCardProps = {

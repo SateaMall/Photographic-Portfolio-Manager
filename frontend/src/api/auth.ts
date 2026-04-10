@@ -1,4 +1,4 @@
-import { httpJson} from "./http";
+import { API_BASE, httpJson } from "./http";
 export type AuthMeResponse = {
   authenticated: boolean;
   email?: string;
@@ -35,6 +35,11 @@ export function login(input: LoginInput) {
     body: JSON.stringify(input),
   });
 }
+
+export function getGoogleLoginUrl() {
+  return `${API_BASE}/oauth2/authorization/google`;
+}
+
 export function logout() {
   return httpJson<void>("/api/auth/logout", {
     method: "POST",

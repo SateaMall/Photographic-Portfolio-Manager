@@ -1,7 +1,7 @@
 import { useState, type SubmitEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
-import { signup } from "../../../api/auth";
+import { getGoogleLoginUrl, signup } from "../../../api/auth";
 import { useAuth } from "../../../auth/AuthContext";
 import { MarketingNavbar } from "../components/navigation/MarketingNavbar";
 import "./AuthPages.css";
@@ -71,6 +71,10 @@ export default function SignupPage() {
     }
   }
 
+  function handleGoogleSignIn() {
+    window.location.assign(getGoogleLoginUrl());
+  }
+
   return (
     <main className="auth-page auth-page--minimal">
       <MarketingNavbar />
@@ -87,6 +91,12 @@ export default function SignupPage() {
 
               {error && <p className="auth-error">{error}</p>}
               {message && <p className="auth-success">{message}</p>}
+
+              <button className="auth-provider-btn" type="button" onClick={handleGoogleSignIn} disabled={submitting}>
+                Continue with Google
+              </button>
+
+              <div className="auth-divider">or sign up with email</div>
 
               {step === 1 ? (
                 <>
