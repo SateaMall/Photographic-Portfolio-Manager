@@ -91,6 +91,7 @@
   background: rgba(255, 255, 255, 0.14);
   padding: 0;
   cursor: pointer;
+  transition: background-color 180ms ease;
 }
 
 .marketing-nav--scrolled .marketing-nav__toggle,
@@ -105,14 +106,34 @@
   margin: 4px auto;
   border-radius: 999px;
   background: currentColor;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.marketing-nav__toggle--open span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.marketing-nav__toggle--open span:nth-child(2) {
+  opacity: 0;
+}
+
+.marketing-nav__toggle--open span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 @media (max-width: 760px) {
   .marketing-nav__inner {
+    position: relative;
     width: min(100%, calc(100% - 24px));
     flex-wrap: wrap;
     gap: 14px;
     padding: 14px 0;
+  }
+
+  .marketing-nav__brand,
+  .marketing-nav__toggle {
+    position: relative;
+    z-index: 2;
   }
 
   .marketing-nav__toggle {
@@ -129,11 +150,30 @@
     border-radius: 24px;
   }
 
+  .marketing-nav__link,
+  .marketing-nav__action {
+    width: 100%;
+  }
+
+  .marketing-nav__link {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
   .marketing-nav__links--open {
     display: flex;
+    position: fixed;
+    inset: 0;
+    min-height: 100svh;
+    padding: 88px 24px 24px;
+    justify-content: flex-start;
     background: rgba(17, 24, 39, 0.72);
     color: #fff;
     backdrop-filter: blur(16px);
+    z-index: 1;
+    animation: marketing-nav-overlay-in 220ms ease;
   }
 
   .marketing-nav--scrolled .marketing-nav__links--open,
@@ -143,8 +183,27 @@
     box-shadow: 0 18px 40px rgba(17, 24, 39, 0.08);
   }
 
+  .marketing-nav--scrolled .marketing-nav__link,
+  .marketing-nav:not(.marketing-nav--overlay) .marketing-nav__link {
+    border-bottom-color: rgba(17, 24, 39, 0.12);
+  }
+
   .marketing-nav__action {
     margin-left: 0;
     text-align: center;
+    margin-top: 20px;
+    padding: 14px 18px;
+  }
+}
+
+@keyframes marketing-nav-overlay-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

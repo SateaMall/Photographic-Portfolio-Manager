@@ -62,9 +62,9 @@ export function Navbar() {
 
         {/* Mobile toggle */}
         <button
-          className="rg-burger"
+          className={`rg-burger${open ? " rg-burger--open" : ""}`}
           type="button"
-          aria-label="Open menu"
+          aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >

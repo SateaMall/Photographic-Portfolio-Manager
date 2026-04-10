@@ -5,10 +5,10 @@
 
 /** Topper **/
 .Topper{
- font-family:inherit;
+  font-family:inherit;
   position: relative;
   width: 100%;
-  height: 95vh;
+  min-height: 100vh;
 }
 .navbar-container {
   position: absolute;
@@ -27,6 +27,9 @@
   position: absolute;
   bottom: 5%;
   left: 50%;
+}
+.bio-container {
+ 
 }
 
 

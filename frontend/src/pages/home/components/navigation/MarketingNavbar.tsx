@@ -39,7 +39,7 @@ export function MarketingNavbar({ overlay = false }: MarketingNavbarProps) {
         </Link>
 
         <button
-          className="marketing-nav__toggle"
+          className={`marketing-nav__toggle${menuOpen ? " marketing-nav__toggle--open" : ""}`}
           type="button"
           aria-expanded={menuOpen}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
