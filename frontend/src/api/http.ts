@@ -43,11 +43,13 @@ function readErrorMessage(status: number, statusText: string, body: string) {
 }
 
 export async function httpJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const isFormDataBody = init?.body instanceof FormData;
+
   const res = await fetch(`${API_BASE}${path}`, {
     credentials: "include",
     headers: {
       Accept: "application/json",
-      ...(init?.body ? { "Content-Type": "application/json" } : {}),
+      ...(!isFormDataBody && init?.body ? { "Content-Type": "application/json" } : {}),
       ...(init?.headers ?? {}),
     },
     ...init,

@@ -7,6 +7,12 @@ export type AlbumViewResponse = {
   numberOfPhotos: number;
 };
 
+export type AlbumResponse = {
+  id: string;
+  title: string;
+  description: string | null;
+};
+
 
 export type AlbumPhotoItem = {
   photoId: string,
@@ -80,3 +86,31 @@ export type PublicProfileResponse = {
 };
 
 export type photoVariant= "ORIGINAL"| "MEDIUM"| "THUMB";
+
+export type ManagedPhotoResponse = {
+  id: string;
+  createdAt: string;
+  title: string | null;
+  description: string | null;
+  country: string | null;
+  city: string | null;
+  captureYear: number | null;
+};
+
+export type ManagedAlbumResponse = {
+  albumId: string;
+  title: string;
+  description: string | null;
+  photos: ManagedPhotoResponse[];
+};
+
+export type UploadPhotoDraft = {
+  id: string;
+  file: File;
+  previewUrl: string;
+  title: string;
+  description: string;
+  country: string;
+  city: string;
+  captureYear: string;
+};

@@ -38,7 +38,12 @@
 .hp-head__album {
   margin: 30px 25px 20px;
   padding-bottom: 20px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-wrap: wrap;
   justify-content: space-between;
+   gap: 16px;
   text-align: center;
 }
 
@@ -48,4 +53,17 @@
   font-weight: 650;
   letter-spacing: 0.2px;
   text-transform: lowercase; /* matches your "photos" sketch vibe */
+}
+
+.hp-manage-link__album {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(15, 23, 42, 0.06);
+  color: inherit;
+  text-decoration: none;
 }

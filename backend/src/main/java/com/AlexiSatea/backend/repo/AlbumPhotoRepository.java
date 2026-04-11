@@ -29,6 +29,15 @@ public interface AlbumPhotoRepository extends JpaRepository<AlbumPhoto, AlbumPho
     Page<AlbumPhoto> findByAlbumIdWithPhoto(@Param("albumId") UUID albumId,
                                             Pageable pageable);
 
+    @Query("""
+        select ap
+        from AlbumPhoto ap
+        join fetch ap.photo
+        where ap.album.id = :albumId
+        order by ap.position asc, ap.addedAt asc
+    """)
+    List<AlbumPhoto> findAllByAlbumIdWithPhoto(@Param("albumId") UUID albumId);
+
     @Modifying
     @Query("""
     update AlbumPhoto ap

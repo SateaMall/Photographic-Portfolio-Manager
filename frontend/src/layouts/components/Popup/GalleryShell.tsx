@@ -1,7 +1,10 @@
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
+import { RequireAuthenticated } from "../../../auth/RequireAuthenticated";
 import Homepage from "../../../pages/gallery/profile/ProfilePage";
 import AlbumPage from "../../../pages/gallery/photo-album/AlbumPage";
 import PhotoPage from "../../../pages/gallery/photo-album/PhotoPage";
+import ManageAlbumPage from "../../../pages/gallery/manage/ManageAlbumPage";
+import ProfilePhotosManagePage from "../../../pages/gallery/manage/ProfilePhotosManagePage";
 import {PhotoModal} from "./PhotoModal";
 
 
@@ -21,6 +24,9 @@ export function GalleryShell() {
         <Routes location={backgroundLocation || location}>
           <Route path="/" element={<Homepage />} />
           <Route path="album/:albumId" element={<AlbumPage />} />
+          <Route path="manage/photos" element={<RequireAuthenticated><ProfilePhotosManagePage /></RequireAuthenticated>} />
+          <Route path="manage/albums" element={<RequireAuthenticated><ManageAlbumPage /></RequireAuthenticated>} />
+          <Route path="manage/albums/:albumId" element={<RequireAuthenticated><ManageAlbumPage /></RequireAuthenticated>} />
 
           {/* full page photo when opened directly */}
           <Route path="photo/:photoId" element={<PhotoPage />} />

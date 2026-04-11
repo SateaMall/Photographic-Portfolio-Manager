@@ -31,6 +31,10 @@
   background: rgba(255, 0, 0, 0.12);
 }
 
+.photo-page__status--success {
+  background: rgba(22, 101, 52, 0.24);
+}
+
 .photo-page__hero {
   display: grid;
   grid-template-columns: 1fr;

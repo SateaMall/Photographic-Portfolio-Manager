@@ -15,6 +15,12 @@
   margin-bottom: 12px;
 }
 
+.photo-page__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .meta-sep{
   opacity: 0.35;
 }
@@ -26,6 +32,92 @@
 .photo-page__desc {
   margin: 0 0 14px;
   opacity: 0.9;
+}
+
+.photo-page__messages {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.photo-page__admin-actions,
+.photo-page__form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.photo-page__admin-actions {
+  margin-bottom: 14px;
+}
+
+.photo-page__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.photo-page__action-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.photo-page__action-btn--ghost {
+  background: transparent;
+}
+
+.photo-page__action-btn--danger {
+  border-color: rgba(248, 113, 113, 0.28);
+  background: rgba(127, 29, 29, 0.36);
+}
+
+.photo-page__form {
+  display: grid;
+  gap: 14px;
+}
+
+.photo-page__field {
+  display: grid;
+  gap: 8px;
+}
+
+.photo-page__field span {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.photo-page__field input,
+.photo-page__field textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font: inherit;
+}
+
+.photo-page__field textarea {
+  resize: vertical;
+}
+
+.photo-page__field-row {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 760px) {
+  .photo-page__field-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 

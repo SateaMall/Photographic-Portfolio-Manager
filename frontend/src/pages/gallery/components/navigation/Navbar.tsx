@@ -33,8 +33,6 @@ export function Navbar() {
           }
         });
   
-        document.title = profile?.displayName?.trim() || "Let Me Lens";
-        
       return () => {
         active = false;
       };

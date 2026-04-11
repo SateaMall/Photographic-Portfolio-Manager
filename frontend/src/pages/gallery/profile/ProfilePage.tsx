@@ -3,12 +3,13 @@ import { fetchAlbums} from "../../../api/profile";
 import type { AlbumViewResponse, PhotoResponse } from "../../../types/types";
 import {AlbumsRow} from "../profile/components/AlbumsRow"
 import "./ProfilePage.css";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { SocialBioSection } from "../profile/components/SocialBioSection";
 import { PhotosGrid } from "../components/PhotosGrid";
 import { CarrouselTopper } from "../../../components/carousel/CarrouselTopper";
 import { Navbar } from "../components/navigation/Navbar";
 import { ScrollIndicator } from "../../../components/indicator/ScrollIndicator";
+import { useAuth } from "../../../auth/AuthContext";
 
 type AlbumState = {
   slug: string;
@@ -20,6 +21,8 @@ export default function Profilepage() {
 
 const { slug } = useParams() 
 const profileSlug = slug?.trim().toLowerCase() ?? "";
+const { session, isAuthenticated } = useAuth();
+const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() === profileSlug;
 
 
 /**** **** **** **** ALBUMS **** **** **** ****/
@@ -57,7 +60,6 @@ const profileSlug = slug?.trim().toLowerCase() ?? "";
 
   const currentAlbumState = albumState?.slug === profileSlug ? albumState : null;
   const albums = currentAlbumState?.albums ?? [];
-  const albumsLoading = Boolean(profileSlug) && currentAlbumState === null;
   const error = currentAlbumState?.error ?? null;
 
 
@@ -86,13 +88,21 @@ return (
   
   <div className="content">
       {/* Albums */}
-    {albums.length!==0 && (
+    {(albums.length !== 0 || canManage) && (
       <section className="hp-section-album"  id="albums">
       <header className="hp-head-album">
         <h1 className="hp-title">Albums</h1>
+        {canManage && (
+          <Link className="hp-manage-link" to={`/${profileSlug}/manage/albums`}>
+            Configure albums
+          </Link>
+        )}
       </header>
-      {albumsLoading && (<div className="hp">Albums Loading…</div>)}
-       <AlbumsRow albums={albums} />
+      {albums.length !== 0 ? (
+        <AlbumsRow albums={albums} />
+      ) : (
+        <div className="hp hp-empty">No albums yet.</div>
+      )}
     </section> 
     )}
 
@@ -100,6 +110,11 @@ return (
     <section className="hp-section"  id="photos">
       <header className="hp-head">
         <h1 className="hp-title ">Photos</h1>
+        {canManage && (
+          <Link className="hp-manage-link" to={`/${profileSlug}/manage/photos`}>
+            Configure photos
+          </Link>
+        )}
       </header>
       <PhotosGrid onPhotosChange={setPhotos}/>
     </section>

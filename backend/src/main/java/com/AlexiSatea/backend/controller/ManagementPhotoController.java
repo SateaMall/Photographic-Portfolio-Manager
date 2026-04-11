@@ -1,11 +1,15 @@
 package com.AlexiSatea.backend.controller;
 
+import com.AlexiSatea.backend.dto.ManagedPhotoResponse;
 import com.AlexiSatea.backend.dto.PhotoResponse;
 import com.AlexiSatea.backend.model.photo.Photo;
 import com.AlexiSatea.backend.model.photo.Theme;
 import com.AlexiSatea.backend.model.photo.feature.PhotoFeatureType;
 import com.AlexiSatea.backend.service.PhotoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,6 +26,16 @@ public class ManagementPhotoController {
 
     private final PhotoService photoService;
 
+    @GetMapping
+    public Page<ManagedPhotoResponse> getManageablePhotos(
+            @RequestParam String slug,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "48") int size,
+            Authentication authentication
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return photoService.getManageablePhotos(slug, pageable, authentication);
+    }
 
     /**********************************         Photos APIs         ******************************/
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -29,7 +43,7 @@ public class ManagementPhotoController {
             @RequestPart("file") MultipartFile file,
             @RequestParam(required = false) UUID albumId,
             @RequestParam(required = false) List<Theme> themes,
-            @RequestParam String title,
+            @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String country,
             @RequestParam(required = false) String city,

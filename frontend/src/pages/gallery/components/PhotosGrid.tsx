@@ -7,6 +7,7 @@ import { PhotoCard } from "./PhotoCard";
 import "./PhotosGrid.css"
 import {fetchAlbumItemsAsPhotos } from "../../../api/photo-album";
 import { useOpenPhoto } from "../../../layouts/components/popup/useOpenPhoto";
+import { PHOTO_MANAGED_EVENT, type PhotoManagedDetail } from "./photoEvents";
 
 type PhotosGridProps = {
   photoId?: string;
@@ -82,6 +83,29 @@ useEffect(() => {
 useEffect(() => {
   onPhotosChange?.(photos);
 }, [onPhotosChange, photos]);
+
+useEffect(() => {
+  function onPhotoManaged(event: Event) {
+    const detail = (event as CustomEvent<PhotoManagedDetail>).detail;
+
+    if (detail.type === "updated") {
+      setPhotos((currentPhotos) => currentPhotos.map((photo) => (
+        photo.id === detail.photo.id
+          ? { ...photo, ...detail.photo }
+          : photo
+      )));
+      return;
+    }
+
+    setPhotos((currentPhotos) => currentPhotos.filter((photo) => photo.id !== detail.photoId));
+  }
+
+  window.addEventListener(PHOTO_MANAGED_EVENT, onPhotoManaged as EventListener);
+
+  return () => {
+    window.removeEventListener(PHOTO_MANAGED_EVENT, onPhotoManaged as EventListener);
+  };
+}, []);
 
 useEffect(() => {
   if (restoreScrollYRef.current == null) return;

@@ -10,11 +10,26 @@ function readEmailFromSearch(search: string) {
   return new URLSearchParams(search).get("email") ?? "";
 }
 
+function readRedirectTarget(state: unknown) {
+  if (
+    state &&
+    typeof state === "object" &&
+    "from" in state &&
+    typeof (state as { from: unknown }).from === "string"
+  ) {
+    const target = (state as { from: string }).from;
+    return target.startsWith("/") ? target : null;
+  }
+
+  return null;
+}
+
 export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, loading, refreshSession, session } = useAuth();
   const searchParams = new URLSearchParams(location.search);
+  const redirectTarget = readRedirectTarget(location.state);
   const [form, setForm] = useState({
     email: readEmailFromSearch(location.search),
     password: "",
@@ -24,7 +39,7 @@ export default function LoginPage() {
   const oauthError = searchParams.get("oauthError");
 
   if (!loading && isAuthenticated) {
-    return <Navigate to={session.profileSlug ? `/${session.profileSlug}` : "/profiles"} replace />;
+    return <Navigate to={redirectTarget ?? (session.profileSlug ? `/${session.profileSlug}` : "/profiles")} replace />;
   }
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
@@ -39,7 +54,7 @@ export default function LoginPage() {
       });
 
       const nextSession = await refreshSession();
-      navigate(nextSession.profileSlug ? `/${nextSession.profileSlug}` : "/profiles", { replace: true });
+      navigate(redirectTarget ?? (nextSession.profileSlug ? `/${nextSession.profileSlug}` : "/profiles"), { replace: true });
     } catch (caughtError) {
       const message = caughtError instanceof Error ? caughtError.message : "Unable to sign in.";
 
