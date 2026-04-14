@@ -14,6 +14,7 @@
   z-index: 0;
   padding: 0 clamp(12px, 3vw, 28px);
   color: #fff;
+  
 }
 
 .hero-bio__inner {
@@ -57,9 +58,9 @@
 .hero-bio__text {
   margin: 5vh auto 0 auto;
   max-width: 55ch;
-  font-size: clamp(19px, 1.6vw, 21px);
-  line-height: 1.45;
-  opacity: 0.95;
+  font-size: clamp(13px, 1.4vw, 15px);
+  letter-spacing: 0.10em;
+  opacity: 0.90;
 }
 
 .hero-bio__text--empty {

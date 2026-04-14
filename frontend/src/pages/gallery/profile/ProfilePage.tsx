@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { fetchAlbums} from "../../../api/profile";
+import { fetchAlbums, fetchProfileHeroPhotos } from "../../../api/profile";
 import type { AlbumViewResponse, PhotoResponse } from "../../../types/types";
 import {AlbumsRow} from "../profile/components/AlbumsRow"
 import "./ProfilePage.css";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { SocialBioSection } from "../profile/components/SocialBioSection";
 import { PhotosGrid } from "../components/PhotosGrid";
 import { CarrouselTopper } from "../../../components/carousel/CarrouselTopper";
@@ -29,6 +29,7 @@ const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() =
 
   const [albumState, setAlbumState] = useState<AlbumState | null>(null);
   const [photos, setPhotos] = useState<PhotoResponse[]>([]);
+  const [heroPhotoState, setHeroPhotoState] = useState<{ slug: string; photos: PhotoResponse[] } | null>(null);
 
   useEffect(() => {
     if (!profileSlug) {
@@ -58,9 +59,35 @@ const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() =
     };
   }, [profileSlug]);
 
+  useEffect(() => {
+    if (!profileSlug) {
+      return () => {};
+    }
+
+    let cancelled = false;
+
+    fetchProfileHeroPhotos(profileSlug)
+      .then((heroPhotos) => {
+        if (!cancelled) {
+          setHeroPhotoState({ slug: profileSlug, photos: heroPhotos });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setHeroPhotoState({ slug: profileSlug, photos: [] });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [profileSlug]);
+
   const currentAlbumState = albumState?.slug === profileSlug ? albumState : null;
   const albums = currentAlbumState?.albums ?? [];
   const error = currentAlbumState?.error ?? null;
+  const heroPhotos = heroPhotoState?.slug === profileSlug ? heroPhotoState.photos : [];
+  const topperPhotos = heroPhotos.length > 0 ? heroPhotos : photos.slice(0,5);
 
 
    
@@ -76,7 +103,7 @@ return (
       </div>
       
       <div className="carrousel-container">
-        <CarrouselTopper carrouselPhotos={photos.slice(0,5)} />
+        <CarrouselTopper carrouselPhotos={topperPhotos} />
       </div>
       <div className="bio-container">
         <SocialBioSection />
@@ -91,17 +118,12 @@ return (
     {(albums.length !== 0 || canManage) && (
       <section className="hp-section-album"  id="albums">
       <header className="hp-head-album">
-        <h1 className="hp-title">Albums</h1>
-        {canManage && (
-          <Link className="hp-manage-link" to={`/${profileSlug}/manage/albums`}>
-            Configure albums
-          </Link>
-        )}
+        <h1 className="hp-title">Collecitons</h1>
       </header>
       {albums.length !== 0 ? (
         <AlbumsRow albums={albums} />
       ) : (
-        <div className="hp hp-empty">No albums yet.</div>
+        <div className="hp hp-empty">No collections yet.</div>
       )}
     </section> 
     )}
@@ -110,11 +132,6 @@ return (
     <section className="hp-section"  id="photos">
       <header className="hp-head">
         <h1 className="hp-title ">Photos</h1>
-        {canManage && (
-          <Link className="hp-manage-link" to={`/${profileSlug}/manage/photos`}>
-            Configure photos
-          </Link>
-        )}
       </header>
       <PhotosGrid onPhotosChange={setPhotos}/>
     </section>

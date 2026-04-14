@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { Navigate, Outlet, useParams } from "react-router-dom";
 
 import { fetchPublicProfile } from "../api/profile";
+import { PROFILE_MANAGED_EVENT, type ProfileManagedDetail } from "../pages/gallery/components/profileEvents";
 import type { PublicProfileResponse } from "../types/types";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { ScrollToHash } from "./components/ScrollToHash";
@@ -51,6 +52,24 @@ export default function GalleryLayout() {
     };
   }, [profileSlug]);
 
+  useEffect(() => {
+    function onProfileManaged(event: Event) {
+      const detail = (event as CustomEvent<ProfileManagedDetail>).detail;
+
+      if (detail.profile.slug !== profileSlug) {
+        return;
+      }
+
+      setResolvedProfile({ slug: profileSlug, profile: detail.profile, failed: false });
+    }
+
+    window.addEventListener(PROFILE_MANAGED_EVENT, onProfileManaged as EventListener);
+
+    return () => {
+      window.removeEventListener(PROFILE_MANAGED_EVENT, onProfileManaged as EventListener);
+    };
+  }, [profileSlug]);
+
 
   if (!profileSlug || resolvedProfile?.slug === profileSlug && resolvedProfile.failed) {
     return <Navigate to="/profiles" replace />;
@@ -63,8 +82,8 @@ export default function GalleryLayout() {
   const profile = resolvedProfile.profile;
 
   const themeStyle: ThemeStyle = {
-    "--primaryColor": profile.primaryColor ?? "#111827",
-    "--secondaryColor": profile.secondaryColor ?? "#886c4e",
+    "--primaryColor": profile.primaryColor ?? "#3b6e37",
+    "--secondaryColor": profile.secondaryColor ?? "#e9ff3f",
   };
 
   return (

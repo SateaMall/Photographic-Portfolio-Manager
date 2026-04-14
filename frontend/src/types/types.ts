@@ -73,6 +73,12 @@ export type Theme =
   | "CONCEPTUAL_ARTISTIC"
   | "DOCUMENTARY_SOCIAL";
 
+export type PhotoFeatureType =
+  | "HOMEPAGE_HERO"
+  | "HOMEPAGE_GRID"
+  | "PROFILE_FEATURED"
+  | "SUGGESTIONS";
+
 
 export type PublicProfileResponse = {
   slug: string;
@@ -83,6 +89,16 @@ export type PublicProfileResponse = {
   publicEmail: string | null;
   linkedIn: string | null;
   instagram: string | null;
+};
+
+export type ManagedProfileRequest = {
+  displayName: string;
+  bio: string;
+  primaryColor: string;
+  secondaryColor: string;
+  publicEmail: string;
+  linkedIn: string;
+  instagram: string;
 };
 
 export type photoVariant= "ORIGINAL"| "MEDIUM"| "THUMB";

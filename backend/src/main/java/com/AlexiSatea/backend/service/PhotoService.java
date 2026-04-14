@@ -96,6 +96,24 @@ public class PhotoService {
                 .map(ManagedPhotoResponse::from);
     }
 
+    @Transactional(readOnly = true)
+    public List<ManagedPhotoResponse> getManageableHeroPhotos(String slug, Authentication authentication) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Profile profile = accessService.requireManageableProfile(currentUser.getId(), slug);
+
+        return photoFeatureRepository.findEnabledFeaturesByProfileId(profile.getId(), PhotoFeatureType.HOMEPAGE_HERO).stream()
+                .map(PhotoFeature::getPhoto)
+                .map(ManagedPhotoResponse::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PhotoResponse> getHeroPhotos(String slug) {
+        return photoFeatureRepository.findEnabledPublicFeaturesByProfileSlug(slug, PhotoFeatureType.HOMEPAGE_HERO).stream()
+                .map(feature -> PhotoResponse.from(feature.getPhoto(), feature))
+                .toList();
+    }
+
     @Transactional
     public Photo uploadPhoto(
             MultipartFile file,

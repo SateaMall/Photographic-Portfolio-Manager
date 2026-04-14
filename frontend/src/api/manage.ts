@@ -2,8 +2,10 @@ import type {
   AlbumResponse,
   AlbumViewResponse,
   ManagedAlbumResponse,
+  ManagedProfileRequest,
   ManagedPhotoResponse,
   PageResponse,
+  PhotoFeatureType,
   PhotoResponse,
   UploadPhotoDraft,
 } from "../types/types";
@@ -48,6 +50,11 @@ export async function fetchAllManageablePhotos(slug: string) {
   }
 
   return photos;
+}
+
+export function fetchManageableHeroPhotos(slug: string) {
+  const params = new URLSearchParams({ slug });
+  return httpJson<ManagedPhotoResponse[]>(`/api/manage/photos/hero?${params.toString()}`);
 }
 
 export function fetchManagedAlbum(albumId: string) {
@@ -155,5 +162,44 @@ export function updateManagedPhoto(photoId: string, input: {
 export function deleteManagedPhoto(photoId: string) {
   return httpJson<void>(`/api/manage/photos/${encodeURIComponent(photoId)}`, {
     method: "DELETE",
+  });
+}
+
+export function setManagedPhotoFeature(photoId: string, input: {
+  slug: string;
+  type: PhotoFeatureType;
+  index: number;
+  enabled?: boolean;
+}) {
+  const params = new URLSearchParams({
+    slug: input.slug,
+    type: input.type,
+    index: String(input.index),
+    enabled: String(input.enabled ?? true),
+  });
+
+  return httpJson<number>(`/api/manage/photos/photo-Feature/${encodeURIComponent(photoId)}?${params.toString()}`, {
+    method: "POST",
+  });
+}
+
+export function deleteManagedPhotoFeature(photoId: string, input: {
+  slug: string;
+  type: PhotoFeatureType;
+}) {
+  const params = new URLSearchParams({
+    slug: input.slug,
+    type: input.type,
+  });
+
+  return httpJson<void>(`/api/manage/photos/photo-Feature/${encodeURIComponent(photoId)}?${params.toString()}`, {
+    method: "DELETE",
+  });
+}
+
+export function updateManagedProfile(profileSlug: string, input: ManagedProfileRequest) {
+  return httpJson<{ message: string }>(`/api/manage/profile/profile/${encodeURIComponent(profileSlug)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
   });
 }

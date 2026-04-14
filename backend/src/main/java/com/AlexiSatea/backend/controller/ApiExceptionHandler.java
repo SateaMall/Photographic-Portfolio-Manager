@@ -1,5 +1,6 @@
 package com.AlexiSatea.backend.controller;
 
+import com.AlexiSatea.backend.exception.TooManyVerificationCodeRequestsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,6 +35,13 @@ public class ApiExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "Invalid email or password."));
+    }
+
+    @ExceptionHandler(TooManyVerificationCodeRequestsException.class)
+    public ResponseEntity<Map<String, String>> handleTooManyVerificationRequests(TooManyVerificationCodeRequestsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(Map.of("message", exception.getMessage()));
     }
 
     @ExceptionHandler(AuthenticationException.class)

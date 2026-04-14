@@ -1,22 +1,21 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { CarrouselTopper } from "../../../components/carousel/CarrouselTopper";
 import { ScrollIndicator } from "../../../components/indicator/ScrollIndicator";
 import { Navbar } from "../components/navigation/Navbar";
 import { PhotosGrid } from "../components/PhotosGrid";
 
 import "./AlbumPage.css"
+import { fetchPublicProfile } from "../../../api/profile";
 import { fetchAlbumInfo } from "../../../api/photo-album";
-import type { AlbumViewResponse, PhotoResponse } from "../../../types/types";
+import type { AlbumViewResponse, PhotoResponse, PublicProfileResponse } from "../../../types/types";
 import { useEffect, useState } from "react";
 import { AlbumInfo } from "./components/AlbumInfo";
-import { useAuth } from "../../../auth/AuthContext";
 
 export default function AlbumPage() {
   const { slug, albumId } = useParams<{slug: string; albumId: string;}>();
   const [album, setAlbum] = useState <AlbumViewResponse| null>(null);
+  const [profile, setProfile] = useState<PublicProfileResponse | null>(null);
   const [photos, setPhotos] = useState<PhotoResponse[]>([]);
-  const { session, isAuthenticated } = useAuth();
-  const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() === slug?.trim().toLowerCase();
 
    useEffect (() => {
     if (!albumId) return;
@@ -33,6 +32,27 @@ export default function AlbumPage() {
     cancelled = true;
   };
   }, [albumId])
+
+  useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+
+    fetchPublicProfile(slug)
+      .then((profileResponse) => {
+        if (!cancelled) {
+          setProfile(profileResponse);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setProfile(null);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
 
       useEffect(() => {
       if (!album) return;
@@ -51,7 +71,7 @@ export default function AlbumPage() {
             <CarrouselTopper carrouselPhotos={photos.slice(0,5)} />
           </div>
           <div className="album-info-container">
-            <AlbumInfo album={album}/>
+            <AlbumInfo album={album} displayName={profile?.displayName ?? null} />
           </div>
           <div className="scroll-indicator">
             <ScrollIndicator targetId={["photos"]} />
@@ -61,11 +81,6 @@ export default function AlbumPage() {
       <section className="content" id="photos">
         <header className="hp-head__album">
           <h1 className="hp-title__album ">Album photos</h1>
-          {canManage && albumId && slug && (
-            <Link className="hp-manage-link__album" to={`/${slug}/manage/albums/${albumId}`}>
-              Configure album
-            </Link>
-          )}
         </header>
           {/* Photos */}
         <PhotosGrid albumId={albumId} onPhotosChange={setPhotos}/>

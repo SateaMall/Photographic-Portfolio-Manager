@@ -17,6 +17,7 @@
 */
 /* Inner layout */
 .rg-nav__inner {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -42,6 +43,46 @@
 /* Desktop menu */
 .rg-menu--desktop {
   margin-left: 12px;
+}
+
+.rg-owner {
+  position: absolute;
+  right: clamp(12px, 3vw, 28px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+}
+
+.rg-owner-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(248, 244, 237, 0.96);
+  color: #111827;
+  font: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.88rem;
+  font-weight: 600;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.rg-owner-trigger:hover {
+  background: #ffffff;
+  color: #111827;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.22);
+  transform: translateY(-1px);
+}
+
+.rg-owner-trigger[data-state="open"] {
+  background: #ffffff;
+  color: #111827;
 }
 
 .rg-list {
@@ -110,31 +151,41 @@
 
 /* Dropdown */
 .rg-dropdown {
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 8px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
-  min-width: 200px;
-  background: rgba(0, 21, 247, 0.1);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 50px rgba(2, 6, 23, 0.28);
+  min-width: 220px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(248, 244, 237, 0.98);
+  backdrop-filter: blur(12px);
   cursor: pointer;
 
 }
 
 .rg-dd-item {
   display: block;
-  padding: 10px 10px;
+  padding: 11px 12px;
   border-radius: 10px;
-  color: #e2e2e2;
+  color: #111827;
   text-decoration: none;
 }
 
+.rg-dd-item--button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
 .rg-dd-item:hover {
-  background: rgba(0, 0, 0, 0.127);
+  background: rgba(15, 23, 42, 0.08);
 }
 
 .rg-dd-sep {
   height: 1px;
-  background: rgba(0,0,0,0.15);
+  background: rgba(15, 23, 42, 0.12);
   margin: 8px 6px;
 }
 
@@ -201,6 +252,11 @@
   text-align: left;
 }
 
+.rg-link--button {
+  border: 0;
+  background: transparent;
+}
+
 .rg-divider {
   height: 1px;
   background: rgba(255,255,255,0.18);
@@ -244,6 +300,10 @@
   }
 
   .rg-menu--desktop {
+    display: none;
+  }
+
+  .rg-owner {
     display: none;
   }
 

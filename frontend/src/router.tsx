@@ -1,7 +1,5 @@
 // src/router.tsx
 import { createBrowserRouter } from "react-router-dom";
-
-import WelcomePage from "./pages/gallery/welcome/WelcomePage.tsx";
 import GalleryLayout from "./layouts/GalleryLayout";
 import RootLayout from "./layouts/RootLayout.tsx";
 import NotFound from "./pages/home/notFound.tsx";
@@ -18,7 +16,6 @@ export const router = createBrowserRouter([
   { path: "login", element: <LoginPage /> },
   { path: "signup", element: <SignupPage /> },
   { path: "verify-email", element: <VerifyEmailPage /> },
-  { path: "profiles", element: <WelcomePage /> },
 
 {
   path: ":slug/*",
@@ -26,9 +23,6 @@ export const router = createBrowserRouter([
   <GalleryLayout />),
   children: [
      { path: "*", element: <GalleryShell /> }
-    /*{ index: true, element: <Homepage /> },
-    { path: "album/:albumId/:photoId?", element: <AlbumPage /> },
-    { path: "photo/:photoId", element: <PhotoPage /> },*/
   ],
 },
   { path: "*", element: <NotFound /> } 

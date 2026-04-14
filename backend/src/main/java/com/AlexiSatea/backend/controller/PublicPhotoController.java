@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,5 +40,10 @@ public class PublicPhotoController {
         Pageable pageable = PageRequest.of(page, size);
 
         return photoService.getPhotos(slug, photoId, pageable);
+    }
+
+    @GetMapping("/profiles/{slug}/hero-photos")
+    public List<PhotoResponse> getHeroPhotos(@PathVariable String slug) {
+        return photoService.getHeroPhotos(slug);
     }
 }

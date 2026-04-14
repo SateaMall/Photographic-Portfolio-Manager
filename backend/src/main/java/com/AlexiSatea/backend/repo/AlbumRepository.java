@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,6 +76,10 @@ where a.id = :albumId
 group by a.id, a.title, a.description, a.created_at
 """, nativeQuery = true)
     AlbumViewRow findAlbumViewById(@Param("albumId") UUID albumId);
+
+    List<Album> findAllByCreatedBy_Id(UUID userId);
+
+    List<Album> findAllByOwnerProfile_IdIn(Collection<UUID> profileIds);
 
 
 

@@ -1,10 +1,13 @@
-import { Routes, Route, useLocation, useParams } from "react-router-dom";
+import { Navigate, Routes, Route, useLocation, useParams } from "react-router-dom";
 import { RequireAuthenticated } from "../../../auth/RequireAuthenticated";
 import Homepage from "../../../pages/gallery/profile/ProfilePage";
 import AlbumPage from "../../../pages/gallery/photo-album/AlbumPage";
 import PhotoPage from "../../../pages/gallery/photo-album/PhotoPage";
 import ManageAlbumPage from "../../../pages/gallery/manage/ManageAlbumPage";
+import ManageShell from "../../../pages/gallery/manage/ManageShell";
+import ProfileCarouselPage from "../../../pages/gallery/manage/ProfileCarouselPage";
 import ProfilePhotosManagePage from "../../../pages/gallery/manage/ProfilePhotosManagePage";
+import ProfileSettingsPage from "../../../pages/gallery/manage/ProfileSettingsPage";
 import {PhotoModal} from "./PhotoModal";
 
 
@@ -24,9 +27,14 @@ export function GalleryShell() {
         <Routes location={backgroundLocation || location}>
           <Route path="/" element={<Homepage />} />
           <Route path="album/:albumId" element={<AlbumPage />} />
-          <Route path="manage/photos" element={<RequireAuthenticated><ProfilePhotosManagePage /></RequireAuthenticated>} />
-          <Route path="manage/albums" element={<RequireAuthenticated><ManageAlbumPage /></RequireAuthenticated>} />
-          <Route path="manage/albums/:albumId" element={<RequireAuthenticated><ManageAlbumPage /></RequireAuthenticated>} />
+          <Route path="manage" element={<RequireAuthenticated><ManageShell /></RequireAuthenticated>}>
+            <Route index element={<Navigate to="profile" replace />} />
+            <Route path="profile" element={<ProfileSettingsPage />} />
+            <Route path="profile/carousel" element={<ProfileCarouselPage />} />
+            <Route path="photos" element={<ProfilePhotosManagePage />} />
+            <Route path="albums" element={<ManageAlbumPage />} />
+            <Route path="albums/:albumId" element={<ManageAlbumPage />} />
+          </Route>
 
           {/* full page photo when opened directly */}
           <Route path="photo/:photoId" element={<PhotoPage />} />

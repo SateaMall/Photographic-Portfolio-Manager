@@ -35,15 +35,24 @@
   font-weight: 550;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-    font-family:  var(--font-copperplate);
+  font-family:  var(--font-copperplate);
+}
+
+.album-info__byline {
+  margin: 0 0 0;
+  font-size: clamp(12px, 1.4vw, 14px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.82;
 }
 
 .album-info__description {
-  margin: 2vh auto clamp(12px, 2vw, 20px) auto;
+  margin: 2vh auto 0 auto;
   max-width: 55ch;
-  font-size: clamp(19px, 1.6vw, 21px);
-  line-height: 1.45;
-  opacity: 0.95;
+  font-size: clamp(13px, 1.4vw, 15px);
+  max-width: 55ch;
+  letter-spacing: 0.12em;
+  opacity: 0.90;
 }
 
 .album-description--empty {

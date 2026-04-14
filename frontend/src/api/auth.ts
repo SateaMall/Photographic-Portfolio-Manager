@@ -45,6 +45,11 @@ export function logout() {
     method: "POST",
   });
 }
+export function deleteCurrentUser() {
+  return httpJson<{ message: string }>("/api/auth/me", {
+    method: "DELETE",
+  });
+}
 export function signup(input: SignupInput) {
   return httpJson<{ message: string }>("/api/auth/signup", {
     method: "POST",

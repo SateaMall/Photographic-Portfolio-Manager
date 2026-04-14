@@ -37,6 +37,14 @@ public class ManagementPhotoController {
         return photoService.getManageablePhotos(slug, pageable, authentication);
     }
 
+    @GetMapping("/hero")
+    public List<ManagedPhotoResponse> getManageableHeroPhotos(
+            @RequestParam String slug,
+            Authentication authentication
+    ) {
+        return photoService.getManageableHeroPhotos(slug, authentication);
+    }
+
     /**********************************         Photos APIs         ******************************/
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public PhotoResponse uploadPhoto(

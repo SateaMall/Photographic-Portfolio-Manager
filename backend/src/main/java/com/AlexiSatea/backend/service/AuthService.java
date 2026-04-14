@@ -7,9 +7,17 @@ import com.AlexiSatea.backend.model.profile.Profile;
 import com.AlexiSatea.backend.model.user.AppUser;
 import com.AlexiSatea.backend.model.user.ProfileUser;
 import com.AlexiSatea.backend.model.user.UserRole;
+import com.AlexiSatea.backend.model.photo.Photo;
+import com.AlexiSatea.backend.model.album.Album;
 import com.AlexiSatea.backend.repo.AppUserRepository;
+import com.AlexiSatea.backend.repo.AlbumRepository;
+import com.AlexiSatea.backend.repo.EmailVerificationCodeRepository;
+import com.AlexiSatea.backend.repo.PhotoFeatureRepository;
+import com.AlexiSatea.backend.repo.PhotoRepository;
 import com.AlexiSatea.backend.repo.ProfileRepository;
 import com.AlexiSatea.backend.repo.ProfileUserRepository;
+import com.AlexiSatea.backend.security.CurrentUserService;
+import com.AlexiSatea.backend.storage.StorageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +37,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +48,12 @@ public class AuthService {
     private final AppUserRepository appUserRepository;
     private final ProfileRepository profileRepository;
     private final ProfileUserRepository profileUserRepository;
+    private final PhotoRepository photoRepository;
+    private final AlbumRepository albumRepository;
+    private final PhotoFeatureRepository photoFeatureRepository;
+    private final EmailVerificationCodeRepository emailVerificationCodeRepository;
+    private final CurrentUserService currentUserService;
+    private final StorageService storageService;
     private final PasswordEncoder passwordEncoder;
     private final SlugService slugService;
     private final EmailVerificationService emailVerificationService;
@@ -145,6 +162,48 @@ public class AuthService {
                 userDetails.getAuthorities()
         );
         establishSession(authentication, httpRequest);
+    }
+
+    @Transactional
+    public void deleteCurrentUser(Authentication authentication) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        UUID userId = currentUser.getId();
+
+        List<Profile> profiles = profileRepository.findAllByMemberships_User_Id(userId);
+        List<UUID> removableProfileIds = profiles.stream()
+                .filter(profile -> profileUserRepository.countByProfile_Id(profile.getId()) <= 1)
+                .map(Profile::getId)
+                .toList();
+
+        Map<UUID, Album> albumsToDelete = new LinkedHashMap<>();
+        albumRepository.findAllByCreatedBy_Id(userId)
+                .forEach(album -> albumsToDelete.put(album.getId(), album));
+
+        if (!removableProfileIds.isEmpty()) {
+            albumRepository.findAllByOwnerProfile_IdIn(removableProfileIds)
+                    .forEach(album -> albumsToDelete.put(album.getId(), album));
+        }
+
+        if (!albumsToDelete.isEmpty()) {
+            albumRepository.deleteAll(albumsToDelete.values());
+        }
+
+        List<Photo> photos = photoRepository.findAllByAuthor_Id(userId);
+        if (!photos.isEmpty()) {
+            photos.forEach(this::deletePhotoAssetsQuietly);
+            photoFeatureRepository.deleteByPhoto_IdIn(photos.stream().map(Photo::getId).toList());
+            photoRepository.deleteAll(photos);
+        }
+
+        if (!removableProfileIds.isEmpty()) {
+            photoFeatureRepository.deleteByProfile_IdIn(removableProfileIds);
+            profileRepository.deleteAll(profiles.stream()
+                    .filter(profile -> removableProfileIds.contains(profile.getId()))
+                    .toList());
+        }
+
+        emailVerificationCodeRepository.deleteByUser_Id(userId);
+        appUserRepository.delete(currentUser);
     }
 
     private AppUser linkOrCreateGoogleUser(GoogleUser googleUser) {
@@ -349,6 +408,19 @@ public class AuthService {
 
     private boolean hasText(String value) {
         return value != null && !value.isBlank();
+    }
+
+    private void deletePhotoAssetsQuietly(Photo photo) {
+        deleteStorageKeyQuietly(photo.getOriginalKey());
+        deleteStorageKeyQuietly(photo.getMediumKey());
+        deleteStorageKeyQuietly(photo.getThumbKey());
+    }
+
+    private void deleteStorageKeyQuietly(String key) {
+        try {
+            storageService.delete(key);
+        } catch (Exception ignored) {
+        }
     }
 
     private record GoogleUser(

@@ -17,7 +17,7 @@
 }
 
 .embla__slide {
-  flex: 0 0 calc((100% - 18px) / 2); /* 2 visible on small screens */
+  flex: 0 0 calc((100% - 12px) / 1); /* 2 visible on small screens */
   min-width: 1; 
 }
 

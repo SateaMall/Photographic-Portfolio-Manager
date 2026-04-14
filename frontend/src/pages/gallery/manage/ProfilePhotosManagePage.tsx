@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 
 import { uploadManagedPhoto } from "../../../api/manage";
 import { useAuth } from "../../../auth/AuthContext";
-import { Navbar } from "../components/navigation/Navbar";
 import type { UploadPhotoDraft } from "../../../types/types";
 import { PhotoUploadQueue } from "./components/PhotoUploadQueue";
 import { revokeUploadDrafts } from "./components/photoUploadDrafts";
@@ -80,45 +79,41 @@ export default function ProfilePhotosManagePage() {
   }
 
   return (
-    <div className="manage-page">
-      <div className="manage-page__topbar">
-        <Navbar />
-      </div>
+    <div className="manage-panel">
+      <header className="manage-hero manage-hero--panel">
+        <p className="manage-hero__eyebrow">Photo upload</p>
+        <h1 className="manage-hero__title">Upload and review your photos.</h1>
+      </header>
 
-      <main className="manage-page__content">
-        <header className="manage-hero">
-          <p className="manage-hero__eyebrow">Photo upload</p>
-          <h1 className="manage-hero__title">Upload and review your photos.</h1>
-        </header>
+      {!loading && !canManage && (
+        <p className="manage-status manage-status--error">This page is only available for your own main profile.</p>
+      )}
 
-        {!loading && !canManage && (
-          <p className="manage-status manage-status--error">This page is only available for your own main profile.</p>
-        )}
+      {loading && <p className="manage-empty">Checking your session...</p>}
 
-        {loading && <p className="manage-empty">Checking your session…</p>}
-
-        {!loading && canManage && (
-          <>
+      {!loading && canManage && (
+        <>
+          <div id="queue">
             <PhotoUploadQueue drafts={drafts} onDraftsChange={setDrafts} disabled={saving} />
+          </div>
 
-            {error && <p className="manage-status manage-status--error">{error}</p>}
-            {success && <p className="manage-status manage-status--success">{success}</p>}
+          {error && <p className="manage-status manage-status--error">{error}</p>}
+          {success && <p className="manage-status manage-status--success">{success}</p>}
 
-            <div className="manage-actions">
-              <div className="manage-actions__group">
-                <button
-                  type="button"
-                  className="manage-button manage-button--primary"
-                  onClick={onSave}
-                  disabled={saving || drafts.length === 0}
-                >
-                  {saving ? "Saving…" : "Save photos"}
-                </button>
-              </div>
+          <div className="manage-actions">
+            <div className="manage-actions__group">
+              <button
+                type="button"
+                className="manage-button manage-button--primary"
+                onClick={onSave}
+                disabled={saving || drafts.length === 0}
+              >
+                {saving ? "Saving..." : "Save photos"}
+              </button>
             </div>
-          </>
-        )}
-      </main>
+          </div>
+        </>
+      )}
     </div>
   );
 }

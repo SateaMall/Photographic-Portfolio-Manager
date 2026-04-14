@@ -6,7 +6,6 @@ import com.AlexiSatea.backend.dto.SignupRequest;
 import com.AlexiSatea.backend.dto.VerifyEmailRequest;
 import com.AlexiSatea.backend.service.AuthService;
 import com.AlexiSatea.backend.service.EmailVerificationService;
-import com.AlexiSatea.backend.service.ProfileUserService;
 import com.AlexiSatea.backend.service.TestService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +26,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final TestService testService;
     private final AuthService authService;
-    private final ProfileUserService  profileUserService;
     private final EmailVerificationService  emailVerificationService;
 
     @PostMapping("/signupTest")
@@ -72,13 +70,13 @@ public class AuthController {
         emailVerificationService.resendVerificationCode(email);
         return ResponseEntity.ok().build();
     }
-/*
     @DeleteMapping("/me")
-    public ResponseEntity<?> deleteCurrentUser(Authentication authentication) {
-        profileUserService.deleteCurrentUser(authentication);
+    public ResponseEntity<?> deleteCurrentUser(Authentication authentication, HttpServletRequest request) throws ServletException {
+        authService.deleteCurrentUser(authentication);
+        request.logout();
+        request.getSession().invalidate();
         return ResponseEntity.ok(Map.of("message", "User deleted successfully"));
     }
- */
 
 
 

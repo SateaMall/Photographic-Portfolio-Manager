@@ -26,6 +26,10 @@ export async function fetchPhotos(profileSlug: string, page = 0, size = 20, phot
   );
 }
 
+export function fetchProfileHeroPhotos(profileSlug: string) {
+  return httpJson<PhotoResponse[]>(`/api/public/profiles/${toProfileSlug(profileSlug)}/hero-photos`);
+}
+
 
 function normalizeProfileSlug(slug: string) {
   return slug.trim().toLowerCase();

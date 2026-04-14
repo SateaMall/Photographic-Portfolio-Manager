@@ -119,5 +119,7 @@ Page<PhotoAndFeature> findFeaturedPriorityThemes(
     """)
     List<Theme> findThemesByPhotoId(@Param("photoId") UUID photoId);
 
+    List<Photo> findAllByAuthor_Id(UUID userId);
+
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
 import {
@@ -32,7 +32,6 @@ import type {
   ManagedPhotoResponse,
   UploadPhotoDraft,
 } from "../../../types/types";
-import { Navbar } from "../components/navigation/Navbar";
 import { PhotoUploadQueue } from "./components/PhotoUploadQueue";
 import { revokeUploadDrafts } from "./components/photoUploadDrafts";
 import "./ManagePage.css";
@@ -497,6 +496,7 @@ function AlbumEditorPanel({
 export default function ManageAlbumPage() {
   const { slug, albumId } = useParams();
   const profileSlug = normalizeSlug(slug);
+  const location = useLocation();
   const navigate = useNavigate();
   const { session, isAuthenticated, loading: authLoading } = useAuth();
   const [albumListState, setAlbumListState] = useState<AlbumListState | null>(null);
@@ -522,6 +522,12 @@ export default function ManageAlbumPage() {
   const albumListLoading = canManage && currentAlbumListState === null;
   const photoLibraryLoading = canManage && currentPhotoLibraryState === null;
   const selectedAlbumLoading = canManage && Boolean(albumId) && currentSelectedAlbumState === null;
+
+  useEffect(() => {
+    if (location.hash === "#new-album") {
+      setIsCreateOpen(true);
+    }
+  }, [location.hash]);
 
   useEffect(() => {
     let cancelled = false;
@@ -588,10 +594,10 @@ export default function ManageAlbumPage() {
       return;
     }
 
-    if (!albumId && currentAlbumListState.albums.length > 0) {
+    if (!albumId && currentAlbumListState.albums.length > 0 && location.hash !== "#new-album") {
       navigate(`/${profileSlug}/manage/albums/${currentAlbumListState.albums[0].albumId}`, { replace: true });
     }
-  }, [albumId, canManage, currentAlbumListState, navigate, profileSlug]);
+  }, [albumId, canManage, currentAlbumListState, location.hash, navigate, profileSlug]);
 
   useEffect(() => {
     if (!canManage || !currentAlbumListState || !albumId) {
@@ -699,37 +705,30 @@ export default function ManageAlbumPage() {
   const activeAlbumId = albumId ?? null;
 
   return (
-    <div className="manage-page">
-      <div className="manage-page__topbar">
-        <Navbar />
-      </div>
+    <div className="manage-panel">
+      <header className="manage-hero manage-hero--panel">
+        <p className="manage-hero__eyebrow">Album configuration</p>
+        <h1 className="manage-hero__title">Manage your collections</h1>
+      </header>
 
-      <main className="manage-page__content">
-        <header className="manage-hero">
-          <p className="manage-hero__eyebrow">Album configuration</p>
-          <h1 className="manage-hero__title">Manage every album from one workspace.</h1>
-          <p className="manage-hero__copy">Create albums, rename them, organize their photo order with drag and drop, add existing photos, and upload new ones without tying the workflow to a specific public template.</p>
-          <p className="manage-hero__meta">New uploads are appended after the current ordered photos when you save an album.</p>
-        </header>
+      {!authLoading && !canManage && (
+        <p className="manage-status manage-status--error">This page is only available for your own main profile.</p>
+      )}
 
-        {!authLoading && !canManage && (
-          <p className="manage-status manage-status--error">This page is only available for your own main profile.</p>
-        )}
+      {(albumListLoading || photoLibraryLoading) && <p className="manage-empty">Loading collection workspace...</p>}
 
-        {(albumListLoading || photoLibraryLoading) && <p className="manage-empty">Loading album workspace...</p>}
-
-        {!authLoading && canManage && !albumListLoading && !photoLibraryLoading && (
-          <div className="manage-workspace">
-            <aside className="manage-sidebar">
+      {!authLoading && canManage && !albumListLoading && !photoLibraryLoading && (
+        <div className="manage-workspace">
+          <aside className="manage-sidebar">
               <Collapsible.Root open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-                <section className="manage-card">
+                <section className="manage-card" id="new-album">
                   <Collapsible.Trigger className="manage-collapsible-trigger">
-                    <span className="manage-section__title">New album</span>
+                    <span className="manage-section__title">New collection</span>
                     <span className={`manage-collapsible-trigger__icon ${isCreateOpen ? "is-open" : ""}`}>▾</span>
                   </Collapsible.Trigger>
 
                   <Collapsible.Content className="manage-collapsible-content">
-                    <p className="manage-section__copy">Create a fresh album, then start ordering photos inside it.</p>
+                    <p className="manage-section__copy">Create a fresh collection, then start ordering photos inside it.</p>
 
                     <div className="manage-form manage-form--compact">
                       <label className="manage-field">
@@ -758,11 +757,11 @@ export default function ManageAlbumPage() {
                 </section>
               </Collapsible.Root>
 
-              <section className="manage-card">
+            <section className="manage-card">
                 <div className="manage-section__header">
                   <div>
                     <h2 className="manage-section__title">Albums</h2>
-                    <p className="manage-section__copy">Choose an album to edit its content and order.</p>
+                    <p className="manage-section__copy">Choose a collection to manage and order its content.</p>
                   </div>
                   <p className="manage-hero__meta">{albums.length}</p>
                 </div>
@@ -770,9 +769,9 @@ export default function ManageAlbumPage() {
                 {albumListError && <p className="manage-status manage-status--error">{albumListError}</p>}
 
                 {albums.length === 0 ? (
-                  <p className="manage-empty">No albums yet. Create your first one from the card above.</p>
+                  <p className="manage-empty">No collections yet. Create your first one from the card above.</p>
                 ) : (
-                  <div className="manage-album-list">
+                  <div className="manage-collection-list">
                     {albums.map((albumSummary) => {
                       const coverUrl = albumSummary.firstPhotoId
                         ? photoFileUrl(albumSummary.firstPhotoId, profileSlug, "THUMB")
@@ -800,39 +799,38 @@ export default function ManageAlbumPage() {
                     })}
                   </div>
                 )}
-              </section>
+            </section>
 
-            </aside>
+          </aside>
 
-            {photoLibraryError && <p className="manage-status manage-status--error">{photoLibraryError}</p>}
+          {photoLibraryError && <p className="manage-status manage-status--error">{photoLibraryError}</p>}
 
-            {selectedAlbumLoading ? (
-              <div className="manage-card manage-detail">
-                <p className="manage-empty">Loading album editor...</p>
-              </div>
-            ) : selectedAlbumError ? (
-              <div className="manage-card manage-detail">
-                <p className="manage-status manage-status--error">{selectedAlbumError}</p>
-              </div>
-            ) : selectedAlbum ? (
-              <AlbumEditorPanel
-                key={selectedAlbum.albumId}
-                profileSlug={profileSlug}
-                album={selectedAlbum}
-                allPhotos={allPhotos}
-                onRefreshAlbums={refreshAlbums}
-                onRefreshAlbum={refreshAlbum}
-                onRefreshPhotoLibrary={refreshPhotoLibrary}
-                onDeleteAlbum={handleDeleteAlbum}
-              />
-            ) : (
-              <div className="manage-card manage-detail">
-                <p className="manage-empty">Select an album from the left or create a new one to start organizing it.</p>
-              </div>
-            )}
-          </div>
-        )}
-      </main>
+          {selectedAlbumLoading ? (
+            <div className="manage-card manage-detail">
+              <p className="manage-empty">Loading collection editor...</p>
+            </div>
+          ) : selectedAlbumError ? (
+            <div className="manage-card manage-detail">
+              <p className="manage-status manage-status--error">{selectedAlbumError}</p>
+            </div>
+          ) : selectedAlbum ? (
+            <AlbumEditorPanel
+              key={selectedAlbum.albumId}
+              profileSlug={profileSlug}
+              album={selectedAlbum}
+              allPhotos={allPhotos}
+              onRefreshAlbums={refreshAlbums}
+              onRefreshAlbum={refreshAlbum}
+              onRefreshPhotoLibrary={refreshPhotoLibrary}
+              onDeleteAlbum={handleDeleteAlbum}
+            />
+          ) : (
+            <div className="manage-card manage-detail">
+              <p className="manage-empty">Select a collection from the left or create a new one!</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
