@@ -1,27 +1,19 @@
 package com.AlexiSatea.backend.controller;
 
+import com.AlexiSatea.backend.dto.AuthMeResponse;
 import com.AlexiSatea.backend.dto.LoginRequest;
 import com.AlexiSatea.backend.dto.SignupRequest;
 import com.AlexiSatea.backend.dto.VerifyEmailRequest;
-import com.AlexiSatea.backend.model.user.AppUser;
-import com.AlexiSatea.backend.model.user.UserRole;
 import com.AlexiSatea.backend.service.AuthService;
 import com.AlexiSatea.backend.service.EmailVerificationService;
-import com.AlexiSatea.backend.service.ProfileUserService;
 import com.AlexiSatea.backend.service.TestService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -34,7 +26,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final TestService testService;
     private final AuthService authService;
-    private final ProfileUserService  profileUserService;
     private final EmailVerificationService  emailVerificationService;
 
     @PostMapping("/signupTest")
@@ -58,7 +49,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public Map<String, Object> me(Authentication authentication) {
+    public AuthMeResponse me(Authentication authentication) {
         return authService.me(authentication);
     }
 
@@ -69,8 +60,9 @@ public class AuthController {
     }
 
     @PostMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
+    public ResponseEntity<?> verifyEmail(@Valid @RequestBody VerifyEmailRequest request,HttpServletRequest httpRequest) {
         emailVerificationService.verifyEmail(request);
+        authService.loginVerifiedUser(request.email(), httpRequest);
         return ResponseEntity.ok(Map.of("message", "Email verified successfully"));
     }
     @PostMapping("/resend-code")
@@ -78,13 +70,13 @@ public class AuthController {
         emailVerificationService.resendVerificationCode(email);
         return ResponseEntity.ok().build();
     }
-/*
     @DeleteMapping("/me")
-    public ResponseEntity<?> deleteCurrentUser(Authentication authentication) {
-        profileUserService.deleteCurrentUser(authentication);
+    public ResponseEntity<?> deleteCurrentUser(Authentication authentication, HttpServletRequest request) throws ServletException {
+        authService.deleteCurrentUser(authentication);
+        request.logout();
+        request.getSession().invalidate();
         return ResponseEntity.ok(Map.of("message", "User deleted successfully"));
     }
- */
 
 
 

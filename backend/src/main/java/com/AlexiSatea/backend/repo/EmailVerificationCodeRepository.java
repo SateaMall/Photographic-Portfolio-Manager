@@ -14,5 +14,11 @@ public interface EmailVerificationCodeRepository extends JpaRepository<EmailVeri
             Instant now
     );
 
+    Optional<EmailVerificationCode> findTopByUser_IdOrderByCreatedAtDesc(UUID userId);
+
+    Optional<EmailVerificationCode> findFirstByUser_IdAndCreatedAtAfterOrderByCreatedAtAsc(UUID userId, Instant createdAt);
+
+    long countByUser_IdAndCreatedAtAfter(UUID userId, Instant createdAt);
+
     void deleteByUser_Id(UUID userId);
 }

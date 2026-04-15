@@ -32,6 +32,22 @@ public interface PhotoRepository extends JpaRepository<Photo, UUID> {
     """)
     Optional<Photo> findPublicPhotoForProfile(@Param("photoId") UUID photoId,
                                               @Param("slug") String slug);
+
+    @Query("""
+        select p
+        from Photo p
+        join ProfileUser pu on pu.user = p.author
+        join pu.profile pr
+        where pr.slug = :slug
+          and pu.user.id = :userId
+        order by p.createdAt desc
+    """)
+    Page<Photo> findManageablePhotos(
+            @Param("slug") String slug,
+            @Param("userId") UUID userId,
+            Pageable pageable
+    );
+
     @Query("""
         select p as photo, pf as photoFeature
         from Photo p
@@ -102,6 +118,8 @@ Page<PhotoAndFeature> findFeaturedPriorityThemes(
       where p.id = :photoId
     """)
     List<Theme> findThemesByPhotoId(@Param("photoId") UUID photoId);
+
+    List<Photo> findAllByAuthor_Id(UUID userId);
 
 }
 

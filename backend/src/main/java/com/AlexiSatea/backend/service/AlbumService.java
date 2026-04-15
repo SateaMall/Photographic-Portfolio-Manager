@@ -3,6 +3,8 @@ package com.AlexiSatea.backend.service;
 import com.AlexiSatea.backend.dto.AlbumPhotoItem;
 import com.AlexiSatea.backend.dto.AlbumResponse;
 import com.AlexiSatea.backend.dto.AlbumViewResponse;
+import com.AlexiSatea.backend.dto.ManagedAlbumResponse;
+import com.AlexiSatea.backend.dto.ManagedPhotoResponse;
 import com.AlexiSatea.backend.model.Interface.AlbumViewRow;
 import com.AlexiSatea.backend.model.album.Album;
 import com.AlexiSatea.backend.model.album.AlbumPhoto;
@@ -22,8 +24,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -110,6 +116,39 @@ public class AlbumService {
         albumPhotoRepository.save(relation);
     }
 
+    @Transactional
+    public void reorderAlbumPhotos(UUID albumId, List<UUID> photoIds, Authentication authentication) {
+        if (photoIds == null) {
+            throw new IllegalArgumentException("Photo order is required");
+        }
+
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        accessService.requireManageableAlbum(currentUser, albumId);
+
+        List<AlbumPhoto> relations = albumPhotoRepository.findAllByAlbumIdWithPhoto(albumId);
+        List<UUID> currentPhotoIds = relations.stream()
+                .map(relation -> relation.getPhoto().getId())
+                .toList();
+
+        if (currentPhotoIds.size() != photoIds.size() || new HashSet<>(currentPhotoIds).size() != new HashSet<>(photoIds).size()) {
+            throw new IllegalArgumentException("Photo order must include every album photo exactly once");
+        }
+
+        if (!new HashSet<>(currentPhotoIds).equals(new HashSet<>(photoIds))) {
+            throw new IllegalArgumentException("Photo order does not match this album");
+        }
+
+        Map<UUID, AlbumPhoto> relationsByPhotoId = relations.stream()
+                .collect(Collectors.toMap(relation -> relation.getPhoto().getId(), Function.identity()));
+
+        for (int index = 0; index < photoIds.size(); index++) {
+            AlbumPhoto relation = relationsByPhotoId.get(photoIds.get(index));
+            relation.setPosition(index);
+        }
+
+        albumPhotoRepository.saveAll(relations);
+    }
+
     //Done
     @Transactional
     public AlbumResponse updateAlbum(
@@ -141,6 +180,27 @@ public class AlbumService {
         album = albumRepository.save(album);
 
         return AlbumResponse.from(album);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlbumViewResponse> getManageableAlbums(String slug, Authentication authentication) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Profile profile = accessService.requireManageableProfile(currentUser.getId(), slug);
+        List<AlbumViewRow> rows = albumRepository.findManageableAlbumViews(profile.getSlug());
+        return AlbumViewResponse.from(rows);
+    }
+
+    @Transactional(readOnly = true)
+    public ManagedAlbumResponse getManageableAlbum(UUID albumId, Authentication authentication) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Album album = accessService.requireManageableAlbum(currentUser, albumId);
+
+        List<ManagedPhotoResponse> photos = albumPhotoRepository.findAllByAlbumIdWithPhoto(albumId).stream()
+                .map(AlbumPhoto::getPhoto)
+                .map(ManagedPhotoResponse::from)
+                .toList();
+
+        return ManagedAlbumResponse.from(album, photos);
     }
 
     //Done
@@ -185,6 +245,9 @@ public class AlbumService {
     @Transactional(readOnly = true)
     public AlbumViewResponse getAlbumDetails(UUID albumId) {
         AlbumViewRow albumDetails = albumRepository.findAlbumViewById(albumId);
+        if (albumDetails == null) {
+            throw new IllegalArgumentException("Album not found: " + albumId);
+        }
         return AlbumViewResponse.from(albumDetails);
 
     }

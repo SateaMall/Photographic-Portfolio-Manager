@@ -1,0 +1,86 @@
+.homepage {
+  font-family: "Roboto Condensed", "Roboto", sans-serif;
+  padding: 0px;
+}
+
+/** Topper **/
+.Topper{
+  font-family:inherit;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+.navbar-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10; /* Ensure it stays above the carousel */
+}
+.carrousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Hide any overflow from the carousel */
+}
+.scroll-indicator {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+}
+
+/** Content **/
+.content {
+  padding: 0px;
+  padding-bottom: 40px;
+}
+@media (min-width: 800px) {
+.content{
+   padding: 10px;} 
+}
+/* section spacing */
+.hp-section {
+  max-width: 1300px;
+  margin: 0 auto;
+  margin-top: 42px;
+  margin-bottom: 42px;
+ 
+}
+
+.hp-section-album{
+  margin-top: 42px;
+  margin-bottom: 42px;
+}
+
+.hp-head-album,
+.hp-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.hp-head-album {
+  padding-bottom: 10px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.hp-head {
+  padding-bottom: 20px;
+}
+
+.hp-title {
+  margin: 0;
+  font-size: clamp(17px, 4vw, 20px);
+  font-weight: 650;
+  letter-spacing: 0.10em;
+  opacity: 0.80;
+}
+
+@media (max-width: 720px) {
+  .hp-head,
+  .hp-head-album {
+    justify-content: center;
+  }
+}

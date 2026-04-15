@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
+    private static final String OAUTH_ONLY_PASSWORD_HASH =
+            "$2b$12$xhtlvjBzkxaTnhoTFt0il.uM.64GFmjtB.hR3BOwGt9yhq/qrl7C.";
+
     private final AppUserRepository appUserRepository;
 
     @Override
@@ -21,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
-                .password(user.getPasswordHash())
+                .password(user.getPasswordHash() != null ? user.getPasswordHash() : OAUTH_ONLY_PASSWORD_HASH)
                 .roles(user.getRole().name())
                 .disabled(!user.isEnabled())
                 .build();

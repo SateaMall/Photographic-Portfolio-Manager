@@ -1,29 +1,28 @@
 // src/router.tsx
-import { Navigate, createBrowserRouter } from "react-router-dom";
-
-import ProfilesPage from "./pages/ProfilesPage/ProfilesPage.tsx";
+import { createBrowserRouter } from "react-router-dom";
 import GalleryLayout from "./layouts/GalleryLayout";
 import RootLayout from "./layouts/RootLayout.tsx";
-import NotFound from "./pages/NotFound";
-import AdminPage from "./AdminSection/admin_upload";
-import { GalleryShell } from "./layouts/components/Popup/GalleryShell.tsx";
+import NotFound from "./pages/home/notFound.tsx";
+import { GalleryShell } from "./layouts/components/popup/GalleryShell.tsx";
+import HomePage from "./pages/home/HomePage.tsx";
+import LoginPage from "./pages/home/auth/LoginPage.tsx";
+import SignupPage from "./pages/home/auth/SignupPage.tsx";
+import VerifyEmailPage from "./pages/home/auth/VerifyEmailPage.tsx";
 
 
 export const router = createBrowserRouter([
   { path: "/",  element: <RootLayout />, children: [
-  { index : true, element: <Navigate to="/profiles" /> },
-  { path: "admin", element: <AdminPage /> },
-  { path: "profiles", element: <ProfilesPage /> },
+  { index : true, element: <HomePage /> },
+  { path: "login", element: <LoginPage /> },
+  { path: "signup", element: <SignupPage /> },
+  { path: "verify-email", element: <VerifyEmailPage /> },
 
 {
-  path: ":context/*",
+  path: ":slug/*",
   element: (
   <GalleryLayout />),
   children: [
      { path: "*", element: <GalleryShell /> }
-    /*{ index: true, element: <Homepage /> },
-    { path: "album/:albumId/:photoId?", element: <AlbumPage /> },
-    { path: "photo/:photoId", element: <PhotoPage /> },*/
   ],
 },
   { path: "*", element: <NotFound /> } 

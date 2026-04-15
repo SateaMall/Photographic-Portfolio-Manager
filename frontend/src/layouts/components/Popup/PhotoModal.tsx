@@ -1,20 +1,29 @@
-import { useNavigate, useParams } from "react-router-dom";
-import * as Dialog from "@radix-ui/react-dialog";
-
-import PhotoPage from "../../../pages/PhotoBrowser/PhotoPage"
-import "./PhotoModal.css"
 import { useState } from "react";
-import { PROFILE_BY_ID } from "../../../constants/constants";
+import type { CSSProperties } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { useNavigate } from "react-router-dom";
 
+import { useGalleryProfile } from "../../GalleryProfileContext";
+import PhotoPage from "../../../pages/gallery/common/photo/PhotoPage"
+import "./PhotoModal.css"
+
+type ThemeStyle = CSSProperties & {
+  "--primaryColor": string;
+  "--secondaryColor": string;
+};
 
 export function PhotoModal() {
   const navigate = useNavigate();
-  const { context } = useParams();
-  const profile = context ? PROFILE_BY_ID[context.toUpperCase() as keyof typeof PROFILE_BY_ID] : null;
+  const { profile } = useGalleryProfile();
   const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
+
+  const themeStyle: ThemeStyle = {
+    "--primaryColor": profile.primaryColor ?? "#111827",
+    "--secondaryColor": profile.secondaryColor ?? "#886c4e",
+  };
+
   return (
-    <div style={{ ["--primaryColor" as any]: profile?.avatar?.primaryColor  ?? "#111827" ,
-      ["--secondaryColor" as any]: profile?.avatar?.secondaryColor}}>
+    <div style={themeStyle}>
     <Dialog.Root open onOpenChange={(open) => !open && navigate(-1)}>
       <Dialog.Portal>
         <Dialog.Overlay className="modal-overlay-popup" />

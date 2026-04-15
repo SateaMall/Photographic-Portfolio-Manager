@@ -1,0 +1,46 @@
+.photo-navbar {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.photo-navbar__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(10px, 2vw, 18px) clamp(12px, 3vw, 28px);
+  margin: 0 auto;
+  justify-content: flex-start;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.photo-navbar__brand {
+  color: rgb(232, 232, 232);
+  text-decoration: none;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.photo-navbar__brand:hover {
+  color: var(--secondaryColor, white);
+}
+
+@media (max-width: 779px) {
+  .photo-navbar {
+    width: 100%;
+    border-radius: 16px;
+  }
+
+  .photo-navbar__inner {
+    padding: 16px;
+  }
+
+  .photo-navbar__brand {
+    font-size: 18px;
+  }
+}

@@ -2,6 +2,7 @@ package com.AlexiSatea.backend.service;
 
 
 import com.AlexiSatea.backend.dto.VerifyEmailRequest;
+import com.AlexiSatea.backend.exception.TooManyVerificationCodeRequestsException;
 import com.AlexiSatea.backend.model.user.AppUser;
 import com.AlexiSatea.backend.model.user.EmailVerificationCode;
 import com.AlexiSatea.backend.repo.AppUserRepository;
@@ -14,15 +15,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationService {
 
     private static final SecureRandom RANDOM = new SecureRandom();
+    private static final Duration RESEND_COOLDOWN = Duration.ofSeconds(60);
+    private static final Duration RESEND_WINDOW = Duration.ofHours(1);
+    private static final int MAX_VERIFICATION_EMAILS_PER_WINDOW = 6;
 
     private final EmailVerificationCodeRepository emailVerificationCodeRepository;
     private final AppUserRepository appUserRepository;
@@ -91,7 +95,39 @@ public class EmailVerificationService {
             return;
         }
 
+        assertResendAllowed(user);
         createAndSendVerificationCode(user);
+    }
+
+    private void assertResendAllowed(AppUser user) {
+        Instant now = Instant.now();
+
+        emailVerificationCodeRepository.findTopByUser_IdOrderByCreatedAtDesc(user.getId())
+                .map(EmailVerificationCode::getCreatedAt)
+                .ifPresent(lastSentAt -> {
+                    Duration remainingCooldown = Duration.between(now, lastSentAt.plus(RESEND_COOLDOWN));
+                    if (!remainingCooldown.isNegative() && !remainingCooldown.isZero()) {
+                        throw new TooManyVerificationCodeRequestsException(
+                                "Please wait " + formatWait(remainingCooldown) + " before requesting another verification code."
+                        );
+                    }
+                });
+
+        Instant windowStart = now.minus(RESEND_WINDOW);
+        long verificationEmailsInWindow = emailVerificationCodeRepository.countByUser_IdAndCreatedAtAfter(user.getId(), windowStart);
+        if (verificationEmailsInWindow < MAX_VERIFICATION_EMAILS_PER_WINDOW) {
+            return;
+        }
+
+        Duration remainingWindow = emailVerificationCodeRepository
+                .findFirstByUser_IdAndCreatedAtAfterOrderByCreatedAtAsc(user.getId(), windowStart)
+                .map(EmailVerificationCode::getCreatedAt)
+                .map(firstSentAt -> Duration.between(now, firstSentAt.plus(RESEND_WINDOW)))
+                .orElse(RESEND_WINDOW);
+
+        throw new TooManyVerificationCodeRequestsException(
+                "Too many verification code requests for this email. Please try again in " + formatWait(remainingWindow) + "."
+        );
     }
 
     private String generateCode() {
@@ -105,5 +141,28 @@ public class EmailVerificationService {
 
     private String safe(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private String formatWait(Duration duration) {
+        long totalSeconds = Math.max(1, duration.toSeconds());
+
+        if (totalSeconds < 60) {
+            return totalSeconds + (totalSeconds == 1 ? " second" : " seconds");
+        }
+
+        long roundedMinutes = Math.max(1, (totalSeconds + 59) / 60);
+        if (roundedMinutes < 60) {
+            return roundedMinutes + (roundedMinutes == 1 ? " minute" : " minutes");
+        }
+
+        long hours = roundedMinutes / 60;
+        long minutes = roundedMinutes % 60;
+
+        if (minutes == 0) {
+            return hours + (hours == 1 ? " hour" : " hours");
+        }
+
+        return hours + (hours == 1 ? " hour" : " hours") + " and "
+                + minutes + (minutes == 1 ? " minute" : " minutes");
     }
 }

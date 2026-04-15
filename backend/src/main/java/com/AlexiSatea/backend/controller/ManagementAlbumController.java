@@ -1,14 +1,17 @@
 package com.AlexiSatea.backend.controller;
 
+import com.AlexiSatea.backend.dto.AlbumPhotoOrderRequest;
 import com.AlexiSatea.backend.dto.AlbumResponse;
+import com.AlexiSatea.backend.dto.AlbumViewResponse;
+import com.AlexiSatea.backend.dto.ManagedAlbumResponse;
 import com.AlexiSatea.backend.service.AlbumService;
 
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -17,6 +20,22 @@ import java.util.UUID;
 public class ManagementAlbumController {
 
     private final AlbumService albumService;
+
+    @GetMapping
+    public List<AlbumViewResponse> getManageableAlbums(
+            @RequestParam String slug,
+            Authentication authentication
+    ) {
+        return albumService.getManageableAlbums(slug, authentication);
+    }
+
+    @GetMapping("/{albumId}")
+    public ManagedAlbumResponse getManageableAlbum(
+            @PathVariable UUID albumId,
+            Authentication authentication
+    ) {
+        return albumService.getManageableAlbum(albumId, authentication);
+    }
 //Done - to test
     @PostMapping
     public AlbumResponse createAlbum(
@@ -48,6 +67,16 @@ public class ManagementAlbumController {
             Authentication authentication
     ) {
         albumService.addPhotoToAlbum(photoId, albumId, position, authentication);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{albumId}/photos/order")
+    public ResponseEntity<Void> reorderAlbumPhotos(
+            @PathVariable UUID albumId,
+            @RequestBody AlbumPhotoOrderRequest request,
+            Authentication authentication
+    ) {
+        albumService.reorderAlbumPhotos(albumId, request.photoIds(), authentication);
         return ResponseEntity.noContent().build();
     }
 

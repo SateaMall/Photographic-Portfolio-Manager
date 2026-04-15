@@ -1,6 +1,7 @@
 package com.AlexiSatea.backend.service;
 
 import com.AlexiSatea.backend.dto.AlbumResponse;
+import com.AlexiSatea.backend.dto.ManagedPhotoResponse;
 import com.AlexiSatea.backend.dto.MainPhotoResponse;
 import com.AlexiSatea.backend.dto.PhotoResponse;
 import com.AlexiSatea.backend.model.album.Album;
@@ -86,6 +87,33 @@ public class PhotoService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<ManagedPhotoResponse> getManageablePhotos(String slug, Pageable pageable, Authentication authentication) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Profile profile = accessService.requireManageableProfile(currentUser.getId(), slug);
+
+        return photoRepository.findManageablePhotos(profile.getSlug(), currentUser.getId(), pageable)
+                .map(ManagedPhotoResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ManagedPhotoResponse> getManageableHeroPhotos(String slug, Authentication authentication) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Profile profile = accessService.requireManageableProfile(currentUser.getId(), slug);
+
+        return photoFeatureRepository.findEnabledFeaturesByProfileId(profile.getId(), PhotoFeatureType.HOMEPAGE_HERO).stream()
+                .map(PhotoFeature::getPhoto)
+                .map(ManagedPhotoResponse::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PhotoResponse> getHeroPhotos(String slug) {
+        return photoFeatureRepository.findEnabledPublicFeaturesByProfileSlug(slug, PhotoFeatureType.HOMEPAGE_HERO).stream()
+                .map(feature -> PhotoResponse.from(feature.getPhoto(), feature))
+                .toList();
+    }
+
     @Transactional
     public Photo uploadPhoto(
             MultipartFile file,
@@ -108,6 +136,7 @@ public class PhotoService {
             validateUploadInputs(file, title, captureYear);
 
             String originalFilename = safeName(file.getOriginalFilename());
+            String normalizedTitle = normalizeUploadedTitle(title, originalFilename);
             String detectedContentType = file.getContentType();
             String normalizedContentType = normalizeContentType(detectedContentType, originalFilename);
 
@@ -162,7 +191,7 @@ public class PhotoService {
                     .thumbContentType("image/jpeg")
                     .thumbSizeBytes(thumbBytes.length)
 
-                    .title(title == null ? null : title.trim())
+                    .title(normalizedTitle)
                     .description(description == null ? null : description.trim())
                     .country(country)
                     .city(city)
@@ -207,6 +236,21 @@ public class PhotoService {
         if (captureYear != null && (captureYear < 1800 || captureYear > 2100)) {
             throw new IllegalArgumentException("Capture year must be between 1800 and 2100");
         }
+    }
+
+    private String normalizeUploadedTitle(String title, String originalFilename) {
+        if (title != null && !title.isBlank()) {
+            return title.trim();
+        }
+
+        if (originalFilename == null || originalFilename.isBlank()) {
+            return null;
+        }
+
+        int extensionIndex = originalFilename.lastIndexOf('.');
+        String baseName = extensionIndex > 0 ? originalFilename.substring(0, extensionIndex) : originalFilename;
+        String normalized = baseName.replace('_', ' ').replace('-', ' ').trim();
+        return normalized.isEmpty() ? null : normalized;
     }
     private void validateSupportedImageType(String contentType, String filename) {
         boolean allowedMimeType = contentType != null && ALLOWED_CONTENT_TYPES.contains(contentType);
