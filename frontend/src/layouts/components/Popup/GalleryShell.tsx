@@ -1,13 +1,13 @@
 import { Navigate, Routes, Route, useLocation, useParams } from "react-router-dom";
 import { RequireAuthenticated } from "../../../auth/RequireAuthenticated";
-import Homepage from "../../../pages/gallery/profile/ProfilePage";
-import AlbumPage from "../../../pages/gallery/photo-album/AlbumPage";
-import PhotoPage from "../../../pages/gallery/photo-album/PhotoPage";
-import ManageAlbumPage from "../../../pages/gallery/manage/ManageAlbumPage";
-import ManageShell from "../../../pages/gallery/manage/ManageShell";
-import ProfileCarouselPage from "../../../pages/gallery/manage/ProfileCarouselPage";
-import ProfilePhotosManagePage from "../../../pages/gallery/manage/ProfilePhotosManagePage";
-import ProfileSettingsPage from "../../../pages/gallery/manage/ProfileSettingsPage";
+import Homepage from "../../../pages/gallery/theme-one/profile/ProfilePage";
+import AlbumPage from "../../../pages/gallery/theme-one/album/AlbumPage";
+import PhotoPage from "../../../pages/gallery/common/photo/PhotoPage";
+import ManageAlbumPage from "../../../pages/gallery/common/manage/ManageAlbumPage";
+import ManageShell from "../../../pages/gallery/common/manage/ManageShell";
+import ProfileCarouselPage from "../../../pages/gallery/common/manage/ProfileCarouselPage";
+import ProfilePhotosManagePage from "../../../pages/gallery/common/manage/ProfilePhotosManagePage";
+import ProfileSettingsPage from "../../../pages/gallery/common/manage/ProfileSettingsPage";
 import {PhotoModal} from "./PhotoModal";
 
 

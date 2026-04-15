@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { CSSProperties } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { fetchPublicProfile } from "../../../api/profile";
-import PhotoPage from "../../../pages/gallery/photo-album/PhotoPage"
+import { useGalleryProfile } from "../../GalleryProfileContext";
+import PhotoPage from "../../../pages/gallery/common/photo/PhotoPage"
 import "./PhotoModal.css"
 
 type ThemeStyle = CSSProperties & {
@@ -14,65 +14,12 @@ type ThemeStyle = CSSProperties & {
 
 export function PhotoModal() {
   const navigate = useNavigate();
-  const { slug } = useParams();
+  const { profile } = useGalleryProfile();
   const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
-  const [resolvedProfile, setResolvedProfile] = useState<{
-    slug: string;
-    primaryColor: string | null;
-    secondaryColor: string | null;
-    failed: boolean;
-  } | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    const profileSlug = slug?.trim().toLowerCase() ?? "";
-
-    if (!profileSlug) {
-      return () => {
-        active = false;
-      };
-    }
-
-    fetchPublicProfile(profileSlug)
-      .then((profile) => {
-        if (active) {
-          setResolvedProfile({
-            slug: profileSlug,
-            primaryColor: profile.primaryColor,
-            secondaryColor: profile.secondaryColor,
-            failed: false,
-          });
-        }
-      })
-      .catch(() => {
-        if (active) {
-          setResolvedProfile({
-            slug: profileSlug,
-            primaryColor: null,
-            secondaryColor: null,
-            failed: true,
-          });
-        }
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [slug]);
-
-  const profileSlug = slug?.trim().toLowerCase() ?? "";
-
-  if (!profileSlug || resolvedProfile?.slug === profileSlug && resolvedProfile.failed) {
-    return <Navigate to="/profiles" replace />;
-  }
-
-  if (!resolvedProfile || resolvedProfile.slug !== profileSlug) {
-    return <div>Loading photo…</div>;
-  }
 
   const themeStyle: ThemeStyle = {
-    "--primaryColor": resolvedProfile.primaryColor ?? "#111827",
-    "--secondaryColor": resolvedProfile.secondaryColor ?? "#886c4e",
+    "--primaryColor": profile.primaryColor ?? "#111827",
+    "--secondaryColor": profile.secondaryColor ?? "#886c4e",
   };
 
   return (

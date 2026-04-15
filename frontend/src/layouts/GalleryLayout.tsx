@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import { Navigate, Outlet, useParams } from "react-router-dom";
 
 import { fetchPublicProfile } from "../api/profile";
-import { PROFILE_MANAGED_EVENT, type ProfileManagedDetail } from "../pages/gallery/components/profileEvents";
 import type { PublicProfileResponse } from "../types/types";
+import { GalleryProfileContext } from "./GalleryProfileContext";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { ScrollToHash } from "./components/ScrollToHash";
 
@@ -52,34 +52,44 @@ export default function GalleryLayout() {
     };
   }, [profileSlug]);
 
-  useEffect(() => {
-    function onProfileManaged(event: Event) {
-      const detail = (event as CustomEvent<ProfileManagedDetail>).detail;
+  const setProfile = useCallback((nextProfile: PublicProfileResponse) => {
+    setResolvedProfile({
+      slug: normalizeGallerySlug(nextProfile.slug),
+      profile: nextProfile,
+      failed: false,
+    });
+  }, []);
 
-      if (detail.profile.slug !== profileSlug) {
-        return;
-      }
-
-      setResolvedProfile({ slug: profileSlug, profile: detail.profile, failed: false });
+  const refreshProfile = useCallback(async () => {
+    if (!profileSlug) {
+      throw new Error("Gallery profile slug is missing.");
     }
 
-    window.addEventListener(PROFILE_MANAGED_EVENT, onProfileManaged as EventListener);
-
-    return () => {
-      window.removeEventListener(PROFILE_MANAGED_EVENT, onProfileManaged as EventListener);
-    };
+    const nextProfile = await fetchPublicProfile(profileSlug);
+    setResolvedProfile({ slug: profileSlug, profile: nextProfile, failed: false });
+    return nextProfile;
   }, [profileSlug]);
 
+  const profile = resolvedProfile?.profile ?? null;
+
+  const contextValue = useMemo(() => (
+    profile
+      ? {
+          profile,
+          profileSlug,
+          setProfile,
+          refreshProfile,
+        }
+      : null
+  ), [profile, profileSlug, refreshProfile, setProfile]);
 
   if (!profileSlug || resolvedProfile?.slug === profileSlug && resolvedProfile.failed) {
     return <Navigate to="/profiles" replace />;
   }
 
-  if (!resolvedProfile || resolvedProfile.slug !== profileSlug || !resolvedProfile.profile) {
+  if (!resolvedProfile || resolvedProfile.slug !== profileSlug || !profile || !contextValue) {
     return <div>Loading gallery…</div>;
   }
-
-  const profile = resolvedProfile.profile;
 
   const themeStyle: ThemeStyle = {
     "--primaryColor": profile.primaryColor ?? "#3b6e37",
@@ -87,10 +97,12 @@ export default function GalleryLayout() {
   };
 
   return (
-    <div style={themeStyle}>
-      <ScrollToTop />
-      <ScrollToHash />
-      <Outlet />
-    </div>
+    <GalleryProfileContext.Provider value={contextValue}>
+      <div style={themeStyle}>
+        <ScrollToTop />
+        <ScrollToHash />
+        <Outlet />
+      </div>
+    </GalleryProfileContext.Provider>
   );
 }

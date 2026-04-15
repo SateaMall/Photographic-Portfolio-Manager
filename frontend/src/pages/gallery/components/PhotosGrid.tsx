@@ -7,7 +7,7 @@ import { PhotoCard } from "./PhotoCard";
 import "./PhotosGrid.css"
 import {fetchAlbumItemsAsPhotos } from "../../../api/photo-album";
 import { useOpenPhoto } from "../../../layouts/components/popup/useOpenPhoto";
-import { PHOTO_MANAGED_EVENT, type PhotoManagedDetail } from "./photoEvents";
+import { PHOTO_MANAGED_EVENT, type PhotoManagedDetail } from "../common/photo/components/photoEvents";
 
 type PhotosGridProps = {
   photoId?: string;
