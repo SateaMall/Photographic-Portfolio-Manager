@@ -1,5 +1,5 @@
-import type { PhotoResponse } from "../../../types/types";
-import { photoFileUrl } from "../../../api/photos";
+import type { PhotoResponse } from "../../../../types/types";
+import { photoFileUrl } from "../../../../api/photos";
 import "./PhotoCard.css";
 import {  useParams } from "react-router-dom";
 import { useState } from "react";

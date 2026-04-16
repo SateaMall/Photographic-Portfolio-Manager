@@ -57,6 +57,11 @@ export function fetchManageableHeroPhotos(slug: string) {
   return httpJson<ManagedPhotoResponse[]>(`/api/manage/photos/hero?${params.toString()}`);
 }
 
+export function fetchManageableGridPhotos(slug: string) {
+  const params = new URLSearchParams({ slug });
+  return httpJson<ManagedPhotoResponse[]>(`/api/manage/photos/grid?${params.toString()}`);
+}
+
 export function fetchManagedAlbum(albumId: string) {
   return httpJson<ManagedAlbumResponse>(`/api/manage/albums/${encodeURIComponent(albumId)}`);
 }
@@ -162,6 +167,15 @@ export function updateManagedPhoto(photoId: string, input: {
 export function deleteManagedPhoto(photoId: string) {
   return httpJson<void>(`/api/manage/photos/${encodeURIComponent(photoId)}`, {
     method: "DELETE",
+  });
+}
+
+export function reorderManagedGridPhotos(slug: string, photoIds: string[]) {
+  const params = new URLSearchParams({ slug });
+
+  return httpJson<void>(`/api/manage/photos/grid/order?${params.toString()}`, {
+    method: "PUT",
+    body: JSON.stringify({ photoIds }),
   });
 }
 

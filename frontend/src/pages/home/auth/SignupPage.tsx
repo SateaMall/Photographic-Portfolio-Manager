@@ -1,10 +1,14 @@
-import { useState, type SubmitEvent } from "react";
+import { useState, type CSSProperties, type SubmitEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import { getGoogleLoginUrl, signup } from "../../../api/auth";
 import { useAuth } from "../../../auth/AuthContext";
 import { MarketingNavbar } from "../components/navigation/MarketingNavbar";
 import "./AuthPages.css";
+
+const signupPageStyle: CSSProperties & Record<"--auth-page-media", string> = {
+  "--auth-page-media": 'url("/Ready5_265592.JPG")',
+};
 
 function isStepOneValid(email: string, password: string) {
   return email.trim().length > 0 && password.length >= 8;
@@ -76,16 +80,16 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="auth-page auth-page--minimal">
-      <MarketingNavbar />
+    <main className="auth-page auth-page--minimal" style={signupPageStyle}>
+      <MarketingNavbar overlay />
       <div className="auth-shell">
         <div className="auth-grid auth-grid--single">
           <section className="auth-panel auth-panel--minimal auth-panel--signup">
             <form className="auth-form" onSubmit={handleSubmit}>
               <div>
-                <h2 className="auth-title">Create your account</h2>
+                <h2 className="auth-title">Create account</h2>
                 <p className="auth-meta">
-                  Create your free portofolio with Let me Lens and share your work with the world.
+                  Create your photographic portofolio with Let me Lens and share your work with the world.
                 </p>
               </div>
 

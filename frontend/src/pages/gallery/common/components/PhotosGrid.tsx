@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import type { PhotoResponse } from "../../../types/types";
-import { fetchPhotos } from "../../../api/profile";
+import type { PhotoResponse } from "../../../../types/types";
+import { fetchPhotos } from "../../../../api/profile";
 import { useParams } from "react-router-dom";
 import { PhotoCard } from "./PhotoCard";
 
 import "./PhotosGrid.css"
-import {fetchAlbumItemsAsPhotos } from "../../../api/photo-album";
-import { useOpenPhoto } from "../../../layouts/components/popup/useOpenPhoto";
-import { PHOTO_MANAGED_EVENT, type PhotoManagedDetail } from "../common/photo/components/photoEvents";
+import {fetchAlbumItemsAsPhotos } from "../../../../api/photo-album";
+import { useOpenPhoto } from "../../../../layouts/components/popup/useOpenPhoto";
+import { PHOTO_MANAGED_EVENT, type PhotoManagedDetail } from "../photo/components/photoEvents";
 
 type PhotosGridProps = {
   photoId?: string;
