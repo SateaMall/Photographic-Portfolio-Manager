@@ -40,13 +40,13 @@
 
 .hero-bio__card {
   text-align: center;
-  background: rgba(0, 0, 0, 0.327);
+  background: rgba(0, 0, 0, 0);
   border-radius: 18px;
   padding: clamp(14px, 2vw, 22px);
 }
 
 .hero-bio__name {
-  margin-top: clamp(12px, 2vw, 20px);
+  margin-top: clamp(19px, 7vw, 50px);
   margin-bottom: clamp(12px, 2vw, 20px);
   font-size: clamp(24px, 3.9vw, 35px);
   font-family:   var(--font-copperplate);
@@ -58,8 +58,8 @@
 .hero-bio__text {
   margin: 5vh auto 0 auto;
   max-width: 55ch;
-  font-size: clamp(13px, 1.4vw, 15px);
-  letter-spacing: 0.10em;
+  font-size: clamp(15px, 1.4vw, 18px);
+  letter-spacing: 0.05em;
   opacity: 0.90;
 }
 
