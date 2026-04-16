@@ -1,5 +1,6 @@
 import type { FormEvent } from "react";
 
+import { CountryCodeField } from "../../../../../components/forms/CountryCodeField";
 import type { MainPhotoResponse, PublicProfileResponse } from "../../../../../types/types";
 import "./PhotoInfo.css";
 
@@ -114,10 +115,9 @@ export default function PhotoInfo({
           <div className="photo-page__field-row">
             <label className="photo-page__field">
               <span>Country</span>
-              <input
+              <CountryCodeField
                 value={editDraft.country}
-                onChange={(event) => onChangeField?.("country", event.target.value)}
-                placeholder="FR"
+                onChange={(value) => onChangeField?.("country", value)}
                 disabled={isSubmitting}
               />
             </label>

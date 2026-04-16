@@ -1,0 +1,71 @@
+.country-code-field {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+.country-code-field__helper {
+  margin: 0;
+  color: rgba(148, 163, 184, 0.92);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.country-code-field__menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: grid;
+  gap: 4px;
+  max-height: 240px;
+  padding: 8px;
+  overflow-y: auto;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.98);
+  box-shadow: 0 20px 45px rgba(2, 6, 23, 0.35);
+  backdrop-filter: blur(12px);
+}
+
+.country-code-field__option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.country-code-field__option.is-active,
+.country-code-field__option:hover {
+  background: rgba(30, 41, 59, 0.96);
+}
+
+.country-code-field__option-name {
+  min-width: 0;
+}
+
+.country-code-field__option-code {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.14);
+  color: #cbd5e1;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.country-code-field__empty {
+  margin: 0;
+  padding: 10px 12px;
+  color: rgba(148, 163, 184, 0.92);
+  font-size: 14px;
+}

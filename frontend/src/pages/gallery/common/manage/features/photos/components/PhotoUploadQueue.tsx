@@ -1,5 +1,6 @@
 import { useId, useRef, useState, type ChangeEvent, type DragEvent } from "react";
 
+import { CountryCodeField } from "../../../../../../../components/forms/CountryCodeField";
 import type { UploadPhotoDraft } from "../../../../../../../types/types";
 import { createUploadPhotoDraft, isAcceptedUploadFile, revokeUploadDrafts } from "../utils/photoUploadDrafts";
 import "../../../components/PhotoUploadQueue.css";
@@ -184,10 +185,9 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
                   <div className="manage-field-row">
                     <label className="manage-field">
                       <span>Country</span>
-                      <input
+                      <CountryCodeField
                         value={draft.country}
-                        onChange={(event) => updateDraft(draft.id, "country", event.target.value)}
-                        placeholder="FR"
+                        onChange={(value) => updateDraft(draft.id, "country", value)}
                         disabled={isBusy}
                       />
                     </label>

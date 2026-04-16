@@ -21,7 +21,7 @@
 }
 
 .manage-shell {
-  --manage-shell-sidebar-width: 316px;
+  --manage-shell-sidebar-width: 250px;
   display: grid;
   gap: 32px;
   align-items: start;
@@ -145,9 +145,10 @@
 .manage-nav__sublink {
   display: block;
   border-radius: 16px;
-  padding: 10px 12px;
+  padding: 5px 12px;
   color: #cbd5e1;
   text-decoration: none;
+  font-size: 14px;
   transition: background-color 140ms ease, color 140ms ease, transform 140ms ease;
 }
 
@@ -184,7 +185,7 @@
 
 .manage-hero__title {
   margin: 0;
-  font-size: clamp(34px, 6vw, 58px);
+  font-size: clamp(34px, 6vw, 40px);
   line-height: 0.95;
 }
 
@@ -618,7 +619,7 @@
 .manage-library-card__date {
   margin: 0;
   color: #94a3b8;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .manage-actions {
