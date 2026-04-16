@@ -18,6 +18,8 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [isPreparingDrafts, setIsPreparingDrafts] = useState(false);
+  const isBusy = disabled || isPreparingDrafts;
 
   function updateDraft(draftId: string, field: keyof Omit<UploadPhotoDraft, "id" | "file" | "previewUrl">, value: string) {
     onDraftsChange(
@@ -39,14 +41,14 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
     onDraftsChange([]);
   }
 
-  function appendFiles(files: File[]) {
+  async function appendFiles(files: File[]) {
     if (files.length === 0) {
       return;
     }
 
     const existingKeys = new Set(drafts.map((draft) => buildFileKey(draft.file)));
     const rejectedNames: string[] = [];
-    const nextDrafts: UploadPhotoDraft[] = [];
+    const acceptedFiles: File[] = [];
 
     files.forEach((file) => {
       const fileKey = buildFileKey(file);
@@ -57,12 +59,19 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
       }
 
       existingKeys.add(fileKey);
-      nextDrafts.push(createUploadPhotoDraft(file));
+      acceptedFiles.push(file);
     });
 
-    if (nextDrafts.length > 0) {
-      onDraftsChange([...drafts, ...nextDrafts]);
-      setLocalError(null);
+    if (acceptedFiles.length > 0) {
+      setIsPreparingDrafts(true);
+
+      try {
+        const nextDrafts = await Promise.all(acceptedFiles.map((file) => createUploadPhotoDraft(file)));
+        onDraftsChange([...drafts, ...nextDrafts]);
+        setLocalError(null);
+      } finally {
+        setIsPreparingDrafts(false);
+      }
     }
 
     if (rejectedNames.length > 0) {
@@ -71,7 +80,7 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
   }
 
   function onFileInputChange(event: ChangeEvent<HTMLInputElement>) {
-    appendFiles(Array.from(event.target.files ?? []));
+    void appendFiles(Array.from(event.target.files ?? []));
     event.target.value = "";
   }
 
@@ -81,13 +90,13 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
       return;
     }
 
-    appendFiles(Array.from(event.dataTransfer.files));
+    void appendFiles(Array.from(event.dataTransfer.files));
   }
 
   return (
     <section className="manage-section">
       <div
-        className={`manage-dropzone ${disabled ? "is-disabled" : ""}`}
+        className={`manage-dropzone ${isBusy ? "is-disabled" : ""}`}
         onDragOver={(event) => event.preventDefault()}
         onDrop={onDrop}
         role="presentation"
@@ -100,19 +109,19 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
           accept=".jpg,.jpeg,.png,.webp"
           multiple
           onChange={onFileInputChange}
-          disabled={disabled}
+          disabled={isBusy}
         />
 
         <p className="manage-dropzone__eyebrow">Queue new photos</p>
         <h2 className="manage-dropzone__title">Drop JPEG, PNG, or WEBP files here</h2>
-        <p className="manage-dropzone__copy">Drop multiple files, adjust each photo metadata in place, then save in one batch.</p>
+        <p className="manage-dropzone__copy">Drop multiple files, adjust each photo metadata in place, then save in one batch. Year auto-fills from photo metadata when available.</p>
         <button
           type="button"
           className="manage-button manage-button--secondary"
           onClick={() => inputRef.current?.click()}
-          disabled={disabled}
+          disabled={isBusy}
         >
-          Choose files
+          {isPreparingDrafts ? "Reading metadata..." : "Choose files"}
         </button>
       </div>
 
@@ -130,7 +139,7 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
               type="button"
               className="manage-button manage-button--ghost"
               onClick={clearDrafts}
-              disabled={disabled}
+              disabled={isBusy}
             >
               Clear queue
             </button>
@@ -146,7 +155,7 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
                     className="manage-draft-card__remove"
                     onClick={() => removeDraft(draft.id)}
                     aria-label={`Remove ${draft.title}`}
-                    disabled={disabled}
+                    disabled={isBusy}
                   >
                     ×
                   </button>
@@ -158,7 +167,7 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
                     <input
                       value={draft.title}
                       onChange={(event) => updateDraft(draft.id, "title", event.target.value)}
-                      disabled={disabled}
+                      disabled={isBusy}
                     />
                   </label>
 
@@ -168,7 +177,7 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
                       value={draft.description}
                       onChange={(event) => updateDraft(draft.id, "description", event.target.value)}
                       rows={3}
-                      disabled={disabled}
+                      disabled={isBusy}
                     />
                   </label>
 
@@ -179,7 +188,7 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
                         value={draft.country}
                         onChange={(event) => updateDraft(draft.id, "country", event.target.value)}
                         placeholder="FR"
-                        disabled={disabled}
+                        disabled={isBusy}
                       />
                     </label>
 
@@ -189,7 +198,7 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
                         value={draft.city}
                         onChange={(event) => updateDraft(draft.id, "city", event.target.value)}
                         placeholder="Paris"
-                        disabled={disabled}
+                        disabled={isBusy}
                       />
                     </label>
 
@@ -200,7 +209,7 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
                         onChange={(event) => updateDraft(draft.id, "captureYear", event.target.value)}
                         inputMode="numeric"
                         placeholder="2026"
-                        disabled={disabled}
+                        disabled={isBusy}
                       />
                     </label>
                   </div>
