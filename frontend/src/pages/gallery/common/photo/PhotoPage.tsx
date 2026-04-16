@@ -228,6 +228,7 @@ export default function PhotoPage({ lightboxPortalContainer, lightboxKey }: Phot
               <PhotoViewer
                 photoId={photoId}
                 profileSlug={slug}
+                albumId={albumId}
                 mainPhoto={mainPhoto}
                 photos={photos}
                 lightboxPortalContainer={lightboxPortalContainer}

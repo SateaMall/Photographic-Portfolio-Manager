@@ -4,16 +4,19 @@ import type { MainPhotoResponse, PhotoResponse } from "../../../../../types/type
 import "./PhotoViewer.css"
 import "react-photo-view/dist/react-photo-view.css";
 import { useMemo } from "react";
+import { useOpenPhoto } from "../../../../../layouts/components/popup/useOpenPhoto";
+
 type PhotoViewerProps = {
   photoId: string;
   profileSlug: string;
+  albumId?: string;
   mainPhoto: MainPhotoResponse | null;
   photos: PhotoResponse[] | null | [];
   lightboxPortalContainer?: HTMLElement | null;
   lightboxKey?: string; // used to force remount when photoId changes, ensuring correct portal behavior
 };
 
-export default function PhotoViewer({ photoId, profileSlug, mainPhoto,photos, lightboxPortalContainer, lightboxKey }: PhotoViewerProps) {
+export default function PhotoViewer({ photoId, profileSlug, albumId, mainPhoto,photos, lightboxPortalContainer, lightboxKey }: PhotoViewerProps) {
 
     const ordered = useMemo(() => {
         const list = (photos ?? []).slice(); // copy
@@ -26,6 +29,11 @@ export default function PhotoViewer({ photoId, profileSlug, mainPhoto,photos, li
         return list;
     }, [photos, photoId]);
 
+    const openPhoto = useOpenPhoto();
+
+    const currentIndex = ordered.findIndex((p) => p.id === photoId);
+    const prevPhoto = currentIndex > 0 ? ordered[currentIndex - 1] : null;
+    const nextPhoto = currentIndex < ordered.length - 1 ? ordered[currentIndex + 1] : null;
 
 
   return (
@@ -42,8 +50,18 @@ export default function PhotoViewer({ photoId, profileSlug, mainPhoto,photos, li
           const src = photoFileUrl(p.id, profileSlug, isCurrent ? "ORIGINAL" : "MEDIUM");
           if (isCurrent) {
             return (
-                <div key={p.id} className="photo-page__mainPhotoWrapper">
-                    <PhotoView key={p.id} src={src} >
+                <div className="photo-page__mainPhotoWrapper">
+                {albumId && prevPhoto && (
+                  <button
+                    type="button"
+                    className="photo-page__nav photo-page__nav--left"
+                    onClick={() => openPhoto(prevPhoto.id, "auto", albumId)}
+                    aria-label="Previous photo"
+                  >
+                    ‹
+                  </button>
+                )}
+                                <PhotoView key={p.id} src={src} >
                         <button type="button" className="photo-page__imageBtn" aria-label="Open viewer">
                         <img
                             className="photo-page__image"
@@ -54,8 +72,20 @@ export default function PhotoViewer({ photoId, profileSlug, mainPhoto,photos, li
                         />
                         <div className="photo-page__hint">Click to fullscreen / zoom</div>
                         </button>
+                        
                     </PhotoView>
-                </div>
+                
+                {albumId &&nextPhoto && (
+                  <button
+                    type="button"
+                    className="photo-page__nav photo-page__nav--right"
+                    onClick={() => openPhoto(nextPhoto.id, "auto", albumId)}
+                    aria-label="Next photo"
+                  >
+                    ›
+                  </button>
+                )}
+                </div> 
             );
           }
 
