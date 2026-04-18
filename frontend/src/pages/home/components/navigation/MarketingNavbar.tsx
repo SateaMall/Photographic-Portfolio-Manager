@@ -55,11 +55,11 @@ export function MarketingNavbar({ overlay = false }: MarketingNavbarProps) {
             Exemple
           </Link>
           <Link className="marketing-nav__link" to="/#about" onClick={() => setMenuOpen(false)}>
-            About Us
+            Why Us
           </Link>
-          <Link className="marketing-nav__link" to="/#contact" onClick={() => setMenuOpen(false)}>
+          {/* <Link className="marketing-nav__link" to="/#contact" onClick={() => setMenuOpen(false)}>
             Contact Us
-          </Link>
+          </Link> */}
           <Link className="marketing-nav__action" to={actionTo} onClick={() => setMenuOpen(false)}>
             {actionLabel}
           </Link>

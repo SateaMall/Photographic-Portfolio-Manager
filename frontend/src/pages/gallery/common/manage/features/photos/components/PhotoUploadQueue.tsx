@@ -3,7 +3,7 @@ import { useId, useRef, useState, type ChangeEvent, type DragEvent } from "react
 import { CountryCodeField } from "../../../../../../../components/forms/CountryCodeField";
 import type { UploadPhotoDraft } from "../../../../../../../types/types";
 import { createUploadPhotoDraft,  getMaxUploadFileSizeLabel, isAcceptedUploadFile, isUploadFileTooLarge, revokeUploadDrafts } from "../utils/photoUploadDrafts";
-import "../../../components/PhotoUploadQueue.css";
+import "./PhotoUploadQueue.css";
 
 function buildFileKey(file: File) {
   return `${file.name}:${file.size}:${file.lastModified}`;

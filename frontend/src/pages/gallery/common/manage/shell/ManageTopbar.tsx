@@ -6,7 +6,7 @@ import { useAuth } from "../../../../../auth/AuthContext";
 import { getGalleryPath, getManageBasePath } from "../shared/utils/manageRoute";
 import { normalizeSlug } from "../shared/utils/manageSlug";
 import { ManageSidebarNavigation } from "./ManageSidebarNavigation";
-import "../components/navigation/Navbar.css";
+import "./ManageTopbar.css";
 
 export function ManageTopbar() {
   const { slug } = useParams();

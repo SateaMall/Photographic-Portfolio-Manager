@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { MarketingNavbar } from "./components/navigation/MarketingNavbar";
 import "./HomePage.css";
+import { ScrollIndicator } from "../../components/indicator/ScrollIndicator";
 
 const homeHeroStyle: CSSProperties & Record<"--home-hero-media", string> = {
   "--home-hero-media": 'url("/Une_foule_vers_le_ciel.jpg")',
@@ -30,39 +31,42 @@ export default function HomePage() {
             Start the journey
           </Link>
         </div>
+        <div className="scroll-indicator">
+                <ScrollIndicator targetId={["about"]} />
+        </div> 
       </section>
 
       <section className="home-section " id="about">
         <div className="home-section__inner home-section__inner--split">
           <div>
-            <p className="home-section__label ">About Us</p>
-            <h2 className="home-section__title">A portofolio built for photographers needs</h2>
+            <p className="home-section__label ">Photographers</p>
+            <h2 className="home-section__title">A portofolio built for photographers</h2>
           </div>
         
           <p className="home-section__copy">
-            This version keeps the first impression minimal, with a full-screen hero and quiet navigation so you can swap in a single photograph or a slideshow later without changing the structure.
+            We understand photographers' needs and have crafted a platform that gives you the possibility to create a portofolio with a tools that you truly need.
           </p>
         </div>
       </section>
-      <section className="home-section home-section--muted" id="contact">
+      <section className="home-section home-section--muted">
         <div className="home-section__inner home-section__inner--split">
           <div>
-            <p className="home-section__label">Contact Us</p>
+            <p className="home-section__label">Elegant & Engaging</p>
             <h2 className="home-section__title">Elegant theme to showcase your work</h2>
           </div>
           <p className="home-section__copy">
-            You can place contact details, a short studio introduction, or a booking call to action here later. For now, the layout stays intentionally light.
+            The theme is designed to engage your visitors with an intuitive and elegant layout that puts your photos in the spotlight. Let your visitors enjoy a seamless browsing experience across all devices, allowing your audience to fully appreciate your work.
           </p>
         </div>
       </section>
-      <section className="home-section home-section--muted" id="contact">
+            <section className="home-section home-section--muted">
         <div className="home-section__inner home-section__inner--split">
           <div>
-            <p className="home-section__label">Contact Us</p>
-            <h2 className="home-section__title">Easy-to-use interface to make the initial steps seamless.</h2>
+            <p className="home-section__label">Adapted to all screens</p>
+            <h2 className="home-section__title">Your portofolio, adapted to all screens</h2>
           </div>
           <p className="home-section__copy">
-            You can place contact details, a short studio introduction, or a booking call to action here later. For now, the layout stays intentionally light.
+            Let your visitors enjoy a seamless browsing experience across all devices, allowing your audience to fully appreciate your work.
           </p>
         </div>
       </section>
