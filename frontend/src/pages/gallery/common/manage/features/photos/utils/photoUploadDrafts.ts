@@ -3,6 +3,8 @@ import * as exifr from "exifr";
 import type { UploadPhotoDraft } from "../../../../../../../types/types";
 
 const ACCEPTED_EXTENSIONS = new Set(["jpg", "jpeg", "png", "webp"]);
+const MAX_UPLOAD_FILE_SIZE_MB = 12;
+export const MAX_UPLOAD_FILE_SIZE_BYTES = MAX_UPLOAD_FILE_SIZE_MB * 1024 * 1024;
 const MIN_CAPTURE_YEAR = 1800;
 const MAX_CAPTURE_YEAR = 2100;
 
@@ -19,7 +21,12 @@ function titleFromFilename(filename: string) {
 export function isAcceptedUploadFile(file: File) {
   return ACCEPTED_EXTENSIONS.has(getExtension(file.name));
 }
-
+export function isUploadFileTooLarge(file: File) {
+  return file.size > MAX_UPLOAD_FILE_SIZE_BYTES;
+}
+export function getMaxUploadFileSizeLabel() {
+  return `${MAX_UPLOAD_FILE_SIZE_MB}MB`;
+}
 function normalizeCaptureYear(value: Date | number | string | null | undefined) {
   if (value instanceof Date) {
     const year = value.getFullYear();

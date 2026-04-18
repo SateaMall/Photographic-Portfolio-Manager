@@ -47,7 +47,7 @@ export default function PhotoViewer({ photoId, profileSlug, albumId, mainPhoto,p
         {/* Render ALL PhotoViews in the correct order */}
         {ordered.map((p) => {
           const isCurrent = p.id === photoId;
-          const src = photoFileUrl(p.id, profileSlug, isCurrent ? "ORIGINAL" : "MEDIUM");
+          const src = photoFileUrl(p.id, profileSlug,"MEDIUM");
           if (isCurrent) {
             return (
                 <div className="photo-page__mainPhotoWrapper">

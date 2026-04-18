@@ -2,7 +2,7 @@ import { useId, useRef, useState, type ChangeEvent, type DragEvent } from "react
 
 import { CountryCodeField } from "../../../../../../../components/forms/CountryCodeField";
 import type { UploadPhotoDraft } from "../../../../../../../types/types";
-import { createUploadPhotoDraft, isAcceptedUploadFile, revokeUploadDrafts } from "../utils/photoUploadDrafts";
+import { createUploadPhotoDraft,  getMaxUploadFileSizeLabel, isAcceptedUploadFile, isUploadFileTooLarge, revokeUploadDrafts } from "../utils/photoUploadDrafts";
 import "../../../components/PhotoUploadQueue.css";
 
 function buildFileKey(file: File) {
@@ -42,43 +42,45 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
     onDraftsChange([]);
   }
 
-  async function appendFiles(files: File[]) {
-    if (files.length === 0) {
+ async function appendFiles(files: File[]) {
+  if (files.length === 0) {
+    return;
+  }
+  const existingKeys = new Set(drafts.map((draft) => buildFileKey(draft.file)));
+  const rejectedNames: string[] = [];
+  const oversizedNames: string[] = [];
+  const acceptedFiles: File[] = [];
+  files.forEach((file) => {
+    const fileKey = buildFileKey(file);
+    if (!isAcceptedUploadFile(file) || existingKeys.has(fileKey)) {
+      rejectedNames.push(file.name);
       return;
     }
-
-    const existingKeys = new Set(drafts.map((draft) => buildFileKey(draft.file)));
-    const rejectedNames: string[] = [];
-    const acceptedFiles: File[] = [];
-
-    files.forEach((file) => {
-      const fileKey = buildFileKey(file);
-
-      if (!isAcceptedUploadFile(file) || existingKeys.has(fileKey)) {
-        rejectedNames.push(file.name);
-        return;
-      }
-
-      existingKeys.add(fileKey);
-      acceptedFiles.push(file);
-    });
-
-    if (acceptedFiles.length > 0) {
-      setIsPreparingDrafts(true);
-
-      try {
-        const nextDrafts = await Promise.all(acceptedFiles.map((file) => createUploadPhotoDraft(file)));
-        onDraftsChange([...drafts, ...nextDrafts]);
-        setLocalError(null);
-      } finally {
-        setIsPreparingDrafts(false);
-      }
+    if (isUploadFileTooLarge(file)) {
+      oversizedNames.push(file.name);
+      return;
     }
-
-    if (rejectedNames.length > 0) {
-      setLocalError(`Skipped unsupported or duplicate files: ${rejectedNames.join(", ")}`);
+    existingKeys.add(fileKey);
+    acceptedFiles.push(file);
+  });
+  if (acceptedFiles.length > 0) {
+    setIsPreparingDrafts(true);
+    try {
+      const nextDrafts = await Promise.all(acceptedFiles.map((file) => createUploadPhotoDraft(file)));
+      onDraftsChange([...drafts, ...nextDrafts]);
+    } finally {
+      setIsPreparingDrafts(false);
     }
   }
+  const messages: string[] = [];
+  if (rejectedNames.length > 0) {
+    messages.push(`Skipped unsupported or duplicate files: ${rejectedNames.join(", ")}`);
+  }
+  if (oversizedNames.length > 0) {
+    messages.push(`Skipped files over ${getMaxUploadFileSizeLabel()}: ${oversizedNames.join(", ")}`);
+  }
+  setLocalError(messages.length > 0 ? messages.join(" ") : null);
+}
 
   function onFileInputChange(event: ChangeEvent<HTMLInputElement>) {
     void appendFiles(Array.from(event.target.files ?? []));
@@ -115,7 +117,8 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
 
         <p className="manage-dropzone__eyebrow">Queue new photos</p>
         <h2 className="manage-dropzone__title">Drop JPEG, PNG, or WEBP files here</h2>
-        <p className="manage-dropzone__copy">Drop multiple files, adjust each photo metadata in place, then save in one batch. Year auto-fills from photo metadata when available.</p>
+        <p className="manage-dropzone__copy">Drop JPEG, PNG, or WEBP files up to {getMaxUploadFileSizeLabel()} each, adjust metadata in place,
+  then save in one batch. Year auto-fills from photo metadata when available.</p>
         <button
           type="button"
           className="manage-button manage-button--secondary"
