@@ -1,5 +1,6 @@
 package com.AlexiSatea.backend.controller;
 
+import com.AlexiSatea.backend.dto.ManagedPhotoOrderRequest;
 import com.AlexiSatea.backend.dto.ManagedPhotoResponse;
 import com.AlexiSatea.backend.dto.PhotoResponse;
 import com.AlexiSatea.backend.model.photo.Photo;
@@ -43,6 +44,24 @@ public class ManagementPhotoController {
             Authentication authentication
     ) {
         return photoService.getManageableHeroPhotos(slug, authentication);
+    }
+
+    @GetMapping("/grid")
+    public List<ManagedPhotoResponse> getManageableGridPhotos(
+            @RequestParam String slug,
+            Authentication authentication
+    ) {
+        return photoService.getManageableGridPhotos(slug, authentication);
+    }
+
+    @PutMapping("/grid/order")
+    public ResponseEntity<Void> reorderManageableGridPhotos(
+            @RequestParam String slug,
+            @RequestBody ManagedPhotoOrderRequest request,
+            Authentication authentication
+    ) {
+        photoService.reorderManageableGridPhotos(slug, request.photoIds(), authentication);
+        return ResponseEntity.noContent().build();
     }
 
     /**********************************         Photos APIs         ******************************/

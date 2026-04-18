@@ -5,7 +5,7 @@ import {AlbumsRow} from "./components/AlbumsRow"
 import "./ProfilePage.css";
 import { useParams } from "react-router-dom";
 import { SocialBioSection } from "./components/SocialBioSection";
-import { PhotosGrid } from "../../components/PhotosGrid";
+import { PhotosGrid } from "../../common/components/PhotosGrid";
 import { CarrouselTopper } from "../../../../components/carousel/CarrouselTopper";
 import { Navbar } from "../navigation/Navbar";
 import { ScrollIndicator } from "../../../../components/indicator/ScrollIndicator";

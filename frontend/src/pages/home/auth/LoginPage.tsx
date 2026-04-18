@@ -1,10 +1,15 @@
-import { useState, type SubmitEvent } from "react";
+import { useState, type CSSProperties, type SubmitEvent } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import { getGoogleLoginUrl, login } from "../../../api/auth";
 import { useAuth } from "../../../auth/AuthContext";
 import { MarketingNavbar } from "../components/navigation/MarketingNavbar";
 import "./AuthPages.css";
+  
+
+const loginPageStyle: CSSProperties & Record<"--auth-page-media", string> = {
+  "--auth-page-media": `url("${encodeURI("/Basalte abandonné.jpg")}")`,
+};
 
 function readEmailFromSearch(search: string) {
   return new URLSearchParams(search).get("email") ?? "";
@@ -79,8 +84,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="auth-page auth-page--minimal">
-      <MarketingNavbar />
+    <main className="auth-page auth-page--minimal" style={loginPageStyle}>
+      <MarketingNavbar overlay />
       <div className="auth-shell">
         <div className="auth-grid auth-grid--single">
           <section className="auth-panel auth-panel--minimal">

@@ -1,14 +1,19 @@
 .auth-page {
   min-height: 100vh;
   padding: 124px 20px 32px;
-  background:
+  background-image:
     radial-gradient(circle at top, rgba(240, 190, 120, 0.14), transparent 30%),
-    linear-gradient(180deg, #101625 0%, #162038 50%, #0d1320 100%);
+    var(--auth-page-media, linear-gradient(180deg, #101625 0%, #162038 50%, #0d1320 100%));
+  background-position: center;
+  background-size: cover;
   color: #f6f4ef;
 }
 
 .auth-page--minimal {
-  background: #fff;
+  background-image:
+    linear-gradient(180deg, rgba(12, 18, 28, 0.3) 0%, rgba(12, 18, 28, 0.62) 100%),
+    var(--auth-page-media, linear-gradient(180deg, #69727d 0%, #303640 45%, #12161c 100%));
+  background-color: #0d1320;
   color: #111827;
 }
 
@@ -32,7 +37,7 @@
 
 .auth-link,
 .auth-inline-link {
-  opacity: 0.84;
+  opacity: 0.9;
 }
 
 .auth-link:hover,
@@ -64,7 +69,7 @@
 
 .auth-panel--minimal {
   border-color: #e5e7eb;
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.931);
   backdrop-filter: blur(8px);
   box-shadow: 0 24px 60px rgba(17, 24, 39, 0.08);
 }
@@ -94,7 +99,7 @@
 
 .auth-title {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 3.8rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   line-height: 0.98;
 }
 
@@ -121,7 +126,7 @@
 .auth-page--minimal .auth-hint,
 .auth-page--minimal .auth-link,
 .auth-page--minimal .auth-inline-link {
-  color: #6b7280;
+  color: #181b21;
 }
 
 .auth-list {

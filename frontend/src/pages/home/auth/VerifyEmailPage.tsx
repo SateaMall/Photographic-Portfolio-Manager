@@ -1,10 +1,14 @@
-import { useMemo, useState, type SubmitEvent } from "react";
+import { useMemo, useState, type CSSProperties, type SubmitEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { resendVerificationCode, verifyEmail } from "../../../api/auth";
 import { useAuth } from "../../../auth/AuthContext";
 import { MarketingNavbar } from "../components/navigation/MarketingNavbar";
 import "./AuthPages.css";
+
+const verifyPageStyle: CSSProperties & Record<"--auth-page-media", string> = {
+  "--auth-page-media": 'url("/Ready5_265592.JPG")',
+};
 
 function readEmailFromSearch(search: string) {
   return new URLSearchParams(search).get("email") ?? "";
@@ -78,8 +82,8 @@ export default function VerifyEmailPage() {
   }
 
   return (
-    <main className="auth-page auth-page--minimal">
-      <MarketingNavbar />
+    <main className="auth-page auth-page--minimal" style={verifyPageStyle}>
+      <MarketingNavbar overlay />
       <div className="auth-shell">
         <div className="auth-grid auth-grid--single">
           <section className="auth-panel auth-panel--minimal">

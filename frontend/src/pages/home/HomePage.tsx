@@ -1,8 +1,14 @@
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../auth/AuthContext";
 import { MarketingNavbar } from "./components/navigation/MarketingNavbar";
 import "./HomePage.css";
+import { ScrollIndicator } from "../../components/indicator/ScrollIndicator";
+
+const homeHeroStyle: CSSProperties & Record<"--home-hero-media", string> = {
+  "--home-hero-media": 'url("/Une_foule_vers_le_ciel.jpg")',
+};
 
 export default function HomePage() {
   const { isAuthenticated, loading, session } = useAuth();
@@ -14,40 +20,57 @@ export default function HomePage() {
     <main className="home-page">
       <MarketingNavbar overlay />
 
-      <section className="home-hero">
+      <section className="home-hero" style={homeHeroStyle}>
         <div className="home-hero__content">
-          <p className="home-hero__eyebrow">Prepare your photography portfolio in 5 minutes.</p>
-          <h1 className="home-hero__title">A calm first screen built for the photograph you will choose later.</h1>
+          <p className="home-hero__eyebrow"> Portofolios made especially for photographers </p>
+          <h1 className="home-hero__title">Let us help you share what matters to you.</h1>
           <p className="home-hero__subtitle">
-            Start with a full-screen image, keep the interface quiet, and let the work speak first.
+            Prepare your photography portfolio in 5 minutes.
           </p>
           <Link className="home-hero__cta" to={primaryTarget}>
             Start the journey
           </Link>
         </div>
+        <div className="scroll-indicator">
+                <ScrollIndicator targetId={["about"]} />
+        </div> 
       </section>
 
-      <section className="home-section" id="about">
-        <div className="home-section__inner">
-          <p className="home-section__label">About Us</p>
-          <h2 className="home-section__title">The homepage now starts with the image instead of the interface.</h2>
-          <p className="home-section__copy">
-            This version keeps the first impression minimal, with a full-screen hero and quiet navigation so you can swap in a single photograph or a slideshow later without changing the structure.
-          </p>
-        </div>
-      </section>
-
-      <section className="home-section home-section--muted" id="contact">
+      <section className="home-section " id="about">
         <div className="home-section__inner home-section__inner--split">
           <div>
-            <p className="home-section__label">Contact Us</p>
-            <h2 className="home-section__title">The white section after the hero is ready for your next content decisions.</h2>
+            <p className="home-section__label ">Photographers</p>
+            <h2 className="home-section__title">A portofolio built for photographers</h2>
           </div>
+        
           <p className="home-section__copy">
-            You can place contact details, a short studio introduction, or a booking call to action here later. For now, the layout stays intentionally light.
+            We understand photographers' needs and have crafted a platform that gives you the possibility to create a portofolio with a tools that you truly need.
           </p>
         </div>
       </section>
+      <section className="home-section home-section--muted">
+        <div className="home-section__inner home-section__inner--split">
+          <div>
+            <p className="home-section__label">Elegant & Engaging</p>
+            <h2 className="home-section__title">Elegant theme to showcase your work</h2>
+          </div>
+          <p className="home-section__copy">
+            The theme is designed to engage your visitors with an intuitive and elegant layout that puts your photos in the spotlight. Let your visitors enjoy a seamless browsing experience across all devices, allowing your audience to fully appreciate your work.
+          </p>
+        </div>
+      </section>
+            <section className="home-section home-section--muted">
+        <div className="home-section__inner home-section__inner--split">
+          <div>
+            <p className="home-section__label">Adapted to all screens</p>
+            <h2 className="home-section__title">Your portofolio, adapted to all screens</h2>
+          </div>
+          <p className="home-section__copy">
+            Let your visitors enjoy a seamless browsing experience across all devices, allowing your audience to fully appreciate your work.
+          </p>
+        </div>
+      </section>
+      
     </main>
   );
 }

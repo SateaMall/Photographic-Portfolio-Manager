@@ -108,6 +108,29 @@ public class PhotoService {
     }
 
     @Transactional(readOnly = true)
+    public List<ManagedPhotoResponse> getManageableGridPhotos(String slug, Authentication authentication) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Profile profile = accessService.requireManageableProfile(currentUser.getId(), slug);
+
+        List<Photo> manageablePhotos = photoRepository.findManageablePhotos(profile.getSlug(), currentUser.getId(), Pageable.unpaged()).getContent();
+        LinkedHashMap<UUID, Photo> remainingPhotos = new LinkedHashMap<>();
+        manageablePhotos.forEach((photo) -> remainingPhotos.put(photo.getId(), photo));
+
+        List<Photo> orderedPhotos = new ArrayList<>();
+        photoFeatureRepository.findEnabledFeaturesByProfileId(profile.getId(), PhotoFeatureType.HOMEPAGE_GRID).forEach((feature) -> {
+            Photo orderedPhoto = remainingPhotos.remove(feature.getPhoto().getId());
+            if (orderedPhoto != null) {
+                orderedPhotos.add(orderedPhoto);
+            }
+        });
+        orderedPhotos.addAll(remainingPhotos.values());
+
+        return orderedPhotos.stream()
+                .map(ManagedPhotoResponse::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<PhotoResponse> getHeroPhotos(String slug) {
         return photoFeatureRepository.findEnabledPublicFeaturesByProfileSlug(slug, PhotoFeatureType.HOMEPAGE_HERO).stream()
                 .map(feature -> PhotoResponse.from(feature.getPhoto(), feature))
@@ -478,6 +501,40 @@ public class PhotoService {
         photoFeatureRepository.save(pf);
 
         return pf.getOrderIndex();
+    }
+
+    @Transactional
+    public void reorderManageableGridPhotos(String slug, List<UUID> photoIds, Authentication authentication) {
+        if (photoIds == null) {
+            throw new IllegalArgumentException("Photo order is required");
+        }
+
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Profile profile = accessService.requireManageableProfile(currentUser.getId(), slug);
+        List<Photo> manageablePhotos = photoRepository.findManageablePhotos(profile.getSlug(), currentUser.getId(), Pageable.unpaged()).getContent();
+        LinkedHashMap<UUID, Photo> photosById = new LinkedHashMap<>();
+        manageablePhotos.forEach((photo) -> photosById.put(photo.getId(), photo));
+
+        LinkedHashSet<UUID> orderedIds = new LinkedHashSet<>(photoIds);
+        if (photoIds.size() != manageablePhotos.size() || orderedIds.size() != photoIds.size() || !photosById.keySet().equals(orderedIds)) {
+            throw new IllegalArgumentException("Photo order must include every manageable photo exactly once");
+        }
+
+        int index = 0;
+        for (UUID photoId : photoIds) {
+            PhotoFeature photoFeature = photoFeatureRepository
+                    .findByPhoto_IdAndTypeAndProfile(photoId, PhotoFeatureType.HOMEPAGE_GRID, profile)
+                    .orElseGet(() -> PhotoFeature.builder()
+                            .photo(photosById.get(photoId))
+                            .profile(profile)
+                            .type(PhotoFeatureType.HOMEPAGE_GRID)
+                            .build());
+
+            photoFeature.setEnabled(true);
+            photoFeature.setOrderIndex(index);
+            photoFeatureRepository.save(photoFeature);
+            index += 1;
+        }
     }
 
     public void deletePhotoFeature(UUID photoId, PhotoFeatureType type, String slug, Authentication authentication) {

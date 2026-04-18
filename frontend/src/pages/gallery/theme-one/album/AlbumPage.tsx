@@ -3,7 +3,7 @@ import { CarrouselTopper } from "../../../../components/carousel/CarrouselTopper
 import { ScrollIndicator } from "../../../../components/indicator/ScrollIndicator";
 import { useGalleryProfile } from "../../../../layouts/GalleryProfileContext";
 import { Navbar } from "../navigation/Navbar";
-import { PhotosGrid } from "../../components/PhotosGrid";
+import { PhotosGrid } from "../../common/components/PhotosGrid";
 
 import "./AlbumPage.css"
 import { fetchAlbumInfo } from "../../../../api/photo-album";

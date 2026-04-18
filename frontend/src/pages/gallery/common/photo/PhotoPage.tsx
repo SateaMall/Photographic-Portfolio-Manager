@@ -8,7 +8,7 @@ import { useGalleryProfile } from "../../../../layouts/GalleryProfileContext";
 import type { MainPhotoResponse, PhotoResponse } from "../../../../types/types";
 import { emitPhotoDeleted, emitPhotoUpdated } from "./components/photoEvents";
 import { PhotoNavbar } from "./components/PhotoNavbar";
-import { PhotosGrid } from "../../components/PhotosGrid";
+import { PhotosGrid } from "../components/PhotosGrid";
 import PhotoInfo from "./components/PhotoInfo";
 import PhotoViewer from "./components/PhotoViewer";
 import "./PhotoPage.css";
@@ -228,6 +228,7 @@ export default function PhotoPage({ lightboxPortalContainer, lightboxKey }: Phot
               <PhotoViewer
                 photoId={photoId}
                 profileSlug={slug}
+                albumId={albumId}
                 mainPhoto={mainPhoto}
                 photos={photos}
                 lightboxPortalContainer={lightboxPortalContainer}
