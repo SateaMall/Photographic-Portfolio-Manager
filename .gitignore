@@ -33,6 +33,7 @@ backend/target
 
 # env
 .env
+backend/.env.server
 
 # uploads / images
 uploads/

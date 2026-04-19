@@ -1,17 +1,16 @@
 services:
   db:
     image: postgres:16
-    container_name: photo_gallery_db
-    environment:
-      POSTGRES_DB: photo_gallery
-      POSTGRES_USER: photo
-      POSTGRES_PASSWORD: photo
+    container_name: letmelens_db
+    restart: unless-stopped
+    env_file:
+      - .env.server
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U photo -d photo_gallery"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
       timeout: 3s
       retries: 20

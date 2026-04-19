@@ -84,7 +84,7 @@ export default function GalleryLayout() {
   ), [profile, profileSlug, refreshProfile, setProfile]);
 
   if (!profileSlug || resolvedProfile?.slug === profileSlug && resolvedProfile.failed) {
-    return <Navigate to="/profiles" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (!resolvedProfile || resolvedProfile.slug !== profileSlug || !profile || !contextValue) {
