@@ -4,7 +4,7 @@ import type { MainPhotoResponse, PhotoResponse } from "../../../../../types/type
 import "./PhotoViewer.css"
 import "react-photo-view/dist/react-photo-view.css";
 import { useMemo } from "react";
-import { useOpenPhoto } from "../../../../../layouts/components/popup/useOpenPhoto";
+import { useOpenPhoto } from "../../../../../layouts/components/Popup/useOpenPhoto";
 
 type PhotoViewerProps = {
   photoId: string;

@@ -3,7 +3,7 @@ import { closestCenter } from "@dnd-kit/core";
 import { useLocation } from "react-router-dom";
 
 import { uploadManagedPhoto } from "../../../../../../../api/manage";
-import { useOpenPhoto } from "../../../../../../../layouts/components/popup/useOpenPhoto";
+import { useOpenPhoto } from "../../../../../../../layouts/components/Popup/useOpenPhoto";
 import { useManageAccess } from "../../../shared/hooks/useManageAccess";
 import { useManagePhotoGrid } from "../hooks/useManagePhotoGrid";
 import { useUploadDraftQueue } from "../../../shared/hooks/useUploadDraftQueue";

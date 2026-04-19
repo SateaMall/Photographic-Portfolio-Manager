@@ -8,7 +8,7 @@ import { SocialBioSection } from "./components/SocialBioSection";
 import { PhotosGrid } from "../../common/components/PhotosGrid";
 import { CarrouselTopper } from "../../../../components/carousel/CarrouselTopper";
 import { Navbar } from "../navigation/Navbar";
-import { ScrollIndicator } from "../../../../components/indicator/ScrollIndicator";
+import { ScrollIndicator } from "../../../../components/Indicator/ScrollIndicator";
 import { useAuth } from "../../../../auth/AuthContext";
 
 type AlbumState = {
