@@ -1,7 +1,7 @@
 package com.letmelens.backend.config;
 
-import com.letmelens.backend.storage.LocalStorageService;
-import com.letmelens.backend.storage.StorageService;
+import com.letmelens.backend.register.LocalStorageService;
+import com.letmelens.backend.register.StorageService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

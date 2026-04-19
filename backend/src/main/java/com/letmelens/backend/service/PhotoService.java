@@ -15,7 +15,7 @@ import com.letmelens.backend.model.user.AppUser;
 import com.letmelens.backend.repo.*;
 import com.letmelens.backend.security.AccessService;
 import com.letmelens.backend.security.CurrentUserService;
-import com.letmelens.backend.storage.StorageService;
+import com.letmelens.backend.register.StorageService;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;

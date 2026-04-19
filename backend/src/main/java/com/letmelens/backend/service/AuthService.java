@@ -17,7 +17,7 @@ import com.letmelens.backend.repo.PhotoRepository;
 import com.letmelens.backend.repo.ProfileRepository;
 import com.letmelens.backend.repo.ProfileUserRepository;
 import com.letmelens.backend.security.CurrentUserService;
-import com.letmelens.backend.storage.StorageService;
+import com.letmelens.backend.register.StorageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
