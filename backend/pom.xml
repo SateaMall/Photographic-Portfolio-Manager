@@ -8,7 +8,7 @@
 		<version>4.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.AlexiSatea</groupId>
+	<groupId>com.letmelens</groupId>
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>backend</name>
