@@ -214,6 +214,10 @@
 
 .auth-provider-btn {
   width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   border: 1px solid #d1d5db;
   border-radius: 999px;
   background: #fff;
@@ -223,6 +227,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: transform 160ms ease, opacity 160ms ease, border-color 160ms ease;
+}
+
+.auth-provider-btn__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .auth-primary-btn:hover,
@@ -246,15 +256,16 @@
 
 .auth-primary-btn {
   border: 0;
-  background: linear-gradient(135deg, #f0ba71, #c67339);
-  color: #11151f;
+  background: linear-gradient(135deg, #f0ba71, #d98041);
+  color: #ffffff;
   font-weight: 700;
+  width: 100%;
+}
+.auth-primary-btn:hover {
+  background: linear-gradient(135deg, #e98a46, #c98453, #cb7b42);
 }
 
-.auth-page--minimal .auth-primary-btn {
-  background: #111827;
-  color: #fff;
-}
+
 
 .auth-secondary-btn,
 .auth-ghost-btn {
