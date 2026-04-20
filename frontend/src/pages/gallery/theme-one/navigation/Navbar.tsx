@@ -51,7 +51,7 @@ export function Navbar() {
           <NavigationMenu.List className="rg-list">
             <NavigationMenu.Item>
               <NavLink className="rg-link" to={`${base}#albums`}>
-                Albums
+                Collections
               </NavLink>
             </NavigationMenu.Item>
 

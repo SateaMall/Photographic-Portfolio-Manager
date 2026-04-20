@@ -14,7 +14,7 @@ export function AlbumListSidebar({ albums, profileSlug, activeAlbumId, albumList
     <section className="manage-card manage-card--compact manage-card--tight">
       <div className="manage-section__header">
         <div>
-          <h2 className="manage-section__title">Albums</h2>
+          <h2 className="manage-section__title">Collections</h2>
           <p className="manage-section__copy">Choose a collection to manage and order its content.</p>
         </div>
         <p className="manage-hero__meta">{albums.length}</p>

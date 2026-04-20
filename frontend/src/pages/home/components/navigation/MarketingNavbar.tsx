@@ -51,7 +51,7 @@ export function MarketingNavbar({ overlay = false }: MarketingNavbarProps) {
         </button>
 
         <nav className={`marketing-nav__links${menuOpen ? " marketing-nav__links--open" : ""}`} aria-label="Primary">
-          <Link className="marketing-nav__link" to="/satea" onClick={() => setMenuOpen(false)}>
+          <Link className="marketing-nav__link" to="/satea-almallouhi" onClick={() => setMenuOpen(false)}>
             Exemple
           </Link>
           <Link className="marketing-nav__link" to="/#about" onClick={() => setMenuOpen(false)}>

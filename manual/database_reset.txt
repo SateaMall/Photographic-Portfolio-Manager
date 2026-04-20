@@ -1,0 +1,29 @@
+to fully reset the database on the VPS, the clean way is to delete the Postgres Docker volume and let the app recreate the schema.
+Warning
+This deletes all current DB data:
+- users
+- profiles
+- albums
+- photos metadata
+- verification codes
+It does not delete uploaded files on disk unless you delete the storage folder separately.
+Reset Steps
+1. Stop the backend:
+sudo systemctl stop photographic-portfolio-manager
+2. Stop Postgres and delete its volume:
+sudo docker compose -f /deploy/postgres-compose.yml down -v
+3. Start Postgres fresh:
+sudo docker compose -f /deploy/postgres-compose.yml up -d
+4. Confirm Postgres is running:
+sudo docker compose -f /deploy/postgres-compose.yml ps
+5. Start the backend again:
+sudo systemctl start photographic-portfolio-manager
+6. Watch backend startup:
+sudo journalctl -u photographic-portfolio-manager -n 200 --no-pager -l
+7. Check that tables were recreated:
+sudo docker exec photographic_portfolio_manager_db psql -U letmelens_db -d letmelens -c "\dt"
+You should see tables like:
+- users
+- profiles
+- photos
+- albums

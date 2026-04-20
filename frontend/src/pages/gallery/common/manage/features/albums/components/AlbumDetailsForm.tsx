@@ -25,8 +25,8 @@ export function AlbumDetailsForm({
     <section className="manage-section">
       <div className="manage-section__header">
         <div>
-          <h2 className="manage-section__title">Album details</h2>
-          <p className="manage-section__copy">Rename the album and keep its description aligned with the story you want to tell.</p>
+          <h2 className="manage-section__title">Collection details</h2>
+          <p className="manage-section__copy">Rename the collection.</p>
         </div>
       </div>
 

@@ -33,15 +33,15 @@ export function AlbumOrderSection({
     <section className="manage-section">
       <div className="manage-section__header">
         <div>
-          <h2 className="manage-section__title">Album order</h2>
+          <h2 className="manage-section__title">Collection order</h2>
           <p className="manage-section__copy">Drag photos to reorder them. New uploads are appended after the ordered photos when you save.</p>
         </div>
-        <p className="manage-hero__meta">{orderedPhotoIds.length} in album</p>
+        <p className="manage-hero__meta">{orderedPhotoIds.length} in collection</p>
       </div>
 
       {orderedPhotos.length === 0 ? (
         <div className="manage-card">
-          <p className="manage-empty">This album is empty. Add photos from your library or upload new ones.</p>
+          <p className="manage-empty">This collection is empty. Add photos from your library or upload new ones.</p>
         </div>
       ) : (
         <DndContext sensors={sensors} collisionDetection={collisionDetection} onDragEnd={onDragEnd}>

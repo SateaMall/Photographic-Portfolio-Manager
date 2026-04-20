@@ -48,7 +48,7 @@ export default function ManageAlbumsPage() {
   return (
     <div className="manage-panel">
       <header className="manage-hero manage-hero--panel">
-        <p className="manage-hero__eyebrow">Album configuration</p>
+        <p className="manage-hero__eyebrow">Collection configuration</p>
         <h1 className="manage-hero__title">Manage your collections</h1>
       </header>
 

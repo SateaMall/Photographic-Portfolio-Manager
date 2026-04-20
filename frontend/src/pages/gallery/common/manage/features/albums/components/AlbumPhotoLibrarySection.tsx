@@ -15,7 +15,7 @@ export function AlbumPhotoLibrarySection({ profileSlug, allPhotos, libraryPhotoI
       <div className="manage-section__header">
         <div>
           <h2 className="manage-section__title">Photo library</h2>
-          <p className="manage-section__copy">Add existing profile photos to the album or remove them from the final order.</p>
+          <p className="manage-section__copy">Add or remove existing profile photos.</p>
         </div>
       </div>
 
