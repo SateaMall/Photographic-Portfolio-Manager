@@ -3,7 +3,7 @@ import * as exifr from "exifr";
 import type { UploadPhotoDraft } from "../../../../../../../types/types";
 
 const ACCEPTED_EXTENSIONS = new Set(["jpg", "jpeg", "png", "webp"]);
-const MAX_UPLOAD_FILE_SIZE_MB = 12;
+const MAX_UPLOAD_FILE_SIZE_MB = 15;
 export const MAX_UPLOAD_FILE_SIZE_BYTES = MAX_UPLOAD_FILE_SIZE_MB * 1024 * 1024;
 const MIN_CAPTURE_YEAR = 1800;
 const MAX_CAPTURE_YEAR = 2100;
