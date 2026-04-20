@@ -19,7 +19,7 @@ export function PhotoModal() {
 
   const themeStyle: ThemeStyle = {
     "--primaryColor": profile.primaryColor ?? "#111827",
-    "--secondaryColor": profile.secondaryColor ?? "#886c4e",
+    "--secondaryColor": profile.primaryColor ?? "#111827",
   };
 
   return (

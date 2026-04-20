@@ -35,7 +35,7 @@
 }
 
 .marketing-nav__brand {
-  font-size: 0.92rem;
+  font-size: 1rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -67,7 +67,7 @@
 
 .marketing-nav--overlay:not(.marketing-nav--scrolled) .marketing-nav__action {
   background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.36);
+  border-color: rgba(209, 188, 188, 0.36);
 }
 
 .marketing-nav--scrolled .marketing-nav__action,
@@ -96,7 +96,7 @@
 
 .marketing-nav--scrolled .marketing-nav__toggle,
 .marketing-nav:not(.marketing-nav--overlay) .marketing-nav__toggle {
-  background: #f3f4f6;
+  background: #aab3c4;
 }
 
 .marketing-nav__toggle span {
@@ -105,7 +105,8 @@
   height: 2px;
   margin: 4px auto;
   border-radius: 999px;
-  background: currentColor;
+  background: #000000;
+  opacity: 0.35;
   transition: transform 180ms ease, opacity 180ms ease;
 }
 
@@ -147,7 +148,7 @@
     align-items: stretch;
     gap: 10px;
     padding: 16px;
-    border-radius: 24px;
+
   }
 
   .marketing-nav__link,

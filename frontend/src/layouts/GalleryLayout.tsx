@@ -92,8 +92,8 @@ export default function GalleryLayout() {
   }
 
   const themeStyle: ThemeStyle = {
-    "--primaryColor": profile.primaryColor ?? "#3b6e37",
-    "--secondaryColor": profile.secondaryColor ?? "#e9ff3f",
+    "--primaryColor": profile.primaryColor ?? "#ffffff",
+    "--secondaryColor": profile.primaryColor ?? "#fcfcfc",
   };
 
   return (

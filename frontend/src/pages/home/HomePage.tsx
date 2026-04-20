@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { MarketingNavbar } from "./components/navigation/MarketingNavbar";
 import "./HomePage.css";
-import { ScrollIndicator } from "../../components/Indicator/ScrollIndicator";
+import { ScrollIndicator } from "../../components/indicator/ScrollIndicator";
 
 const homeHeroStyle: CSSProperties & Record<"--home-hero-media", string> = {
-  "--home-hero-media": 'url("/Une_foule_vers_le_ciel.jpg")',
+  "--home-hero-media": 'url("/homepage-bg.webp")',
 };
 
 export default function HomePage() {

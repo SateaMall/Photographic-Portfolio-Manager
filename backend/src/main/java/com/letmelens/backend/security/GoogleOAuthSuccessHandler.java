@@ -36,14 +36,14 @@ public class GoogleOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             getRedirectStrategy().sendRedirect(request, response, frontendBaseUrl);
         } catch (RuntimeException exception) {
             clearAuthenticationState(request);
-            getRedirectStrategy().sendRedirect(request, response, buildLoginErrorUrl(exception.getMessage()));
+            getRedirectStrategy().sendRedirect(request, response, buildLoginErrorUrl());
         }
     }
 
-    private String buildLoginErrorUrl(String message) {
+    private String buildLoginErrorUrl() {
         return UriComponentsBuilder.fromUriString(frontendBaseUrl)
                 .path("/login")
-                .queryParam("oauthError", message)
+                .queryParam("oauthError", "Google sign-in failed.")
                 .build()
                 .toUriString();
     }

@@ -27,7 +27,7 @@
 }
 
 .photo-navbar__brand:hover {
-  color: var(--secondaryColor, white);
+  color: var(--primaryColor, white);
 }
 
 @media (max-width: 779px) {

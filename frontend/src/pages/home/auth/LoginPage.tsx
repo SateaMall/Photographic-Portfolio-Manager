@@ -8,7 +8,7 @@ import "./AuthPages.css";
   
 
 const loginPageStyle: CSSProperties & Record<"--auth-page-media", string> = {
-  "--auth-page-media": `url("${encodeURI("/Basalte abandonné.jpg")}")`,
+  "--auth-page-media": `url("${encodeURI("/login-bg.webp")}")`,
 };
 
 function readEmailFromSearch(search: string) {
@@ -92,7 +92,6 @@ export default function LoginPage() {
             <form className="auth-form" onSubmit={handleSubmit}>
               <div>
                 <h2 className="auth-title">Welcome back</h2>
-                <p className="auth-meta">Sign in with the email and password linked to your gallery account.</p>
               </div>
 
               {searchParams.get("verified") === "1" && (

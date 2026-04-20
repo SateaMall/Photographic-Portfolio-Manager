@@ -7,7 +7,7 @@ import { MarketingNavbar } from "../components/navigation/MarketingNavbar";
 import "./AuthPages.css";
 
 const signupPageStyle: CSSProperties & Record<"--auth-page-media", string> = {
-  "--auth-page-media": 'url("/Ready5_265592.JPG")',
+  "--auth-page-media": 'url("/signup-bg.webp")',
 };
 
 function isStepOneValid(email: string, password: string) {
@@ -89,7 +89,7 @@ export default function SignupPage() {
               <div>
                 <h2 className="auth-title">Create account</h2>
                 <p className="auth-meta">
-                  Create your photographic portofolio with Let me Lens and share your work with the world.
+                  Create your portofolio with us and share your work with the world.
                 </p>
               </div>
 
