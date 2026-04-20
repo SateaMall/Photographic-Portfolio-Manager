@@ -97,6 +97,6 @@
   transform: translateY(-1px);
   background: rgba(255,255,255,0.14);
   border-color: rgba(255,255,255,0.3);
-  color: var(--secondaryColor, #fff);
+  color: var(--primaryColor, #fff);
   cursor: pointer;
 }

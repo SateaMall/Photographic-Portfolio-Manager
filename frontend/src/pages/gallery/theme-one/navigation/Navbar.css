@@ -38,7 +38,7 @@
   margin-right: 20vw;
 }
 .rg-brand:hover {
-  color:  var(--secondaryColor, white);
+  color:  var(--primaryColor, white);
 }
 /* Desktop menu */
 .rg-menu--desktop {
@@ -120,7 +120,7 @@
   bottom: -3px; /* adjust distance from text */
   width: 0;
   height: 2px; /* thickness of the line */
-  background-color: var(--secondaryColor, white); /* line color */
+  background-color: var(--primaryColor, white); /* line color */
   transition: width 0.3s ease;
 }
 
@@ -129,7 +129,7 @@
 }
 .rg-link:hover {
  
-  color: var(--secondaryColor, white);
+  color: var(--primaryColor, white);
 
 }
 

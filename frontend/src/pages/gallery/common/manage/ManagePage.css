@@ -377,7 +377,7 @@
   padding: 0 16px;
   border: 0;
   border-radius: 999px;
-  background: var(--secondaryColor);
+  background: var(--primaryColor);
   color: #020617;
   font: inherit;
   font-weight: 600;
@@ -398,7 +398,7 @@
 .manage-preview__card-media {
   min-height: 120px;
   background:
-    linear-gradient(135deg, var(--secondaryColor) 0%, rgba(255, 255, 255, 0.15) 100%);
+    linear-gradient(135deg, var(--primaryColor) 0%, rgba(255, 255, 255, 0.15) 100%);
 }
 
 .manage-preview__card-body {

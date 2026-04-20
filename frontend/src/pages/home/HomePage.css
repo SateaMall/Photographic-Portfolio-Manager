@@ -38,7 +38,7 @@
 
 .home-hero__eyebrow {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: clamp(0.65rem, 1.5vw, 0.8rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   opacity: 0.86;
@@ -54,7 +54,7 @@
 .home-hero__subtitle {
   margin: 0;
   max-width: 560px;
-  font-size: 1.05rem;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.82);
 }
@@ -64,14 +64,18 @@
   text-decoration: none;
   border-radius: 999px;
   padding: 14px 28px;
-  background: #fff;
+  background: white;
+  background: linear-gradient(135deg, #ffffff, #85e5ff); /* indigo → purple */
   font-weight: 600;
   transition: transform 180ms ease, background-color 180ms ease;
+  transform: translateY(-2px) scale(1.02);
+  letter-spacing: 0.02em;
+  
 }
 
 .home-hero__cta:hover {
   transform: translateY(-1px);
-  background: #f7f7f7;
+  background: linear-gradient(135deg, #76dbfa, #55d4f7); /* indigo → purple */
 }
 
 .home-section {

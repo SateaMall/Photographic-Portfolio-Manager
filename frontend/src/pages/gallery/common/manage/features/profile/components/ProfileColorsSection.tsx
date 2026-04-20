@@ -1,5 +1,5 @@
 import type { ProfileDraft } from "../utils/profileDraft";
-import { colorInputValue, DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR } from "../utils/profileColors";
+import { colorInputValue, DEFAULT_PRIMARY_COLOR } from "../utils/profileColors";
 
 type ProfileColorsSectionProps = {
   draft: ProfileDraft;
@@ -33,26 +33,7 @@ export function ProfileColorsSection({ draft, disabled, onChange }: ProfileColor
                 <input
                   value={draft.primaryColor}
                   onChange={(event) => onChange("primaryColor", event.target.value)}
-                  placeholder="#111827"
-                  disabled={disabled}
-                />
-              </div>
-            </label>
-
-            <label className="manage-field">
-              <span>Secondary color</span>
-              <div className="manage-color-field">
-                <input
-                  className="manage-color-field__picker"
-                  type="color"
-                  value={colorInputValue(draft.secondaryColor, DEFAULT_SECONDARY_COLOR)}
-                  onChange={(event) => onChange("secondaryColor", event.target.value)}
-                  disabled={disabled}
-                />
-                <input
-                  value={draft.secondaryColor}
-                  onChange={(event) => onChange("secondaryColor", event.target.value)}
-                  placeholder="#8dff84"
+                  placeholder="#fcfcfc"
                   disabled={disabled}
                 />
               </div>

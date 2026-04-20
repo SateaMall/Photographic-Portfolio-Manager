@@ -42,7 +42,6 @@ export default function ProfileSettingsPage() {
   async function onSave() {
     const normalizedDisplayName = draft.displayName.trim();
     const normalizedPrimaryColor = draft.primaryColor.trim();
-    const normalizedSecondaryColor = draft.secondaryColor.trim();
 
     if (!normalizedDisplayName) {
       setError("Display name is required.");
@@ -51,11 +50,6 @@ export default function ProfileSettingsPage() {
 
     if (normalizedPrimaryColor && !isHexColor(normalizedPrimaryColor)) {
       setError("Primary color must be a valid hex value.");
-      return;
-    }
-
-    if (normalizedSecondaryColor && !isHexColor(normalizedSecondaryColor)) {
-      setError("Secondary color must be a valid hex value.");
       return;
     }
 
@@ -68,7 +62,7 @@ export default function ProfileSettingsPage() {
         displayName: normalizedDisplayName,
         bio: draft.bio,
         primaryColor: normalizedPrimaryColor,
-        secondaryColor: normalizedSecondaryColor,
+        secondaryColor: normalizedPrimaryColor,
         publicEmail: draft.publicEmail,
         linkedIn: draft.linkedIn,
         instagram: draft.instagram,
