@@ -6,6 +6,7 @@ import { MarketingNavbar } from "./components/navigation/MarketingNavbar";
 import "./HomePage.css";
 import { ScrollIndicator } from "../../components/indicator/ScrollIndicator";
 
+import { ScrollToHash } from "../../layouts/components/ScrollToHash";
 const homeHeroStyle: CSSProperties & Record<"--home-hero-media", string> = {
   "--home-hero-media": 'url("/homepage-bg.webp")',
 };
@@ -16,8 +17,11 @@ export default function HomePage() {
     ? (session.profileSlug ? `/${session.profileSlug}` : "/profiles")
     : "/signup";
 
+  const actionLabel = isAuthenticated ? "Open gallery" : "Start the journey";
+
   return (
     <main className="home-page">
+      <ScrollToHash />
       <MarketingNavbar overlay />
 
       <section className="home-hero" style={homeHeroStyle}>
@@ -28,7 +32,7 @@ export default function HomePage() {
             Prepare your photography portfolio in 5 minutes.
           </p>
           <Link className="home-hero__cta" to={primaryTarget}>
-            Start the journey
+            {actionLabel}
           </Link>
         </div>
         <div className="scroll-indicator">
@@ -69,8 +73,13 @@ export default function HomePage() {
             Let your visitors enjoy a seamless browsing experience across all devices, allowing your audience to fully appreciate your work.
           </p>
         </div>
-      </section>
-      
-    </main>
+       </section>
+       
+       <footer className="home-footer">
+         <p>© 2026 Let Me Lens. All rights reserved.</p>
+         <p>Empowering photographers to share what matters to them</p>
+         <p>support@letmelens.com</p>
+       </footer>
+     </main>
   );
 }

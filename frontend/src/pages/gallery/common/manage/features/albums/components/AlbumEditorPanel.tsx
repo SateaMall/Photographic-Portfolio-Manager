@@ -99,7 +99,7 @@ export function AlbumEditorPanel({
 
         <div className="manage-actions__group">
           <Link className="manage-button manage-button--ghost" to={getPublicAlbumPath(profileSlug, album.albumId)}>
-            View album
+            View collection
           </Link>
         </div>
       </div>
