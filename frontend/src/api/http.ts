@@ -5,6 +5,11 @@ type ErrorResponse = {
   message?: string;
 };
 
+function looksLikeHtml(body: string) {
+  const normalized = body.trimStart().toLowerCase();
+  return normalized.startsWith("<!doctype html") || normalized.startsWith("<html");
+}
+
 export class HttpError extends Error {
   status: number;
   statusText: string;
@@ -26,6 +31,10 @@ async function readJsonSafe<T>(res: Response): Promise<T | null> {
 }
 
 function readErrorMessage(status: number, statusText: string, body: string) {
+  if (status === 413) {
+    return "Upload failed: payload too large. Maximum allowed size is 15MB.";
+  }
+
   if (!body) {
     return `${status} ${statusText}`;
   }
@@ -37,6 +46,10 @@ function readErrorMessage(status: number, statusText: string, body: string) {
     }
   } catch {
     // Fall back to the raw text body when the response is not JSON.
+  }
+
+  if (looksLikeHtml(body)) {
+    return `${status} ${statusText}`;
   }
 
   return body;
