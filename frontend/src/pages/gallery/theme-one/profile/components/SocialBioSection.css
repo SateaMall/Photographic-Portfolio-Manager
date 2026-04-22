@@ -48,20 +48,29 @@
 .hero-bio__name {
   margin-top: clamp(19px, 7vw, 50px);
   margin-bottom: clamp(12px, 2vw, 20px);
-  font-size: clamp(24px, 3.9vw, 35px);
-  font-family:   var(--font-copperplate);
+  font-size: clamp(24px, 1.5vw, 20px);
+  font-family: var(--font-copperplate);
   font-weight: 650;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-
 .hero-bio__text {
   margin: 5vh auto 0 auto;
-  max-width: 55ch;
+  max-width: clamp(40ch, 80vw,80ch);
   font-size: clamp(15px, 1.4vw, 18px);
   letter-spacing: 0.05em;
   opacity: 0.90;
 }
+@media (max-width: 768px) {
+  .hero-bio__name {
+    display: none;
+  }
+  .hero-bio__text {
+    margin: 9vh auto 0 auto;
+  }
+}
+
+
 
 .hero-bio__text--empty {
   height: 18px; /* keeps layout stable if bio is null */

@@ -11,7 +11,7 @@
 }
 
 .album-info__inner {
-  max-width: 1000px;
+
   margin: 0 auto;
 
   display: grid;
@@ -23,7 +23,7 @@
 
 .hero-info__background {
   /* subtle glass look on top of photos */
-  background: rgba(0, 0, 0, 0.22);
+
   backdrop-filter: blur(10px);
   border-radius: 18px;
 }
@@ -31,7 +31,7 @@
 .album-info__title {
   margin: 0;
   margin-top: clamp(12px, 2vw, 20px);
-  font-size: clamp(30px, 3.9vw, 42px);
+  font-size: clamp(25px, 3.9vw, 35px);
   font-weight: 550;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -48,9 +48,9 @@
 
 .album-info__description {
   margin: 2vh auto 0 auto;
-  max-width: 55ch;
+
   font-size: clamp(13px, 1.4vw, 15px);
-  max-width: 55ch;
+  max-width: clamp(40ch, 80vw,80ch);
   letter-spacing: 0.12em;
   opacity: 0.90;
 }

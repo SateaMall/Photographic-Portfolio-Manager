@@ -6,7 +6,8 @@ import { MarketingNavbar } from "./components/navigation/MarketingNavbar";
 import "./HomePage.css";
 import { ScrollIndicator } from "../../components/indicator/ScrollIndicator";
 
-import { ScrollToHash } from "../../layouts/components/ScrollToHash";
+import { ScrollToHash,  } from "../../layouts/components/ScrollToHash";
+import { ScrollToTop } from "../../layouts/components/ScrollToTop";
 const homeHeroStyle: CSSProperties & Record<"--home-hero-media", string> = {
   "--home-hero-media": 'url("/homepage-bg.webp")',
 };
@@ -21,6 +22,7 @@ export default function HomePage() {
 
   return (
     <main className="home-page">
+      <ScrollToTop />
       <ScrollToHash />
       <MarketingNavbar overlay />
 

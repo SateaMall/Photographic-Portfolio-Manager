@@ -1,32 +1,32 @@
 How to deploy those modifications on the server
 Because you already made some hotfixes directly on the VPS, do this safely.
-1. Check server repo status
+
+1. Pull your new commit
 cd /home/ubuntu/Photographic-Portfolio-Manager
-git status
-If you see local modified tracked files, do not hard reset.
-2. Stash server-local repo changes
-This keeps a backup of the manual server hotfixes:
-git stash push -u -m "server hotfixes before pull"
-3. Pull your new commit
 git pull
-4. Rebuild backend
+
+2. Rebuild backend
 Use this form even if mvnw executable bit is still not fixed:
 cd /home/ubuntu/Photographic-Portfolio-Manager/backend
 bash ./mvnw clean package
-5. Redeploy backend jar
+
+3. Redeploy backend jar
 sudo cp target/backend-0.0.1-SNAPSHOT.jar /opt/Photographic-Portfolio-Manager/backend.jar
 sudo chown ubuntu:ubuntu /opt/Photographic-Portfolio-Manager/backend.jar
 sudo systemctl restart photographic-portfolio-manager
 sudo systemctl status photographic-portfolio-manager --no-pager -l
-6. Rebuild and publish frontend
+
+4. Rebuild and publish frontend
 cd /home/ubuntu/Photographic-Portfolio-Manager/frontend
 npm ci
 VITE_API_BASE_URL="" npm run build
 sudo rsync -a --delete dist/ /var/www/letmelens/
-7. Reload Nginx
+
+5. Reload Nginx
 sudo nginx -t
 sudo systemctl reload nginx
-8. Verify
+
+6. Verify
 curl -i http://127.0.0.1:8080/api/auth/me
 curl -I http://www.letmelens.com
 curl -I https://www.letmelens.com

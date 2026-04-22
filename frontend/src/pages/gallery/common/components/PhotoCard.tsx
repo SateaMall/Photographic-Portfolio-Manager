@@ -78,7 +78,12 @@ export function PhotoCard({ photo, onClick }: PhotoCardProps) {
           <span className="photo-location-avatar">
             <BsGeoAltFill />
           </span>
-          <span className="photo-location-name">{photo.city}, {photo.country}</span>
+
+          <span className="photo-location-name">
+            {photo.city}
+            {photo.city && photo.country ? ", " : ""}
+            {photo.country}
+          </span>
         </button>
         {/*
         <button
