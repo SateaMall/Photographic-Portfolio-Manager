@@ -3,12 +3,12 @@
   padding: 0px;
 }
 
-/** Topper **/
-.Topper{
-  font-family:inherit;
+.Topper {
+  font-family: inherit;
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100svh;
 }
 .navbar-container {
   position: absolute;
@@ -23,9 +23,9 @@
   height: 100%;
   overflow: hidden; /* Hide any overflow from the carousel */
 }
-.scroll-indicator {
+.scroll-indicator-profile {
   position: absolute;
-  bottom: 5%;
+  bottom: 10%;
   left: 50%;
 }
 

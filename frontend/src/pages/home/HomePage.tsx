@@ -37,7 +37,7 @@ export default function HomePage() {
             {actionLabel}
           </Link>
         </div>
-        <div className="scroll-indicator">
+        <div className="scroll-indicator-home">
                 <ScrollIndicator targetId={["about"]} />
         </div> 
       </section>

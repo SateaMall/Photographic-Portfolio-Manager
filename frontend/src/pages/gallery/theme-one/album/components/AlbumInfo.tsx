@@ -11,10 +11,10 @@ export function AlbumInfo({ album, displayName = null }: AlbumInfoProps) {
     const byline = displayName?.trim() ? `collection by ${displayName.trim()}` : null;
     return (
     <section className="hero-album-info" aria-label="Album title and description">
-        <div className="album-info__inner hero-info__background">
+        <div className="album-info__inner">
             <h2 className="album-info__title">{title}</h2>
             {byline ? <p className="album-info__byline">{byline}</p> : null}
-            <p className={description ? "album-info__description" : "album-description--empty"}>{description}</p>
+            <p className={'hero-info__background ' + (description ? "album-info__description" : "album-description--empty")}>{description}</p>
         </div>
     </section>
   );

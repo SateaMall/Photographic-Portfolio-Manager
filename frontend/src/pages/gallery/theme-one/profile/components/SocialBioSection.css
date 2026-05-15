@@ -1,20 +1,14 @@
-/*  
-  var(--font-body)
-  var(--font-copperplate)
-  var(--font-roboto)
-  var(--font-Montserrat)
-*/
 
-/* Put this section inside your HERO wrapper (position: absolute over carousel) */
+
 .hero-bio {
   position: absolute;
   left: 0;
   right: 0;
-  top: clamp(90px, 14vh, 160px); /* moves it down under navbar */
+  top: clamp(90px, 20vh, 200px); 
   z-index: 0;
   padding: 0 clamp(12px, 3vw, 28px);
   color: #fff;
-  
+  pointer-events: none;
 }
 
 .hero-bio__inner {
@@ -24,14 +18,8 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: clamp(12px, 2vw, 26px);
 }
-.hearo-bio_ineer_two-columns {
-  max-width: 1200px;
-  margin: 0 auto;
 
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(12px, 2vw, 26px);
-}
+
 @media (max-width: 900px) {
   .hero-bio__inner {
     grid-template-columns: 1fr;
@@ -43,12 +31,13 @@
   background: rgba(0, 0, 0, 0);
   border-radius: 18px;
   padding: clamp(14px, 2vw, 22px);
+  pointer-events: auto;
 }
 
 .hero-bio__name {
   margin-top: clamp(19px, 7vw, 50px);
   margin-bottom: clamp(12px, 2vw, 20px);
-  font-size: clamp(24px, 1.5vw, 20px);
+  font-size: clamp(24px, 1.8vw, 55px);
   font-family: var(--font-copperplate);
   font-weight: 650;
   letter-spacing: 0.06em;
@@ -56,15 +45,13 @@
 }
 .hero-bio__text {
   margin: 5vh auto 0 auto;
-  max-width: clamp(40ch, 80vw,80ch);
+  max-width: clamp(40ch, 80vw,70ch);
   font-size: clamp(15px, 1.4vw, 18px);
   letter-spacing: 0.05em;
   opacity: 0.90;
 }
 @media (max-width: 768px) {
-  .hero-bio__name {
-    display: none;
-  }
+
   .hero-bio__text {
     margin: 9vh auto 0 auto;
   }

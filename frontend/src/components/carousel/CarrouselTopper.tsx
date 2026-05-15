@@ -23,7 +23,13 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
     setCanNext(emblaApi.canScrollNext());
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
-
+const handleImageLoad = useCallback(() => {
+  if (!emblaApi) return;
+  window.requestAnimationFrame(() => {
+    emblaApi.reInit();
+    update();
+  });
+}, [emblaApi, update]);
   const clearAutoplay = useCallback(() => {
     if (autoplayTimeoutRef.current !== null) {
       window.clearTimeout(autoplayTimeoutRef.current);
@@ -121,8 +127,10 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
                     src={photoFileUrl(c.id, slug)}
                     className={`embla-img_topper embla__img ${i === selectedIndex ? "is-active" : ""}`}
                     alt={c.title ?? ""}
-                    loading="lazy"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    fetchPriority={i === 0 ? "high" : "auto"}
                     decoding="async"
+                    onLoad={handleImageLoad}
                   />
                 </div>
               ))}

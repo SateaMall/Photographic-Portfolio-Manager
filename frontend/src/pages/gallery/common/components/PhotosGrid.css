@@ -35,7 +35,7 @@
 /* PHOTOS PREVIEW: clamp + fade + button */
 .photos-preview {
   position: relative;
-  margin-bottom: 5%;;
+  margin-bottom: 5%;
 }
 
 /* clamp only when there are more photos */
