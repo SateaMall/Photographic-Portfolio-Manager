@@ -1,0 +1,29 @@
+.gallery-footer {
+  display: grid;
+  gap: 6px;
+  padding: 20px 24px 28px;
+  color: #6b7280;
+  text-align: center;
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.gallery-footer p {
+  margin: 0;
+}
+
+.gallery-footer__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gallery-footer__link:hover {
+  color: #111827;
+}
+
+@media (min-width: 800px) {
+  .gallery-footer {
+    padding-bottom: 36px;
+    font-size: 0.72rem;
+  }
+}

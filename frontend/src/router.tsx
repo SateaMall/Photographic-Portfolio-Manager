@@ -6,6 +6,7 @@ import NotFound from "./pages/home/notFound.tsx";
 import { GalleryShell } from "./layouts/components/popup/GalleryShell.tsx";
 import HomePage from "./pages/home/HomePage.tsx";
 import LoginPage from "./pages/home/auth/LoginPage.tsx";
+import PrivacyNoticePage from "./pages/home/legal/PrivacyNoticePage";
 import SignupPage from "./pages/home/auth/SignupPage.tsx";
 import VerifyEmailPage from "./pages/home/auth/VerifyEmailPage.tsx";
 
@@ -14,6 +15,7 @@ export const router = createBrowserRouter([
   { path: "/",  element: <RootLayout />, children: [
   { index : true, element: <HomePage /> },
   { path: "login", element: <LoginPage /> },
+  { path: "privacy", element: <PrivacyNoticePage /> },
   { path: "signup", element: <SignupPage /> },
   { path: "verify-email", element: <VerifyEmailPage /> },
 

@@ -10,6 +10,7 @@ import { CarrouselTopper } from "../../../../components/carousel/CarrouselTopper
 import { Navbar } from "../navigation/Navbar";
 import { ScrollIndicator } from "../../../../components/indicator/ScrollIndicator";
 import { useAuth } from "../../../../auth/AuthContext";
+import { GalleryFooter } from "../components/GalleryFooter";
 
 type AlbumState = {
   slug: string;
@@ -136,6 +137,8 @@ return (
       <PhotosGrid onPhotosChange={setPhotos}/>
     </section>
   </div>
+
+  <GalleryFooter />
 
   </div>
 );

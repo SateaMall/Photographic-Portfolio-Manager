@@ -212,6 +212,10 @@ export default function SignupPage() {
               )}
 
               <p className="auth-hint">
+                Review our <Link className="auth-inline-link" to="/privacy">Privacy Notice</Link> to learn how we use your account and portfolio data.
+              </p>
+
+              <p className="auth-hint">
                 Already registered? <Link className="auth-inline-link" to="/login">Sign in</Link>
               </p>
             </form>
