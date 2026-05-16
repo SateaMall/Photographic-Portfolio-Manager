@@ -1,6 +1,6 @@
-import { getCountryDataList } from "countries-list";
 import { useId, useMemo, useState, type KeyboardEvent } from "react";
 
+import { COUNTRY_OPTIONS, getCountryOption, type CountryOption } from "./countryData";
 import "./CountryCodeField.css";
 
 type CountryCodeFieldProps = {
@@ -9,32 +9,6 @@ type CountryCodeFieldProps = {
   disabled?: boolean;
   placeholder?: string;
 };
-
-type CountryOption = {
-  code: string;
-  name: string;
-  label: string;
-  search: string;
-};
-
-const COUNTRY_OPTIONS: CountryOption[] = getCountryDataList()
-  .filter((country) => !country.userAssigned)
-  .map((country) => ({
-    code: country.iso2,
-    name: country.name,
-    label: `${country.name} (${country.iso2})`,
-    search: `${country.name} ${country.iso2}`.toLowerCase(),
-  }))
-  .sort((left, right) => left.name.localeCompare(right.name));
-
-function getCountryOption(value: string) {
-  const normalizedValue = value.trim().toLowerCase();
-  if (!normalizedValue) {
-    return null;
-  }
-
-  return COUNTRY_OPTIONS.find((option) => option.code.toLowerCase() === normalizedValue) ?? null;
-}
 
 function findExactCountryOption(query: string) {
   const normalizedQuery = query.trim().toLowerCase();

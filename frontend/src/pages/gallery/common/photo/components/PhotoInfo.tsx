@@ -1,6 +1,7 @@
 import type { FormEvent } from "react";
 
 import { CountryCodeField } from "../../../../../components/forms/CountryCodeField";
+import { getCountryDisplayName } from "../../../../../components/forms/countryData";
 import type { MainPhotoResponse, PublicProfileResponse } from "../../../../../types/types";
 import "./PhotoInfo.css";
 
@@ -47,7 +48,8 @@ export default function PhotoInfo({
   const description = mainPhoto?.description?.trim?.() || mainPhoto?.description;
   const owner = mainProfile?.displayName;
   const themes = mainPhoto?.themes ?? [];
-  const location = [mainPhoto?.city, mainPhoto?.country].filter(Boolean).join(", ");
+  const country = getCountryDisplayName(mainPhoto?.country);
+  const location = [mainPhoto?.city, country].filter(Boolean).join(", ");
   const captureYear = mainPhoto?.captureYear;
   const metaItems = [location || null, captureYear ? String(captureYear) : null, owner || null].filter(Boolean);
 
