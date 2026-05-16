@@ -78,10 +78,11 @@ export default function HomePage() {
        </section>
        
        <footer className="home-footer">
-         <p>© 2026 Let Me Lens. All rights reserved.</p>
-         <p>Empowering photographers to share what matters to them</p>
-         <p>support@letmelens.com</p>
-       </footer>
+          <p>© 2026 Let Me Lens. All rights reserved.</p>
+          <p>Empowering photographers to share what matters to them</p>
+          <p><a className="home-footer__link" href="mailto:support@letmelens.com">support@letmelens.com</a></p>
+          <p><Link className="home-footer__link" to="/privacy">Privacy Notice</Link></p>
+        </footer>
      </main>
   );
 }

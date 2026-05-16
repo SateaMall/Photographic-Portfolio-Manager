@@ -10,6 +10,7 @@ import { fetchAlbumInfo } from "../../../../api/photo-album";
 import type { AlbumViewResponse, PhotoResponse } from "../../../../types/types";
 import { useEffect, useState } from "react";
 import { AlbumInfo } from "./components/AlbumInfo";
+import { GalleryFooter } from "../components/GalleryFooter";
 
 export default function AlbumPage() {
   const { albumId } = useParams<{slug: string; albumId: string;}>();
@@ -64,6 +65,8 @@ export default function AlbumPage() {
           {/* Photos */}
         <PhotosGrid albumId={albumId} onPhotosChange={setPhotos}/>
       </section>
+
+      <GalleryFooter />
     </div>
  
   );
