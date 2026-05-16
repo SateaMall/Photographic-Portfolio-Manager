@@ -32,10 +32,13 @@
 .rg-brand {
   color: rgb(232, 232, 232);
   text-decoration: none;
-  font-size: 25px;
-  font-weight: 600 ;
+  font-size: clamp(21px, 1.4vw, 23px);
+  font-weight: 500 ;
   margin-left: 0; /* keep your old spacing */
   margin-right: 20vw;
+}
+.rg-brand--hidden {
+  display: none;
 }
 .rg-brand:hover {
   color:  var(--primaryColor, white);
@@ -201,6 +204,7 @@
   display: none; /* shown on mobile */
   cursor: pointer;
   transition: background-color 180ms ease;
+
 }
 
 .rg-burger:hover {
@@ -269,6 +273,16 @@
     position: relative;
   }
 
+  .rg-brand {
+    margin-left: 3vw;
+  }
+
+  .rg-brand--hidden {
+  display: flex;
+  visibility: hidden;
+  pointer-events: none;
+}
+
   .rg-nav__inner {
     position: relative;
     z-index: 2;
@@ -295,7 +309,7 @@
     width: 44px;
     height: 44px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.317);
     
   }
 

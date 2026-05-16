@@ -7,7 +7,11 @@ import "./Navbar.css";
 import { useAuth } from "../../../../auth/AuthContext";
 import { useGalleryProfile } from "../../../../layouts/GalleryProfileContext";
 
-export function Navbar() {
+type NavbarProps = {
+  showBrand?: boolean;
+};
+
+export function Navbar({ showBrand = true }: NavbarProps) {
   const navigate = useNavigate();
   const { isAuthenticated, session, signOut } = useAuth();
   const { profile } = useGalleryProfile();
@@ -29,7 +33,12 @@ export function Navbar() {
     <header className="rg-nav">
       <div className="rg-nav__inner">
         {/* Brand */}
-        <Link className="rg-brand" to={base} >
+        <Link
+          aria-hidden={!showBrand}
+          className={`rg-brand ${showBrand ? "" : "rg-brand--hidden"}`}
+          tabIndex={showBrand ? undefined : -1}
+          to={base}
+        >
           {profile.displayName || profile.slug}
         </Link>
 

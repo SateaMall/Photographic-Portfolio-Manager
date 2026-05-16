@@ -48,6 +48,8 @@ function toPhotoResponse(photo: MainPhotoResponse, owner: string): PhotoResponse
     country: photo.country,
     city: photo.city,
     captureYear: photo.captureYear,
+    width: photo.width,
+    height: photo.height,
   };
 }
 

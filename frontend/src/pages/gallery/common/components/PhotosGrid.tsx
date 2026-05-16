@@ -1,13 +1,90 @@
 import { useEffect, useRef, useState } from "react";
-import type { PhotoResponse } from "../../../../types/types";
-import { fetchPhotos } from "../../../../api/profile";
+import { RowsPhotoAlbum, type Photo as AlbumPhoto } from "react-photo-album";
 import { useParams } from "react-router-dom";
-import { PhotoCard } from "./PhotoCard";
 
-import "./PhotosGrid.css"
-import {fetchAlbumItemsAsPhotos } from "../../../../api/photo-album";
+import { fetchAlbumItemsAsPhotos } from "../../../../api/photo-album";
+import { photoFileUrl } from "../../../../api/photos";
+import { fetchPhotos } from "../../../../api/profile";
 import { useOpenPhoto } from "../../../../layouts/components/popup/useOpenPhoto";
+import type { PhotoResponse } from "../../../../types/types";
+import { PhotoCard } from "./PhotoCard";
 import { PHOTO_MANAGED_EVENT, type PhotoManagedDetail } from "../photo/components/photoEvents";
+
+import "react-photo-album/rows.css";
+import "./PhotosGrid.css";
+
+type GridAlbumPhoto = AlbumPhoto & {
+  key: string;
+  item: PhotoResponse;
+  alt: string;
+};
+
+type RowsLayoutConfig = {
+  spacing: number;
+  targetRowHeight: number;
+  rowConstraints: {
+    maxPhotos: number;
+    singleRowMaxHeight: number;
+  };
+};
+
+function resolvePhotoDimensions(photo: PhotoResponse) {
+  if (
+    typeof photo.width === "number" &&
+    photo.width > 0 &&
+    typeof photo.height === "number" &&
+    photo.height > 0
+  ) {
+    return { width: photo.width, height: photo.height };
+  }
+
+  return { width: 4, height: 5 };
+}
+
+function getRowsLayoutConfig(containerWidth?: number): RowsLayoutConfig {
+  if (!containerWidth || containerWidth >= 900) {
+    return {
+      spacing: 18,
+      targetRowHeight: 280,
+      rowConstraints: {
+        maxPhotos: 4,
+        singleRowMaxHeight: 360,
+      },
+    };
+  }
+
+  if (containerWidth < 540) {
+    return {
+      spacing: 10,
+      targetRowHeight: 190,
+      rowConstraints: {
+        maxPhotos: 2,
+        singleRowMaxHeight: 250,
+      },
+    };
+  }
+
+  return {
+    spacing: 18,
+    targetRowHeight: 230,
+    rowConstraints: {
+      maxPhotos: 3,
+      singleRowMaxHeight: 300,
+    },
+  };
+}
+
+function getTargetRowHeight(containerWidth?: number) {
+  return getRowsLayoutConfig(containerWidth).targetRowHeight;
+}
+
+function getRowSpacing(containerWidth?: number) {
+  return getRowsLayoutConfig(containerWidth).spacing;
+}
+
+function getRowConstraints(containerWidth?: number) {
+  return getRowsLayoutConfig(containerWidth).rowConstraints;
+}
 
 type PhotosGridProps = {
   photoId?: string;
@@ -16,9 +93,9 @@ type PhotosGridProps = {
 };
 
 export function PhotosGrid({ photoId, albumId, onPhotosChange }: PhotosGridProps) {
-  const { slug } = useParams(); 
-  const pageSize = photoId ? 8 : 20;
-  const firstVisible = 12;
+  const { slug } = useParams();
+  const pageSize = photoId ? 8 : 40;
+  const firstVisible = 20;
   const [photos, setPhotos] = useState<PhotoResponse[]>([]);
   const [page, setPage] = useState(0); // backend page index
   const [error, setError] = useState<string | null>(null); 
@@ -129,16 +206,47 @@ function loadMore() {
   setPage((p) => p + 1); // triggers API
 }
 
+const visiblePhotos = photos.slice(0, visibleCount);
+const albumPhotos: GridAlbumPhoto[] = slug
+  ? visiblePhotos.map((photo) => {
+      const { width, height } = resolvePhotoDimensions(photo);
+
+      return {
+        key: photo.id,
+        src: photoFileUrl(photo.id, slug),
+        width,
+        height,
+        alt: photo.title?.trim() || "Photo",
+        item: photo,
+      };
+    })
+  : [];
+
 return (
     <>
     {error && <div className="hp hp-error">{error}</div>}
     {photosLoading && (<div className="hp">Photos Loading…</div>)}
      <div className={`photos-preview ${hasHiddenInCurrent ? "is-clamped" : ""}`}>
-    <div className="photos-masonry">
-      {photos.slice(0, visibleCount).map((p) => (
-        <PhotoCard key={p.id} photo={p} onClick={() => openPhoto(p.id, "modal", albumId)}/>
-      ))}
-    </div>
+      <RowsPhotoAlbum
+        photos={albumPhotos}
+        targetRowHeight={getTargetRowHeight}
+        spacing={getRowSpacing}
+        padding={0}
+        rowConstraints={getRowConstraints}
+        componentsProps={{ container: { className: "photos-rows" } }}
+        render={{
+          photo: (_, { photo, width, height, index }) => (
+            <PhotoCard
+              key={photo.key ?? `${photo.item.id}-${index}`}
+              photo={photo.item}
+              imageSrc={photo.src}
+              width={width}
+              height={height}
+              onClick={() => openPhoto(photo.item.id, "modal", albumId)}
+            />
+          ),
+        }}
+      />
 
     {/* FIRST SEE MORE (fade reveal) */}
     {hasHiddenInCurrent && (

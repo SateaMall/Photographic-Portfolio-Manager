@@ -64,15 +64,11 @@
   text-decoration: none;
   border-radius: 999px;
   padding: 14px 28px;
-
   background: linear-gradient(135deg, #ffffff, #85e5ff, #ffffff);
   background-size: 200% 200%;
-
   font-weight: 600;
   letter-spacing: 0.02em;
-
   animation: gradientWave 4s ease infinite;
-
   transition: transform 180ms ease;
 }
 
@@ -139,7 +135,7 @@
 
 @media (max-width: 760px) {
   .home-hero {
-    padding: 116px 20px 40px;
+    padding: 0vh 20px 40px;
   }
 
   .home-section {
@@ -152,9 +148,9 @@
   }
 }
 
-.scroll-indicator {
+.scroll-indicator-home {
    position: absolute;
-   bottom: 5%;
+   bottom: 10%;
    left: 50%;
 }
 

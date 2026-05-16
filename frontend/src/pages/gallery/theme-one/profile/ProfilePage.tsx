@@ -99,7 +99,7 @@ return (
 
     <div className="Topper">
       <div className="navbar-container">
-        <Navbar />
+        <Navbar showBrand={false} />
       </div>
       
       <div className="carrousel-container">
@@ -108,7 +108,7 @@ return (
       <div className="bio-container">
         <SocialBioSection />
       </div>
-      <div className="scroll-indicator">
+      <div className="scroll-indicator-profile">
         <ScrollIndicator targetId={["albums", "photos"]} />
       </div>
     </div>

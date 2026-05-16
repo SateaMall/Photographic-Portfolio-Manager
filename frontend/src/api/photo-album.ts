@@ -37,7 +37,8 @@ export async function fetchAlbumItemsAsPhotos(albumId: string, page = 0, size = 
       country: it.country,
       city: it.city,
       captureYear: it.captureYear,
+      width: it.width,
+      height: it.height,
     })),
   } satisfies PageResponse<PhotoResponse>;
 }
-

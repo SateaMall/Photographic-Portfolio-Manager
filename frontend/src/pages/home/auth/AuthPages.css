@@ -254,15 +254,33 @@
   border-color: #9ca3af;
 }
 
+
+@keyframes gradientWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .auth-primary-btn {
   border: 0;
-  background: linear-gradient(135deg, #f0ba71, #d98041);
   color: #ffffff;
+  background: linear-gradient(135deg, #fbc57e, #d99e52, #f7c88b);
+  background-size: 200% 200%;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  animation: gradientWave 4s ease infinite;
+  transition: transform 180ms ease;
   font-weight: 700;
   width: 100%;
 }
 .auth-primary-btn:hover {
-  background: linear-gradient(135deg, #e98a46, #c98453, #cb7b42);
+ background: linear-gradient(135deg, #da9b4a, #f9b050, #da9b4a);
 }
 
 

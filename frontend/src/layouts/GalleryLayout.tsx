@@ -7,6 +7,7 @@ import type { PublicProfileResponse } from "../types/types";
 import { GalleryProfileContext } from "./GalleryProfileContext";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { ScrollToHash } from "./components/ScrollToHash";
+import "./GalleryLayout.css";
 
 type ThemeStyle = CSSProperties & {
   "--primaryColor": string;
@@ -15,6 +16,18 @@ type ThemeStyle = CSSProperties & {
 
 function normalizeGallerySlug(slug?: string) {
   return slug?.trim().toLowerCase() ?? "";
+}
+
+function formatGalleryName(slug: string) {
+  const words = slug.split("-").filter(Boolean);
+
+  if (words.length === 0) {
+    return "Photo Gallery";
+  }
+
+  return words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 export default function GalleryLayout() {
@@ -88,7 +101,25 @@ export default function GalleryLayout() {
   }
 
   if (!resolvedProfile || resolvedProfile.slug !== profileSlug || !profile || !contextValue) {
-    return <div>Loading gallery…</div>;
+    return (
+      <section className="gallery-loading" role="status" aria-live="polite" aria-busy="true">
+        <div className="gallery-loading__panel">
+          <p className="gallery-loading__eyebrow">Opening gallery</p>
+          <h1 className="gallery-loading__title">{formatGalleryName(profileSlug)}</h1>
+          <p className="gallery-loading__copy">Preparing the portfolio and first images.</p>
+
+          <div className="gallery-loading__progress" aria-hidden="true">
+            <span className="gallery-loading__progress-bar" />
+          </div>
+        </div>
+
+        <div className="gallery-loading__filmstrip" aria-hidden="true">
+          <span className="gallery-loading__frame gallery-loading__frame--tall" />
+          <span className="gallery-loading__frame gallery-loading__frame--wide" />
+          <span className="gallery-loading__frame gallery-loading__frame--square" />
+        </div>
+      </section>
+    );
   }
 
   const themeStyle: ThemeStyle = {

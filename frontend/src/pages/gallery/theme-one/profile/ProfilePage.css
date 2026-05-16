@@ -3,12 +3,12 @@
   padding: 0px;
 }
 
-/** Topper **/
-.Topper{
-  font-family:inherit;
+.Topper {
+  font-family: inherit;
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100svh;
 }
 .navbar-container {
   position: absolute;
@@ -23,9 +23,9 @@
   height: 100%;
   overflow: hidden; /* Hide any overflow from the carousel */
 }
-.scroll-indicator {
+.scroll-indicator-profile {
   position: absolute;
-  bottom: 5%;
+  bottom: 10%;
   left: 50%;
 }
 
@@ -40,7 +40,7 @@
 }
 /* section spacing */
 .hp-section {
-  max-width: 1300px;
+  max-width: 95vw;
   margin: 0 auto;
   margin-top: 42px;
   margin-bottom: 42px;
@@ -72,7 +72,7 @@
 
 .hp-title {
   margin: 0;
-  font-size: clamp(17px, 4vw, 20px);
+  font-size: clamp(17px, 4vw, 18px);
   font-weight: 650;
   letter-spacing: 0.10em;
   opacity: 0.80;

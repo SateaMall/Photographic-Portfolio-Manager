@@ -142,13 +142,28 @@
   }
 
   .marketing-nav__links {
-    display: none;
+    position: fixed;
+    inset: 0;
     width: 100%;
+    min-height: 100svh;
     flex-direction: column;
     align-items: stretch;
+    justify-content: flex-start;
     gap: 10px;
-    padding: 16px;
-
+    padding: 88px 24px 24px;
+    background: rgba(17, 24, 39, 0.72);
+    color: #fff;
+    backdrop-filter: blur(16px);
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-12px);
+    transition:
+      opacity 220ms ease,
+      transform 220ms ease,
+      visibility 0ms linear 220ms;
+    will-change: opacity, transform;
   }
 
   .marketing-nav__link,
@@ -164,17 +179,14 @@
   }
 
   .marketing-nav__links--open {
-    display: flex;
-    position: fixed;
-    inset: 0;
-    min-height: 100svh;
-    padding: 88px 24px 24px;
-    justify-content: flex-start;
-    background: rgba(17, 24, 39, 0.72);
-    color: #fff;
-    backdrop-filter: blur(16px);
-    z-index: 1;
-    animation: marketing-nav-overlay-in 220ms ease;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition:
+      opacity 220ms ease,
+      transform 220ms ease,
+      visibility 0ms linear 0ms;
   }
 
   .marketing-nav--scrolled .marketing-nav__links--open,
@@ -197,14 +209,9 @@
   }
 }
 
-@keyframes marketing-nav-overlay-in {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media (prefers-reduced-motion: reduce) {
+  .marketing-nav__links,
+  .marketing-nav__links--open {
+    transition: none;
   }
 }

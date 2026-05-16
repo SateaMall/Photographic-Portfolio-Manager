@@ -43,7 +43,7 @@ export default function AlbumPage() {
     
         <div className="Topper">
           <div className="navbar-container">
-            <Navbar />
+            <Navbar showBrand={true} />
           </div>
           
           <div className="carrousel-container">
@@ -52,14 +52,14 @@ export default function AlbumPage() {
           <div className="album-info-container">
             <AlbumInfo album={album} displayName={profile.displayName ?? null} />
           </div>
-          <div className="scroll-indicator">
+          <div className="scroll-indicator-album">
             <ScrollIndicator targetId={["photos"]} />
           </div>
         </div>
       
-      <section className="content" id="photos">
-        <header className="hp-head__album">
-          <h1 className="hp-title__album ">Album photos</h1>
+      <section className="content-photo_album" id="photos">
+        <header className="hp-head">
+          <h1 className="hp-title">Collection's photos</h1>
         </header>
           {/* Photos */}
         <PhotosGrid albumId={albumId} onPhotosChange={setPhotos}/>

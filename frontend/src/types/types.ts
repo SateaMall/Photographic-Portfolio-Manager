@@ -47,6 +47,8 @@ export type PhotoResponse = {
   country: string | null;
   city: string | null;
   captureYear: number | null;
+  width: number;
+  height: number;
 };
 
 export type MainPhotoResponse = {
