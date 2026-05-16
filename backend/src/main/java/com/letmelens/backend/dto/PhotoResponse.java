@@ -15,7 +15,9 @@ public record PhotoResponse(
         String description,
         String country,
         String city,
-        Integer captureYear
+        Integer captureYear,
+        Integer width,
+        Integer height
 
 ) {
 //TODO correct
@@ -29,7 +31,9 @@ public record PhotoResponse(
                 p.getDescription(),
                 p.getCountry(),
                 p.getCity(),
-                p.getCaptureYear()
+                p.getCaptureYear(),
+                p.getWidth(),
+                p.getHeight()
         );
     }
 
@@ -44,7 +48,9 @@ public record PhotoResponse(
                 p.getDescription(),
                 p.getCountry(),
                 p.getCity(),
-                p.getCaptureYear()
+                p.getCaptureYear(),
+                p.getWidth(),
+                p.getHeight()
         );
     }
 }
