@@ -66,7 +66,9 @@
 .hero-bio__icons {
   margin-top: 40px;
   display: flex;
+   align-items: center;
   justify-content: center;
+   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: clamp(12px, 2vw, 20px);
 
@@ -76,8 +78,10 @@
   width: 46px;
   height: 46px;
   padding: 0;
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
 
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.18);
@@ -96,8 +100,13 @@
 
 .hero-bio__icon svg {
   display: block;
+  flex: none;
   width: 1em;
   height: 1em;
+}
+
+.hero-bio__icon--instagram svg {
+  transform: translateX(-1px);
 }
 
 .hero-bio__icon:hover {
