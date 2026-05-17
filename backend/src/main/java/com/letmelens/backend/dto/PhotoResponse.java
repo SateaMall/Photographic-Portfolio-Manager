@@ -8,8 +8,6 @@ import java.util.UUID;
 
 public record PhotoResponse(
         UUID id,
-        String Fname,
-        String Lname,
         Instant createdAt,
         String title,
         String description,
@@ -20,12 +18,9 @@ public record PhotoResponse(
         Integer height
 
 ) {
-//TODO correct
     public static PhotoResponse from(Photo p) {
         return new PhotoResponse(
                 p.getId(),
-                "satea",
-                "mall",
                 p.getCreatedAt(),
                 p.getTitle(),
                 p.getDescription(),
@@ -41,8 +36,6 @@ public record PhotoResponse(
     public static PhotoResponse from(Photo p, PhotoFeature pf) {
         return new PhotoResponse(
                 p.getId(),
-                "satea",
-                "mall",
                 p.getCreatedAt(),
                 p.getTitle(),
                 p.getDescription(),

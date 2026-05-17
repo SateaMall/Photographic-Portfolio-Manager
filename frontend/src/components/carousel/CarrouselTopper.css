@@ -4,22 +4,26 @@
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 0;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 .embla__viewport_topper {
   height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 .embla__container_topper {
   display: flex;
   height: 100%;
+  min-height: 0;
 }
 
 
 /* Control how big each slide is */
 .embla__slide_topper {
+  position: relative;
   flex: 0 0 100%;
   min-width: 0;
   height: 100%;
@@ -37,12 +41,20 @@
 
 /* LIMIT “long” photos: fixed height (responsive) + cover */
 .embla-img_topper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  max-width: none;
+  min-height: 100%;
   object-fit: cover;
   display: block;
   filter: brightness(0.5) contrast(1.05);
   transform: scale(1);
+  backface-visibility: hidden;
   will-change: transform;
 }
 .embla-img_topper.is-active {
@@ -75,6 +87,8 @@
   z-index: 5;
   padding: 0;
   font-size: 30px;
+  width: 40px;
+  height: 80px;
   width: clamp(30px,2vw,50px);
   height: clamp(70px,4.5vw,90px);
   border-radius: 999px;
@@ -82,6 +96,7 @@
   -webkit-appearance: none;
   appearance: none;
   background: rgba(0, 0, 0, 0);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   color: white;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.33);

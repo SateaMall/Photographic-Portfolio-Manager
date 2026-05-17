@@ -6,21 +6,27 @@ type ScrollIndicatorProps = {
 };
       
 export function ScrollIndicator({ targetId }: ScrollIndicatorProps) {
-    
-    
-    return (<button
-        className="hero-scroll-indicator"
-        onClick={() => 
-            {
-            const el= targetId
-            .map(id => document.getElementById(id))
-            .find((node): node is HTMLElement => node !== null);
-            if (el) el.scrollIntoView({ behavior: "smooth" });
-            }
+  return (
+    <button
+      className="hero-scroll-indicator"
+      onClick={() => {
+        const el = targetId
+          .map((id) => document.getElementById(id))
+          .find((node): node is HTMLElement => node !== null);
+
+        if (!el) {
+          return;
         }
-        aria-label="Scroll down"
-      >
-         <BsChevronDoubleDown  />
-      </button>
-      );
+
+        try {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        } catch {
+          el.scrollIntoView(true);
+        }
+      }}
+      aria-label="Scroll down"
+    >
+      <BsChevronDoubleDown />
+    </button>
+  );
 }

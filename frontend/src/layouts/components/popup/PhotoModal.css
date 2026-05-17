@@ -1,9 +1,14 @@
 .modal-content-popup {
   position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 1000;
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.939);
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   outline: none;
   inset: 0px;
 }
@@ -24,6 +29,17 @@
 }
 .modal-close-popup:hover {
   color: rgb(177, 0, 0);
+}
+
+.modal-overlay-popup {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.42);
+  inset: 0;
 }
 @keyframes popupFadeIn {
   from { opacity: 0; }
@@ -72,6 +88,7 @@
 
 /* Optional: subtle background blur */
 .modal-overlay-popup {
+  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
 }
 

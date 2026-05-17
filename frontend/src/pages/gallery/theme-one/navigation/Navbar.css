@@ -160,6 +160,7 @@
   min-width: 220px;
   border: 1px solid rgba(148, 163, 184, 0.14);
   background: rgba(248, 244, 237, 0.98);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   cursor: pointer;
 
@@ -208,7 +209,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 4px;
+  gap: 0;
   cursor: pointer;
   line-height: 1;
   transition: background-color 180ms ease;
@@ -228,6 +229,10 @@
   border-radius: 999px;
   background: #000000;
   transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.rg-burger__line + .rg-burger__line {
+  margin-top: 4px;
 }
 
 .rg-burger--open .rg-burger__line:nth-child(1) {
@@ -253,6 +258,7 @@
   flex-direction: column;
   gap: 8px;
   background: rgba(0, 0, 0, 0.22);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 12px;
@@ -332,12 +338,20 @@
 
   .rg-mobile__content {
     position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     inset: 0;
+    min-height: 100vh;
     min-height: 100svh;
     padding: 100px 24px 24px;
     background: rgba(17, 24, 39, 0.72);
+    -webkit-backdrop-filter: blur(16px);
     backdrop-filter: blur(16px);
     z-index: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     animation: rg-mobile-overlay-in 220ms ease;
   }
 

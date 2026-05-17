@@ -61,7 +61,7 @@ export function SocialBioSection() {
 
             {instagramUrl && (
               <a
-                className="hero-bio__icon"
+                className="hero-bio__icon hero-bio__icon--instagram"
                 href={instagramUrl}
                 target="_blank"
                 rel="noreferrer"

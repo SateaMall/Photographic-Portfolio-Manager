@@ -1,8 +1,16 @@
 .hero-scroll-indicator {
   z-index: 15;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
   transform: translateX(-50%);
   background: none;
   border: none;
+  -webkit-appearance: none;
+  appearance: none;
   color: white;
   cursor: pointer;
   animation: bounce 1.6s infinite;
@@ -10,14 +18,27 @@
 }
 
 .hero-scroll-indicator svg{
-  font-size: 33px;
+  display: block;
   opacity: 0.8;
-  width: 10vw;
+  width: 32px;
+  height: 32px;
 }
 
-.hero-scroll-indicator :hover {
+.hero-scroll-indicator:hover {
   color: var(--primaryColor);
   opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .hero-scroll-indicator {
+    width: 48px;
+    height: 48px;
+  }
+
+  .hero-scroll-indicator svg {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 @keyframes bounce {

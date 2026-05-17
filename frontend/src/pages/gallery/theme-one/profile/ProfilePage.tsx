@@ -11,6 +11,7 @@ import { Navbar } from "../navigation/Navbar";
 import { ScrollIndicator } from "../../../../components/indicator/ScrollIndicator";
 import { useAuth } from "../../../../auth/AuthContext";
 import { GalleryFooter } from "../components/GalleryFooter";
+import { useGalleryProfile } from "../../../../layouts/GalleryProfileContext";
 
 type AlbumState = {
   slug: string;
@@ -23,7 +24,12 @@ export default function Profilepage() {
 const { slug } = useParams() 
 const profileSlug = slug?.trim().toLowerCase() ?? "";
 const { session, isAuthenticated } = useAuth();
+const { profile } = useGalleryProfile();
 const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() === profileSlug;
+
+  useEffect(() => {
+    document.title = profile.displayName.trim() || profile.slug || "Let Me Lens";
+  }, [profile.displayName, profile.slug]);
 
 
 /**** **** **** **** ALBUMS **** **** **** ****/
