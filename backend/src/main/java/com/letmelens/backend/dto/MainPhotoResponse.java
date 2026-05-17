@@ -10,7 +10,6 @@ import java.util.UUID;
 
 public record MainPhotoResponse(
             UUID id,
-            String name,
             Instant createdAt,
             String title,
             String description,
@@ -20,13 +19,11 @@ public record MainPhotoResponse(
             List<Theme> themes,
             Integer width,
             Integer height
-//TODO Correct
     ) {
         //For single photo (photo's page)
         public static MainPhotoResponse from(Photo p) {
             return new MainPhotoResponse(
                     p.getId(),
-                    "Satea",
                     p.getCreatedAt(),
                     p.getTitle(),
                     p.getDescription(),

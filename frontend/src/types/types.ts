@@ -16,7 +16,6 @@ export type AlbumResponse = {
 
 export type AlbumPhotoItem = {
   photoId: string,
-  owner: string,
   title: string | null,
   description: string | null;
   country: string | null;
@@ -40,7 +39,6 @@ export type PageResponse<T> = {
 
 export type PhotoResponse = {
   id: string;
-  owner: string;
   createdAt: string; // ISO date string
   title: string | null;
   description: string | null;
@@ -53,7 +51,6 @@ export type PhotoResponse = {
 
 export type MainPhotoResponse = {
   id: string;
-  owner: string;
   createdAt: string; // ISO date string
   title: string | null;
   description: string | null;

@@ -16,7 +16,7 @@
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   text-align: center;
-  padding: clamp(10px, 2vw, 22px);
+  padding: clamp(5px, 1.7vw, 22px);
 }
 
 .hero-info__background {
@@ -26,8 +26,8 @@
 
 .album-info__title {
   margin-bottom: 10px;
-  margin-top: clamp(12px, 2vw, 20px);
-  font-size: clamp(25px, 3.9vw, 35px);
+  margin-top: clamp(8px, 2vw, 20px);
+  font-size: clamp(24px, 3.9vw, 35px);
   font-weight: 550;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -36,17 +36,17 @@
 
 .album-info__byline {
   margin: 0 0 0;
-  font-size: clamp(12px, 1.4vw, 14px);
+  font-size: clamp(9px, 1.4vw, 14px);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   opacity: 0.82;
 }
 
 .album-info__description {
-  margin: 6vh auto 0 auto;
+  margin: 5vh auto 0 auto;
   background-color: rgba(0, 0, 0, 0.401);
   padding: 10px;
-  font-size: clamp(12px, 1.4vw, 15px);
+  font-size: clamp(11.5px, 1.4vw, 15px);
   max-width: clamp(40ch, 80vw,80ch);
   letter-spacing: 0.12em;
   opacity: 0.95;
