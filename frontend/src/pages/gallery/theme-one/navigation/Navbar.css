@@ -197,12 +197,20 @@
   margin-left: auto;
   width: 44px;
   height: 44px;
+  padding: 0;
   border-radius: 999px;
   border: 0;
+  -webkit-appearance: none;
+  appearance: none;
   background: rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(10px);
   display: none; /* shown on mobile */
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
   cursor: pointer;
+  line-height: 1;
   transition: background-color 180ms ease;
 
 }
@@ -215,11 +223,11 @@
   display: block;
   width: 18px;
   height: 2px;
-  margin: 4px auto;
+  margin: 0;
+  flex: none;
   border-radius: 999px;
-  background: currentColor;
+  background: #000000;
   transition: transform 180ms ease, opacity 180ms ease;
-  color: #000000;
 }
 
 .rg-burger--open .rg-burger__line:nth-child(1) {
@@ -304,7 +312,8 @@
   }
 
   .rg-burger {
-    display: inline-block;
+    display: inline-flex;
+    flex-shrink: 0;
     margin-left: 12px;
     width: 44px;
     height: 44px;

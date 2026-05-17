@@ -23,13 +23,16 @@ export function CarrouselTopper({ carrouselPhotos }: { carrouselPhotos: PhotoRes
     setCanNext(emblaApi.canScrollNext());
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
-const handleImageLoad = useCallback(() => {
-  if (!emblaApi) return;
-  window.requestAnimationFrame(() => {
-    emblaApi.reInit();
-    update();
-  });
-}, [emblaApi, update]);
+
+  const handleImageLoad = useCallback(() => {
+    if (!emblaApi) return;
+
+    window.requestAnimationFrame(() => {
+      emblaApi.reInit();
+      update();
+    });
+  }, [emblaApi, update]);
+
   const clearAutoplay = useCallback(() => {
     if (autoplayTimeoutRef.current !== null) {
       window.clearTimeout(autoplayTimeoutRef.current);
@@ -42,17 +45,21 @@ const handleImageLoad = useCallback(() => {
 
     clearAutoplay();
 
-    autoplayTimeoutRef.current = window.setTimeout(() => {
-      if (!emblaApi) return;
+    const scheduleNextAutoplayTick = () => {
+      autoplayTimeoutRef.current = window.setTimeout(() => {
+        if (!emblaApi) return;
 
-      if (!emblaApi.canScrollNext()) {
-        emblaApi.scrollTo(0);
-      } else {
-        emblaApi.scrollNext();
-      }
+        if (!emblaApi.canScrollNext()) {
+          emblaApi.scrollTo(0);
+        } else {
+          emblaApi.scrollNext();
+        }
 
-      restartAutoplay(); // schedule next autoplay after moving
-    }, AUTOPLAY_DELAY);
+        scheduleNextAutoplayTick();
+      }, AUTOPLAY_DELAY);
+    };
+
+    scheduleNextAutoplayTick();
   }, [emblaApi, clearAutoplay]);
 
   useEffect(() => {
