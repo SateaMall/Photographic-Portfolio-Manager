@@ -61,12 +61,15 @@
   transform: translateY(-50%);
   z-index: 2;
 
+  padding: 0;
   font-size: 30px;
   width: 40px;
   height: 90px;
   border-radius: 999px;
 
   border: none;
+  -webkit-appearance: none;
+  appearance: none;
   background: rgba(255, 255, 255, 0.691);
   backdrop-filter: blur(6px);
   color: rgb(120, 120, 120);
@@ -75,7 +78,14 @@
 
   display: grid;
   place-items: center;
+  line-height: 1;
   transition: background 140ms ease, color 140ms ease, transform 140ms ease, opacity 140ms ease;
+}
+
+.albums-nav-icon {
+  display: block;
+  line-height: 1;
+  font-size: 1em;
 }
 
 .albums-nav:hover {
@@ -94,5 +104,21 @@
 .albums-nav.is-hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+@media (max-width: 799px) {
+  .embla {
+    padding-right: 44px;
+    padding-left: 24px;
+  }
+
+  .albums-nav {
+    width: 32px;
+    height: 64px;
+    font-size: 22px;
+  }
+
+  .albums-nav-left { left: 0; }
+  .albums-nav-right { right: 0; }
 }
 

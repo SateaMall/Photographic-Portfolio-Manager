@@ -10,6 +10,11 @@
   --font-Montserrat: "Montserrat", sans-serif;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 html, body {
   font-family: var(--font-roboto);
   margin: 0;
