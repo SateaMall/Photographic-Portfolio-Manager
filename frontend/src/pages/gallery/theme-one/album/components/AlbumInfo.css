@@ -20,7 +20,7 @@
 }
 
 .hero-info__background {
-  backdrop-filter: blur(10px);
+
   border-radius: 18px;
 }
 
@@ -44,7 +44,7 @@
 
 .album-info__description {
   margin: 5vh auto 0 auto;
-  background-color: rgba(0, 0, 0, 0.401);
+ 
   padding: 10px;
   font-size: clamp(11.5px, 1.4vw, 15px);
   max-width: clamp(40ch, 80vw,80ch);
