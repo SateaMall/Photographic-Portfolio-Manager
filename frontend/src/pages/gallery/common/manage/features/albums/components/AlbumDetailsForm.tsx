@@ -2,7 +2,7 @@ type AlbumDetailsFormProps = {
   title: string;
   description: string;
   disabled: boolean;
-  saving: boolean;
+  savingDetails: boolean;
   deleting: boolean;
   onTitleChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
@@ -14,7 +14,7 @@ export function AlbumDetailsForm({
   title,
   description,
   disabled,
-  saving,
+  savingDetails,
   deleting,
   onTitleChange,
   onDescriptionChange,
@@ -52,7 +52,7 @@ export function AlbumDetailsForm({
       <div className="manage-actions manage-actions--section">
         <div className="manage-actions__group">
           <button type="button" className="manage-button manage-button--primary" onClick={onSave} disabled={disabled}>
-            {saving ? "Saving..." : "Save album"}
+            {savingDetails ? "Saving..." : "Save details"}
           </button>
           <button type="button" className="manage-button manage-button--danger" onClick={onDelete} disabled={disabled}>
             {deleting ? "Deleting..." : "Delete album"}

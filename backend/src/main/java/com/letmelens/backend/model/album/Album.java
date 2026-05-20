@@ -22,6 +22,7 @@ import java.util.UUID;
         },
         indexes = {
         @Index(name = "idx_albums_profile_public", columnList = "owner_profile_id, is_public"),
+        @Index(name = "idx_albums_profile_position", columnList = "owner_profile_id, position"),
         @Index(name = "idx_albums_created_by", columnList = "created_by_user_id"),
         @Index(name = "idx_albums_created_at", columnList = "created_at")
 })
@@ -44,6 +45,9 @@ public class Album {
 
     @Column(length = 2000)
     private String description;
+
+    @Column(name = "position")
+    private Integer position;
 
     @Builder.Default
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true)

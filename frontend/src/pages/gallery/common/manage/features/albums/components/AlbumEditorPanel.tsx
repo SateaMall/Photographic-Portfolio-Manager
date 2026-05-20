@@ -2,8 +2,7 @@ import { closestCenter } from "@dnd-kit/core";
 import { Link } from "react-router-dom";
 
 import type { AlbumViewResponse, ManagedAlbumResponse, ManagedPhotoResponse } from "../../../../../../../types/types";
-import { getPublicAlbumPath } from "../../../shared/utils/manageRoute";
-import { PhotoUploadQueue } from "../../photos/components/PhotoUploadQueue";
+import { getManagePhotosPath, getPublicAlbumPath } from "../../../shared/utils/manageRoute";
 import { useAlbumEditor } from "../hooks/useAlbumEditor";
 import { AlbumDetailsForm } from "./AlbumDetailsForm";
 import { AlbumOrderSection } from "./AlbumOrderSection";
@@ -15,7 +14,6 @@ type AlbumEditorPanelProps = {
   allPhotos: ManagedPhotoResponse[];
   onRefreshAlbums: () => Promise<AlbumViewResponse[]>;
   onRefreshAlbum: (albumId: string) => Promise<ManagedAlbumResponse>;
-  onRefreshPhotoLibrary: () => Promise<ManagedPhotoResponse[]>;
   onDeleteAlbum: (albumId: string) => Promise<void>;
 };
 
@@ -25,30 +23,31 @@ export function AlbumEditorPanel({
   allPhotos,
   onRefreshAlbums,
   onRefreshAlbum,
-  onRefreshPhotoLibrary,
   onDeleteAlbum,
 }: AlbumEditorPanelProps) {
   const {
     deleting,
     description,
-    drafts,
     error,
+    hasPendingPhotoChanges,
     isBusy,
+    isPhotoBusy,
     libraryPhotoIds,
     onDelete,
     onDragEnd,
-    onSave,
+    onSaveDetails,
     orderedPhotoIds,
     orderedPhotos,
-    saving,
+    retryPhotoSave,
+    savingDetails,
+    savingPhotos,
     sensors,
     setDescription,
-    setDrafts,
     setTitle,
     success,
     title,
     togglePhoto,
-  } = useAlbumEditor({ album, allPhotos, onRefreshAlbums, onRefreshAlbum, onRefreshPhotoLibrary, onDeleteAlbum });
+  } = useAlbumEditor({ album, allPhotos, onRefreshAlbums, onRefreshAlbum, onDeleteAlbum });
 
   return (
     <div className="manage-detail">
@@ -56,11 +55,11 @@ export function AlbumEditorPanel({
         title={title}
         description={description}
         disabled={isBusy}
-        saving={saving}
+        savingDetails={savingDetails}
         deleting={deleting}
         onTitleChange={setTitle}
         onDescriptionChange={setDescription}
-        onSave={onSave}
+        onSave={onSaveDetails}
         onDelete={onDelete}
       />
 
@@ -68,12 +67,10 @@ export function AlbumEditorPanel({
         profileSlug={profileSlug}
         orderedPhotoIds={orderedPhotoIds}
         orderedPhotos={orderedPhotos}
-        disabled={isBusy}
-        saving={saving}
+        disabled={isPhotoBusy}
         sensors={sensors}
         onDragEnd={onDragEnd}
         onRemove={togglePhoto}
-        onSave={onSave}
         collisionDetection={closestCenter}
       />
 
@@ -81,20 +78,27 @@ export function AlbumEditorPanel({
         profileSlug={profileSlug}
         allPhotos={allPhotos}
         libraryPhotoIds={libraryPhotoIds}
-        disabled={isBusy}
+        disabled={isPhotoBusy}
         onToggle={togglePhoto}
       />
 
-      <PhotoUploadQueue drafts={drafts} onDraftsChange={setDrafts} disabled={isBusy} />
-
+      {savingPhotos && <p className="manage-hero__meta">Saving collection changes...</p>}
       {error && <p className="manage-status manage-status--error">{error}</p>}
       {success && <p className="manage-status manage-status--success">{success}</p>}
 
       <div className="manage-actions">
+        {error && hasPendingPhotoChanges && (
+          <div className="manage-actions__group">
+            <button type="button" className="manage-button manage-button--primary" onClick={retryPhotoSave} disabled={isPhotoBusy}>
+              Retry save
+            </button>
+          </div>
+        )}
+
         <div className="manage-actions__group">
-          <button type="button" className="manage-button manage-button--primary" onClick={onSave} disabled={isBusy}>
-            {saving ? "Saving..." : "Save album"}
-          </button>
+          <Link className="manage-button manage-button--secondary" to={`${getManagePhotosPath(profileSlug)}#queue`}>
+            Add new photo
+          </Link>
         </div>
 
         <div className="manage-actions__group">

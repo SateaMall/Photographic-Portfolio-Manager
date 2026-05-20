@@ -58,7 +58,7 @@ export default function PhotoViewer({ photoId, profileSlug, albumId, mainPhoto,p
                     onClick={() => openPhoto(prevPhoto.id, "auto", albumId)}
                     aria-label="Previous photo"
                   >
-                    ‹
+                    <span className="photo-page__nav-icon">‹</span>
                   </button>
                 )}
                                 <PhotoView key={p.id} src={src} >
@@ -82,7 +82,7 @@ export default function PhotoViewer({ photoId, profileSlug, albumId, mainPhoto,p
                     onClick={() => openPhoto(nextPhoto.id, "auto", albumId)}
                     aria-label="Next photo"
                   >
-                    ›
+                    <span className="photo-page__nav-icon">›</span>
                   </button>
                 )}
                 </div> 

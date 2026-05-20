@@ -9,11 +9,9 @@ type AlbumOrderSectionProps = {
   orderedPhotoIds: string[];
   orderedPhotos: ManagedPhotoResponse[];
   disabled: boolean;
-  saving: boolean;
   sensors: ReturnType<typeof useSensors>;
   onDragEnd: (event: DragEndEvent) => void;
   onRemove: (photoId: string) => void;
-  onSave: () => void;
   collisionDetection: CollisionDetection;
 };
 
@@ -22,11 +20,9 @@ export function AlbumOrderSection({
   orderedPhotoIds,
   orderedPhotos,
   disabled,
-  saving,
   sensors,
   onDragEnd,
   onRemove,
-  onSave,
   collisionDetection,
 }: AlbumOrderSectionProps) {
   return (
@@ -34,7 +30,7 @@ export function AlbumOrderSection({
       <div className="manage-section__header">
         <div>
           <h2 className="manage-section__title">Collection order</h2>
-          <p className="manage-section__copy">Drag photos to reorder them. New uploads are appended after the ordered photos when you save.</p>
+          <p className="manage-section__copy">Drag photos to reorder them.</p>
         </div>
         <p className="manage-hero__meta">{orderedPhotoIds.length} in collection</p>
       </div>
@@ -60,14 +56,6 @@ export function AlbumOrderSection({
           </SortableContext>
         </DndContext>
       )}
-
-      <div className="manage-actions manage-actions--section">
-        <div className="manage-actions__group">
-          <button type="button" className="manage-button manage-button--primary" onClick={onSave} disabled={disabled}>
-            {saving ? "Saving..." : "Save album"}
-          </button>
-        </div>
-      </div>
     </section>
   );
 }

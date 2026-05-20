@@ -3,6 +3,7 @@ package com.letmelens.backend.controller;
 import com.letmelens.backend.dto.AlbumPhotoOrderRequest;
 import com.letmelens.backend.dto.AlbumResponse;
 import com.letmelens.backend.dto.AlbumViewResponse;
+import com.letmelens.backend.dto.ManagedAlbumOrderRequest;
 import com.letmelens.backend.dto.ManagedAlbumResponse;
 import com.letmelens.backend.service.AlbumService;
 
@@ -27,6 +28,16 @@ public class ManagementAlbumController {
             Authentication authentication
     ) {
         return albumService.getManageableAlbums(slug, authentication);
+    }
+
+    @PutMapping("/order")
+    public ResponseEntity<Void> reorderManageableAlbums(
+            @RequestParam String slug,
+            @RequestBody ManagedAlbumOrderRequest request,
+            Authentication authentication
+    ) {
+        albumService.reorderManageableAlbums(slug, request.albumIds(), authentication);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{albumId}")

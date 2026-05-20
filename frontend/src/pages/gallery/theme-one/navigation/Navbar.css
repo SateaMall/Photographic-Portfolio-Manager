@@ -352,7 +352,15 @@
     z-index: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    animation: rg-mobile-overlay-in 220ms ease;
+    will-change: opacity, transform;
+  }
+
+  .rg-mobile__content[data-state="open"] {
+    animation: rg-mobile-overlay-in 220ms ease-out;
+  }
+
+  .rg-mobile__content[data-state="closed"] {
+    animation: rg-mobile-overlay-out 220ms ease-in;
   }
 
   .rg-mobile__links {
@@ -397,5 +405,24 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes rg-mobile-overlay-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rg-mobile__content[data-state="open"],
+  .rg-mobile__content[data-state="closed"] {
+    animation: none;
   }
 }

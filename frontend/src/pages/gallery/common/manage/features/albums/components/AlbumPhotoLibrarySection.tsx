@@ -35,7 +35,7 @@ export function AlbumPhotoLibrarySection({ profileSlug, allPhotos, libraryPhotoI
                 photo={photo}
                 disabled={disabled}
                 onAction={() => onToggle(photo.id)}
-                actionLabel={isSelected ? "In album" : "Add to album"}
+                actionLabel={isSelected ? "Added" : "Add to collection"}
                 actionVariant={isSelected ? "secondary" : "ghost"}
                 isSelected={isSelected}
                 showDate

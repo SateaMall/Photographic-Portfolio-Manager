@@ -11,10 +11,11 @@ export default function ProfileCarouselPage() {
   const { authLoading, canManage, profileSlug } = useManageAccess();
   const {
     error,
+    hasUnsavedChanges,
     loading,
     onDragEnd,
-    onSave,
     photoLibrary,
+    retrySave,
     saving,
     selectedHeroIds,
     selectedHeroPhotos,
@@ -36,7 +37,7 @@ export default function ProfileCarouselPage() {
       <header className="manage-hero manage-hero--panel">
         <p className="manage-hero__eyebrow">Manage Slides</p>
         <h1 className="manage-hero__title">Organise slides at the top of your profile.</h1>
-        <p className="manage-hero__meta">If the hero carousel is empty, the profile page shows the first photos from your gallery.</p>
+        <p className="manage-hero__meta">If the hero carousel is empty, the profile page shows the first photos from your gallery. Every change saves automatically.</p>
       </header>
 
       <CarouselSelectionSection
@@ -47,21 +48,23 @@ export default function ProfileCarouselPage() {
         sensors={sensors}
         onDragEnd={onDragEnd}
         onRemove={toggleHeroPhoto}
-        onSave={onSave}
         collisionDetection={closestCenter}
       />
 
       <CarouselLibrarySection profileSlug={profileSlug} photos={photoLibrary} saving={saving} onAdd={toggleHeroPhoto} />
 
+      {saving && <p className="manage-hero__meta">Saving carousel changes...</p>}
       {error && <p className="manage-status manage-status--error">{error}</p>}
       {success && <p className="manage-status manage-status--success">{success}</p>}
 
       <div className="manage-actions">
-        <div className="manage-actions__group">
-          <button type="button" className="manage-button manage-button--primary" onClick={onSave} disabled={saving}>
-            {saving ? "Saving..." : "Save carousel"}
-          </button>
-        </div>
+        {error && hasUnsavedChanges && (
+          <div className="manage-actions__group">
+            <button type="button" className="manage-button manage-button--primary" onClick={retrySave} disabled={saving}>
+              Retry save
+            </button>
+          </div>
+        )}
 
         <div className="manage-actions__group">
           <Link className="manage-button manage-button--ghost" to={getGalleryPath(profileSlug)}>

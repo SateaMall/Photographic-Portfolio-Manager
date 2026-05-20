@@ -3,9 +3,8 @@
   position: absolute;
   left: 0%;
   right: 0%;
-  top: clamp(90px, 14vh, 160px); /* moves it down under navbar */
+  top: clamp(80px, 10vh, 160px); /* moves it down under navbar */
   z-index: 0;
-
   padding: 0 clamp(12px, 3vw, 28px);
   color: #fff;
   pointer-events: none;
@@ -44,16 +43,17 @@
 
 .album-info__description {
   margin: 5vh auto 0 auto;
- 
   padding: 10px;
-  font-size: clamp(11.5px, 1.4vw, 15px);
+  font-size: clamp(12px, 1.4vw, 17px);
   max-width: clamp(40ch, 80vw,80ch);
   letter-spacing: 0.12em;
   opacity: 0.95;
 }
 @media (max-width: 779px) {
   .album-info__description {
-      padding: 05px;
+      padding: 5px;
+      margin: 2vh auto 0 auto;
+      letter-spacing: 0.08em;
   }
 }
 .album-description--empty {

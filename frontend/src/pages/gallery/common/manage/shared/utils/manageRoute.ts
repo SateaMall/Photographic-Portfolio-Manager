@@ -10,6 +10,10 @@ export function getManageAlbumPath(profileSlug: string, albumId?: string) {
   return albumId ? `${getManageBasePath(profileSlug)}/albums/${albumId}` : `${getManageBasePath(profileSlug)}/albums`;
 }
 
+export function getManagePhotosPath(profileSlug: string) {
+  return `${getManageBasePath(profileSlug)}/photos`;
+}
+
 export function getPublicAlbumPath(profileSlug: string, albumId: string) {
   return `/${profileSlug}/album/${albumId}`;
 }
