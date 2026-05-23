@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { Navigate, Outlet, useParams } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 
-import { fetchPublicProfile } from "../api/profile";
+import { fetchPublicProfile, recordProfileOpen } from "../api/profile";
 import type { PublicProfileResponse } from "../types/types";
 import { GalleryProfileContext } from "./GalleryProfileContext";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -30,9 +30,26 @@ function formatGalleryName(slug: string) {
     .join(" ");
 }
 
+function normalizePathname(pathname: string) {
+  const normalizedPathname = pathname.trim().toLowerCase();
+  if (!normalizedPathname || normalizedPathname === "/") {
+    return "/";
+  }
+
+  return normalizedPathname.endsWith("/") ? normalizedPathname.slice(0, -1) : normalizedPathname;
+}
+
+function isManagePath(pathname: string, profileSlug: string) {
+  const normalizedPathname = normalizePathname(pathname);
+  const manageBasePath = `/${profileSlug}/manage`;
+  return normalizedPathname === manageBasePath || normalizedPathname.startsWith(`${manageBasePath}/`);
+}
+
 export default function GalleryLayout() {
   const { slug } = useParams();
+  const location = useLocation();
   const profileSlug = normalizeGallerySlug(slug);
+  const recordedPublicOpenSlugsRef = useRef(new Set<string>());
   const [resolvedProfile, setResolvedProfile] = useState<{
     slug: string;
     profile: PublicProfileResponse | null;
@@ -64,6 +81,18 @@ export default function GalleryLayout() {
       active = false;
     };
   }, [profileSlug]);
+
+  useEffect(() => {
+    if (!profileSlug || isManagePath(location.pathname, profileSlug) || recordedPublicOpenSlugsRef.current.has(profileSlug)) {
+      return;
+    }
+
+    recordedPublicOpenSlugsRef.current.add(profileSlug);
+
+    void recordProfileOpen(profileSlug).catch(() => {
+      // Portfolio analytics should never interrupt public navigation.
+    });
+  }, [location.pathname, profileSlug]);
 
   const setProfile = useCallback((nextProfile: PublicProfileResponse) => {
     setResolvedProfile({

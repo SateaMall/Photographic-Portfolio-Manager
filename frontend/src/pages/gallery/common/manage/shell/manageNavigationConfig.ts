@@ -14,8 +14,8 @@ export const MANAGE_NAVIGATION_SECTIONS: ManageNavSection[] = [
   {
     heading: "Photos",
     items: [
-      { label: "New photo", path: "/photos", hash: "#queue", nested: true },
-      { label: "Configure photos", path: "/photos" },
+      { label: "New photo", path: "/photos", hash: "#queue"},
+      { label: "Configure photos", path: "/photos", nested: true  },
     ],
   },
   {
@@ -28,10 +28,13 @@ export const MANAGE_NAVIGATION_SECTIONS: ManageNavSection[] = [
   {
     heading: "Profile",
     items: [
-      { label: "About me", path: "/profile", hash: "#display-name", nested: true },
-      { label: "Social media", path: "/profile", hash: "#social-media" },
-      { label: "Carousel/ Slides", path: "/profile/carousel", nested: true },
+      { label: "Profile overview", path: "/profile" },
+      { label: "About me", path: "/profile", hash: "#about-me", nested: true },
+      { label: "Social media", path: "/profile", hash: "#social-media", nested: true },
       { label: "Colors", path: "/profile", hash: "#colors", nested: true },
+      { label: "Statistics", path: "/profile", hash: "#statistics", nested: true },
+      { label: "Privacy", path: "/profile", hash: "#privacy", nested: true },
+      { label: "Carousel / Slides", path: "/profile/carousel" },
     ],
   },
 ];

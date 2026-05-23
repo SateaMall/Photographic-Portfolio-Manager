@@ -6,11 +6,11 @@ type DeleteAccountSectionProps = {
 
 export function DeleteAccountSection({ disabled, deleting, onDelete }: DeleteAccountSectionProps) {
   return (
-    <section className="manage-section">
+    <section className="manage-section" id="privacy">
       <div className="manage-section__header">
         <div>
-          <h2 className="manage-section__title">Danger zone</h2>
-          <p className="manage-section__copy">Delete the entire account and remove every photo, album, profile, and verification record tied to it.</p>
+          <h2 className="manage-section__title">Privacy</h2>
+          <p className="manage-section__copy">Control the permanent account removal action from the privacy section of your profile settings.</p>
         </div>
       </div>
 

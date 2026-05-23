@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { deleteCurrentUser as deleteCurrentUserRequest } from "../../../../../../../api/auth";
-import { updateManagedProfile } from "../../../../../../../api/manage";
+import { fetchManagedProfileStats, updateManagedProfile } from "../../../../../../../api/manage";
 import { useGalleryProfile } from "../../../../../../../layouts/GalleryProfileContext";
+import type { ManagedProfileStatsResponse } from "../../../../../../../types/types";
 import { useManageAccess } from "../../../shared/hooks/useManageAccess";
 import { readErrorMessage } from "../../../shared/utils/manageErrors";
 import "../../../ManagePage.css";
 import { DeleteAccountSection } from "../components/DeleteAccountSection";
 import { ProfileColorsSection } from "../components/ProfileColorsSection";
 import { ProfileIdentitySection } from "../components/ProfileIdentitySection";
+import { ProfileStatisticsSection } from "../components/ProfileStatisticsSection";
 import { ProfileSocialSection } from "../components/ProfileSocialSection";
 import { isHexColor } from "../utils/profileColors";
 import { draftFromProfile, type ProfileDraft } from "../utils/profileDraft";
@@ -23,6 +25,12 @@ export default function ProfileSettingsPage() {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [statsLoading, setStatsLoading] = useState(false);
+  const [statsState, setStatsState] = useState<{
+    slug: string;
+    stats: ManagedProfileStatsResponse | null;
+    error: string | null;
+  } | null>(null);
 
   useEffect(() => {
     if (!canManage) {
@@ -32,6 +40,45 @@ export default function ProfileSettingsPage() {
     setDraft(draftFromProfile(profile));
     setError(null);
   }, [canManage, profile]);
+
+  useEffect(() => {
+    if (authLoading || !canManage || !profileSlug) {
+      return;
+    }
+
+    let cancelled = false;
+    setStatsLoading(true);
+    setStatsState((currentState) => (
+      currentState?.slug === profileSlug
+        ? { ...currentState, error: null }
+        : { slug: profileSlug, stats: null, error: null }
+    ));
+
+    fetchManagedProfileStats(profileSlug)
+      .then((stats) => {
+        if (!cancelled) {
+          setStatsState({ slug: profileSlug, stats, error: null });
+        }
+      })
+      .catch((caughtError) => {
+        if (!cancelled) {
+          setStatsState({
+            slug: profileSlug,
+            stats: null,
+            error: readErrorMessage(caughtError, "Failed to load your portfolio statistics."),
+          });
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setStatsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authLoading, canManage, profileSlug]);
 
   function updateField(field: keyof ProfileDraft, value: string) {
     setDraft((currentDraft) => ({ ...currentDraft, [field]: value }));
@@ -107,6 +154,11 @@ export default function ProfileSettingsPage() {
     return <p className="manage-status manage-status--error">This page is only available for your own main profile.</p>;
   }
 
+  const currentStatsState = statsState?.slug === profileSlug ? statsState : null;
+  const isStatsLoading = statsLoading && currentStatsState?.stats === null;
+  const stats = currentStatsState?.stats ?? null;
+  const statsError = currentStatsState?.error ?? null;
+
   return (
     <div className="manage-panel">
       <header className="manage-hero manage-hero--panel">
@@ -120,6 +172,12 @@ export default function ProfileSettingsPage() {
           <ProfileIdentitySection draft={draft} disabled={saving || deleting} onChange={updateField} />
           <ProfileColorsSection draft={draft} disabled={saving || deleting} onChange={updateField} />
           <ProfileSocialSection draft={draft} disabled={saving || deleting} onChange={updateField} />
+          <ProfileStatisticsSection
+            stats={stats}
+            loading={isStatsLoading}
+            refreshing={statsLoading && currentStatsState?.stats !== null}
+            error={statsError}
+          />
           <DeleteAccountSection disabled={saving || deleting} deleting={deleting} onDelete={onDeleteAccount} />
 
           {error && <p className="manage-status manage-status--error">{error}</p>}

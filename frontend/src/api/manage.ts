@@ -2,6 +2,7 @@ import type {
   AlbumResponse,
   AlbumViewResponse,
   ManagedAlbumResponse,
+  ManagedProfileStatsResponse,
   ManagedProfileRequest,
   ManagedPhotoResponse,
   PageResponse,
@@ -225,4 +226,8 @@ export function updateManagedProfile(profileSlug: string, input: ManagedProfileR
     method: "PUT",
     body: JSON.stringify(input),
   });
+}
+
+export function fetchManagedProfileStats(profileSlug: string) {
+  return httpJson<ManagedProfileStatsResponse>(`/api/manage/profile/profile/${encodeURIComponent(profileSlug)}/stats`);
 }

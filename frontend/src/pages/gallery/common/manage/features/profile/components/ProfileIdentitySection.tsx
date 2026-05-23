@@ -8,7 +8,7 @@ type ProfileIdentitySectionProps = {
 
 export function ProfileIdentitySection({ draft, disabled, onChange }: ProfileIdentitySectionProps) {
   return (
-    <section className="manage-section" id="display-name">
+    <section className="manage-section" id="about-me">
       <div className="manage-section__header">
         <div>
           <h2 className="manage-section__title">About me</h2>

@@ -42,3 +42,10 @@ function toProfilePath(slug: string) {
 export function fetchPublicProfile(slug: string) {
   return httpJson<PublicProfileResponse>(`/api/public/profiles/${toProfilePath(slug)}`);
 }
+
+export function recordProfileOpen(slug: string) {
+  return httpJson<void>(`/api/public/profiles/${toProfilePath(slug)}/open`, {
+    method: "POST",
+    keepalive: true,
+  });
+}

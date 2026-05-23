@@ -102,6 +102,24 @@ export type ManagedProfileRequest = {
   instagram: string;
 };
 
+export type ManagedProfileMonthlyOpenCountResponse = {
+  month: string;
+  openCount: number;
+};
+
+export type ManagedProfileYearlyOpenCountResponse = {
+  year: number;
+  openCount: number;
+};
+
+export type ManagedProfileStatsResponse = {
+  totalOpens: number;
+  opensToday: number;
+  opensLast30Days: number;
+  monthlyCounts: ManagedProfileMonthlyOpenCountResponse[];
+  yearlyCounts: ManagedProfileYearlyOpenCountResponse[];
+};
+
 export type photoVariant= "ORIGINAL"| "MEDIUM"| "THUMB";
 
 export type ManagedPhotoResponse = {

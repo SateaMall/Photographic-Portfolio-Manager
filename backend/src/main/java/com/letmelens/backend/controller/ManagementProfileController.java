@@ -1,5 +1,6 @@
 package com.letmelens.backend.controller;
 
+import com.letmelens.backend.dto.ManagedProfileStatsResponse;
 import com.letmelens.backend.dto.ProfileRequest;
 import com.letmelens.backend.service.AuthService;
 import com.letmelens.backend.service.ProfileUserService;
@@ -30,5 +31,11 @@ public class ManagementProfileController {
                                            Authentication authentication) {
         profileService.updateProfile(profileSlug, request, authentication);
         return ResponseEntity.ok(Map.of("message", "Profile updated successfully"));
+    }
+
+    @GetMapping("/profile/{profileSlug}/stats")
+    public ManagedProfileStatsResponse getProfileStats(@PathVariable String profileSlug,
+                                                       Authentication authentication) {
+        return profileService.getManageableProfileStats(profileSlug, authentication);
     }
 }

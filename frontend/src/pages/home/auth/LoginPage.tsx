@@ -44,7 +44,7 @@ export default function LoginPage() {
   const oauthError = searchParams.get("oauthError");
 
   if (!loading && isAuthenticated) {
-    return <Navigate to={redirectTarget ?? (session.profileSlug ? `/${session.profileSlug}` : "/profiles")} replace />;
+    return <Navigate to={redirectTarget ?? (session.profileSlug ? `/${session.profileSlug}` : "/")} replace />;
   }
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {

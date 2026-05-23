@@ -17,7 +17,7 @@ function getLinkClassName(pathname: string, hash: string, to: string, item: Mana
 
   const hashMatches = item.hash == null
     ? hash === ""
-    : hash === item.hash || (hash === "" && item.hash === "#social-media");
+    : hash === item.hash;
 
   return `manage-nav__${item.nested ? "sublink" : "link"} ${pathnameMatches && hashMatches ? "is-active" : ""}`;
 }

@@ -51,7 +51,8 @@ public class EmailVerificationService {
         message.setText(
                 "Hello " + safe(user.getFirstName()) + ",\n\n" +
                         "Your verification code is: " + rawCode + "\n\n" +
-                        "This code expires in 15 minutes."
+                        "This code expires in 15 minutes." + "\n\n" +
+                        "Don't reply to this email. "
         );
 
         mailSender.send(message);

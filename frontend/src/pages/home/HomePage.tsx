@@ -15,7 +15,7 @@ const homeHeroStyle: CSSProperties & Record<"--home-hero-media", string> = {
 export default function HomePage() {
   const { isAuthenticated, loading, session } = useAuth();
   const primaryTarget = !loading && isAuthenticated
-    ? (session.profileSlug ? `/${session.profileSlug}` : "/profiles")
+    ? (session.profileSlug ? `/${session.profileSlug}` : "/")
     : "/signup";
 
   const actionLabel = isAuthenticated ? "Open gallery" : "Start the journey";
@@ -106,7 +106,7 @@ export default function HomePage() {
         <div className="home-section__inner home-section__inner--split">
           <div>
             <p className="home-section__label">Cross-Device Experience</p>
-            <h2 className="home-section__title"> A seamless experience on all screens</h2>
+            <h2 className="home-section__title"> A seamless experience adapted on all screens</h2>
           </div>
           <div className="home-section__copy">
             <img
@@ -135,23 +135,24 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      <section className="home-section home-section--muted" data-home-reveal>
+            <section className="home-section home-section--muted" data-home-reveal>
         <div className="home-section__inner home-section__inner--split">
           <div>
-            <p className="home-section__label ">For Photographers</p>
-            <h2 className="home-section__title">Advanced portfolios built for photographers</h2>
+            <p className="home-section__label">Analytics</p>
+            <h2 className="home-section__title">See how your portfolio performs over time</h2>
           </div>
 
           <div className="home-section__copy">
             <img
-              className="home-section__logo"
-              src="/letmelens.png"
-              alt="Let Me Lens mascot logo"
+              className="home-section__image"
+              src="/statistics.png"
+              alt="Analytics dashboard view"
               loading="lazy"
             />
           </div>
         </div>
       </section>
+
 
       <section className="home-section home-section--muted" data-home-reveal>
         <div className="home-section__inner home-section__inner--cta">
