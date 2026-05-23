@@ -8,11 +8,28 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class CurrentUserService {
 
     private final AppUserRepository appUserRepository;
+
+    public Optional<AppUser> findCurrentUser(Authentication authentication) {
+        if (authentication == null
+                || !authentication.isAuthenticated()
+                || authentication instanceof AnonymousAuthenticationToken) {
+            return Optional.empty();
+        }
+
+        String email = authentication.getName();
+
+        return Optional.of(appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Authenticated user not found: " + email
+                )));
+    }
 
     public AppUser requireCurrentUser(Authentication authentication) {
         if (authentication == null

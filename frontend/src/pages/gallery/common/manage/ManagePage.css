@@ -152,6 +152,13 @@
   transition: background-color 140ms ease, color 140ms ease, transform 140ms ease;
 }
 
+.manage-nav__sublink {
+  margin-left: 14px;
+  padding-left: 16px;
+  border-left: 1px solid rgba(148, 163, 184, 0.2);
+  font-size: 13px;
+}
+
 .manage-nav__link.is-active,
 .manage-nav__sublink.is-active,
 .manage-nav__link:hover,
@@ -419,6 +426,110 @@
   letter-spacing: 0.12em;
 }
 
+.manage-stats {
+  display: grid;
+  gap: 22px;
+}
+
+.manage-stats__summary {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.manage-stats__tile {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(2, 6, 23, 0.36);
+}
+
+.manage-stats__eyebrow {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.manage-stats__value {
+  margin: 0;
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 0.95;
+}
+
+.manage-stats__copy {
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 1.55;
+}
+
+.manage-stats__chart-card {
+  display: grid;
+  gap: 18px;
+}
+
+.manage-stats__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.manage-stats__toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.manage-stats-chart {
+  display: grid;
+  gap: 14px;
+}
+
+.manage-stats-chart__frame {
+  min-height: 360px;
+  padding: 18px 16px 8px;
+  border-radius: 22px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.82) 0%, rgba(2, 6, 23, 0.92) 100%);
+}
+
+.manage-stats__refreshing {
+  margin: 0;
+  color: #93c5fd;
+  font-size: 13px;
+}
+
+.manage-stats-tooltip {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.96);
+  box-shadow: 0 16px 40px rgba(2, 6, 23, 0.28);
+}
+
+.manage-stats-tooltip__label,
+.manage-stats-tooltip__value {
+  margin: 0;
+}
+
+.manage-stats-tooltip__label {
+  color: #cbd5e1;
+  font-size: 13px;
+}
+
+.manage-stats-tooltip__value {
+  color: #f8fafc;
+  font-size: 15px;
+  font-weight: 600;
+}
+
 .manage-field {
   display: grid;
   gap: 8px;
@@ -430,7 +541,8 @@
 }
 
 .manage-field input,
-.manage-field textarea {
+.manage-field textarea,
+.manage-field select {
   width: 100%;
   border: 1px solid rgba(148, 163, 184, 0.22);
   border-radius: 16px;
@@ -809,6 +921,11 @@
   }
 
   .manage-actions__group {
+    width: 100%;
+  }
+
+  .manage-stats__toolbar,
+  .manage-stats__toggle {
     width: 100%;
   }
 

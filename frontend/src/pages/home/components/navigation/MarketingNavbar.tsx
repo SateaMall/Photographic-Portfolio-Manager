@@ -28,7 +28,7 @@ export function MarketingNavbar({ overlay = false }: MarketingNavbarProps) {
     return () => window.removeEventListener("scroll", syncScroll);
   }, [overlay]);
 
-  const actionTo = isAuthenticated ? (session.profileSlug ? `/${session.profileSlug}` : "/profiles") : "/login";
+  const actionTo = isAuthenticated ? (session.profileSlug ? `/${session.profileSlug}` : "/") : "/login";
   const actionLabel = isAuthenticated ? "Open gallery" : "Sign in";
 
   return (
