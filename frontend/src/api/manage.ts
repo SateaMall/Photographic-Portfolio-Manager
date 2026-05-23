@@ -37,6 +37,15 @@ export function fetchManageableAlbums(slug: string) {
   return httpJson<AlbumViewResponse[]>(`/api/manage/albums?${params.toString()}`);
 }
 
+export function reorderManagedAlbums(slug: string, albumIds: string[]) {
+  const params = new URLSearchParams({ slug });
+
+  return httpJson<void>(`/api/manage/albums/order?${params.toString()}`, {
+    method: "PUT",
+    body: JSON.stringify({ albumIds }),
+  });
+}
+
 export async function fetchAllManageablePhotos(slug: string) {
   const photos: ManagedPhotoResponse[] = [];
   let page = 0;

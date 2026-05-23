@@ -94,7 +94,7 @@
 }
 
 .home-section {
-  padding: 96px 24px;
+  padding: 70px 24px;
   scroll-margin-top: 120px;
 }
 
@@ -270,7 +270,9 @@
    bottom: 5%;
    left: 50%;
 }
-
+.scroll-indicator-home:hover {
+ color: #22515f;
+}
 /* Footer styles */
 .home-footer {
    font-size: 0.75rem;
@@ -293,7 +295,7 @@
 }
 
 .home-footer__link:hover {
-   color: #111827;
+   color: #4fb9d6;
 }
 
 @media (prefers-reduced-motion: reduce) {

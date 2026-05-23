@@ -22,11 +22,12 @@ export default function ProfilePhotosManagePage() {
   const [success, setSuccess] = useState<string | null>(null);
   const {
     error: orderError,
+    hasPendingSave,
     loading: orderLoading,
     onDragEnd,
     photos,
     refreshPhotos,
-    saveOrder,
+    retrySave,
     saving: orderSaving,
     sensors,
     success: orderSuccess,
@@ -109,9 +110,19 @@ export default function ProfilePhotosManagePage() {
             collisionDetection={closestCenter}
             onDragEnd={onDragEnd}
             onOpenPhoto={(photoId) => openPhoto(photoId, "modal")}
-            onSave={saveOrder}
           />
         )
+      )}
+
+      {!authLoading && canManage && !isQueueOpen && orderSaving && <p className="manage-hero__meta">Saving photo order...</p>}
+      {!authLoading && canManage && !isQueueOpen && orderError && hasPendingSave && (
+        <div className="manage-actions">
+          <div className="manage-actions__group">
+            <button type="button" className="manage-button manage-button--primary" onClick={retrySave} disabled={orderSaving}>
+              Retry save
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

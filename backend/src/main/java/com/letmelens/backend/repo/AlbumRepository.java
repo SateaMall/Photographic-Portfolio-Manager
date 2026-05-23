@@ -30,8 +30,8 @@ public interface AlbumRepository extends JpaRepository<Album, UUID> {
     from albums a
     join profiles p on p.id = a.owner_profile_id AND p.slug = :slug
     left join album_photos ap on ap.album_id = a.id
-    group by a.id, a.title, a.description, a.created_at
-    order by a.created_at desc
+    group by a.id, a.title, a.description, a.position, a.created_at
+    order by a.position asc nulls last, a.created_at desc
     """, nativeQuery = true)
     List<AlbumViewRow> findManageableAlbumViews(@Param("slug") String slug);
 
@@ -52,8 +52,8 @@ public interface AlbumRepository extends JpaRepository<Album, UUID> {
     join profiles p on p.id = a.owner_profile_id AND p.slug = :slug
     left join album_photos ap on ap.album_id = a.id
     where a.is_public = true
-    group by a.id, a.title, a.description, a.created_at
-    order by a.created_at desc
+    group by a.id, a.title, a.description, a.position, a.created_at
+    order by a.position asc nulls last, a.created_at desc
     """, nativeQuery = true)
     List<AlbumViewRow> findAlbumViews(String slug);
 
@@ -79,11 +79,21 @@ group by a.id, a.title, a.description, a.created_at
 
     List<Album> findAllByCreatedBy_Id(UUID userId);
 
+    List<Album> findAllByOwnerProfile_IdOrderByCreatedAtDesc(UUID profileId);
+
+    List<Album> findAllByOwnerProfile_IdOrderByPositionAscCreatedAtDesc(UUID profileId);
+
+    @Query("""
+        select coalesce(max(a.position) + 1, 0)
+        from Album a
+        where a.ownerProfile.id = :profileId
+        """)
+    Integer findNextPositionByOwnerProfileId(@Param("profileId") UUID profileId);
+
     List<Album> findAllByOwnerProfile_IdIn(Collection<UUID> profileIds);
 
 
 
 
 }
-
 

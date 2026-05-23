@@ -125,7 +125,7 @@ return (
     {(albums.length !== 0 || canManage) && (
       <section className="hp-section-album"  id="albums">
       <header className="hp-head-album">
-        <h1 className="hp-title">Collecitons</h1>
+        <h1 className="hp-title">Collections</h1>
       </header>
       {albums.length !== 0 ? (
         <AlbumsRow albums={albums} />

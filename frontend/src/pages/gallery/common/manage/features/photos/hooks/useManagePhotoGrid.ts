@@ -19,6 +19,7 @@ export function useManagePhotoGrid({ profileSlug, canManage, authLoading }: UseM
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [hasPendingSave, setHasPendingSave] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -28,8 +29,27 @@ export function useManagePhotoGrid({ profileSlug, canManage, authLoading }: UseM
   const refreshPhotos = useCallback(async () => {
     const orderedPhotos = await fetchManageableGridPhotos(profileSlug);
     setPhotos(orderedPhotos);
+    setHasPendingSave(false);
     return orderedPhotos;
   }, [profileSlug]);
+
+  const persistOrder = useCallback(async (nextPhotos: ManagedPhotoResponse[]) => {
+    setSaving(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      await reorderManagedGridPhotos(profileSlug, nextPhotos.map((photo) => photo.id));
+      const refreshedPhotos = await refreshPhotos();
+      setSuccess(`Homepage order saved automatically for ${refreshedPhotos.length} photo${refreshedPhotos.length === 1 ? "" : "s"}.`);
+      setHasPendingSave(false);
+    } catch (caughtError) {
+      setError(readErrorMessage(caughtError, "Failed to save your homepage photo order automatically."));
+      setHasPendingSave(true);
+    } finally {
+      setSaving(false);
+    }
+  }, [profileSlug, refreshPhotos]);
 
   useEffect(() => {
     let cancelled = false;
@@ -87,6 +107,7 @@ export function useManagePhotoGrid({ profileSlug, canManage, authLoading }: UseM
       }
 
       setPhotos((currentPhotos) => currentPhotos.filter((photo) => photo.id !== detail.photoId));
+      setHasPendingSave(false);
     }
 
     window.addEventListener(PHOTO_MANAGED_EVENT, onPhotoManaged as EventListener);
@@ -99,47 +120,41 @@ export function useManagePhotoGrid({ profileSlug, canManage, authLoading }: UseM
   function onDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
-    if (!over || active.id === over.id) {
+    if (saving || !over || active.id === over.id) {
       return;
     }
 
-    setPhotos((currentPhotos) => {
-      const oldIndex = currentPhotos.findIndex((photo) => photo.id === String(active.id));
-      const newIndex = currentPhotos.findIndex((photo) => photo.id === String(over.id));
+    const oldIndex = photos.findIndex((photo) => photo.id === String(active.id));
+    const newIndex = photos.findIndex((photo) => photo.id === String(over.id));
 
-      if (oldIndex === -1 || newIndex === -1) {
-        return currentPhotos;
-      }
+    if (oldIndex === -1 || newIndex === -1) {
+      return;
+    }
 
-      return arrayMove(currentPhotos, oldIndex, newIndex);
-    });
+    const nextPhotos = arrayMove(photos, oldIndex, newIndex);
+    setPhotos(nextPhotos);
+    setHasPendingSave(true);
     setError(null);
     setSuccess(null);
+    void persistOrder(nextPhotos);
   }
 
-  async function saveOrder() {
-    setSaving(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      await reorderManagedGridPhotos(profileSlug, photos.map((photo) => photo.id));
-      const refreshedPhotos = await refreshPhotos();
-      setSuccess(`Saved homepage order for ${refreshedPhotos.length} photo${refreshedPhotos.length === 1 ? "" : "s"}.`);
-    } catch (caughtError) {
-      setError(readErrorMessage(caughtError, "Failed to save your homepage photo order."));
-    } finally {
-      setSaving(false);
+  function retrySave() {
+    if (saving || !hasPendingSave) {
+      return;
     }
+
+    void persistOrder(photos);
   }
 
   return {
     error,
+    hasPendingSave,
     loading,
     onDragEnd,
     photos,
     refreshPhotos,
-    saveOrder,
+    retrySave,
     saving,
     sensors,
     success,

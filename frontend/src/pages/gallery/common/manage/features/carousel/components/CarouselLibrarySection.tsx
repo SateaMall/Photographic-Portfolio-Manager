@@ -14,7 +14,7 @@ export function CarouselLibrarySection({ profileSlug, photos, saving, onAdd }: C
       <div className="manage-section__header">
         <div>
           <h2 className="manage-section__title">Photo library</h2>
-          <p className="manage-section__copy">Add any profile photo into the hero carousel. Its order will match the sequence above.</p>
+          <p className="manage-section__copy">Add any photo into the hero carousel.</p>
         </div>
       </div>
 

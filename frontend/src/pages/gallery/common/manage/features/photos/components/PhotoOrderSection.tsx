@@ -15,7 +15,6 @@ type PhotoOrderSectionProps = {
   collisionDetection: CollisionDetection;
   onDragEnd: (event: DragEndEvent) => void;
   onOpenPhoto: (photoId: string) => void;
-  onSave: () => void;
 };
 
 export function PhotoOrderSection({
@@ -29,14 +28,13 @@ export function PhotoOrderSection({
   collisionDetection,
   onDragEnd,
   onOpenPhoto,
-  onSave,
 }: PhotoOrderSectionProps) {
   return (
     <section className="manage-section">
       <div className="manage-section__header">
         <div>
           <h2 className="manage-section__title">Homepage photo order</h2>
-          <p className="manage-section__copy">Drag to reorder your main photo grid. Click any photo to open its popup and edit the details.</p>
+          <p className="manage-section__copy">Drag to reorder your main photo grid.</p>
         </div>
         <p className="manage-hero__meta">{photos.length} photos</p>
       </div>
@@ -71,14 +69,6 @@ export function PhotoOrderSection({
 
       {error && <p className="manage-status manage-status--error">{error}</p>}
       {success && <p className="manage-status manage-status--success">{success}</p>}
-
-      <div className="manage-actions manage-actions--section">
-        <div className="manage-actions__group">
-          <button type="button" className="manage-button manage-button--primary" onClick={onSave} disabled={saving || loading || photos.length === 0}>
-            {saving ? "Saving..." : "Save photo order"}
-          </button>
-        </div>
-      </div>
     </section>
   );
 }

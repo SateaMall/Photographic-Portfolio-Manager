@@ -35,10 +35,13 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
+  padding: 0;
   width: clamp(30px,2vw,30px);
   height: clamp(70px,4.5vw,90px);
   border: none;
   border-radius: 999px;
+  -webkit-appearance: none;
+  appearance: none;
   display: grid;
   place-items: center;
   font-size: 32px;
@@ -49,6 +52,11 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
   cursor: pointer;
   transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+}
+.photo-page__nav-icon {
+  display: block;
+  font-size: 1em;
+  line-height: 1;
 }
 .photo-page__nav:hover {
   background: rgba(38, 38, 38, 0.9);
@@ -71,9 +79,9 @@
 @media (max-width: 768px) {
   .photo-page__nav {
     background: transparent;
-    width: 30px;
-    height: 60px;
-    font-size: 28px;
+    width: 24px;
+    height: 56px;
+    font-size: 20px;
   }
   .photo-page__nav--left {
     left: 3px;

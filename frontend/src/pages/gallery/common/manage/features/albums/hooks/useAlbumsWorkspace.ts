@@ -1,3 +1,5 @@
+import { KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import type { NavigateFunction } from "react-router-dom";
 
@@ -7,6 +9,7 @@ import {
   fetchAllManageablePhotos,
   fetchManageableAlbums,
   fetchManagedAlbum,
+  reorderManagedAlbums,
 } from "../../../../../../../api/manage";
 import type { AlbumViewResponse, ManagedAlbumResponse, ManagedPhotoResponse } from "../../../../../../../types/types";
 import { readErrorMessage } from "../../../shared/utils/manageErrors";
@@ -47,6 +50,13 @@ export function useAlbumsWorkspace({ profileSlug, albumId, locationHash, canMana
   const [newAlbumDescription, setNewAlbumDescription] = useState("");
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [albumOrderSaving, setAlbumOrderSaving] = useState(false);
+  const [albumOrderError, setAlbumOrderError] = useState<string | null>(null);
+
+  const albumOrderSensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
 
   const currentAlbumListState = albumListState?.slug === profileSlug ? albumListState : null;
   const currentPhotoLibraryState = photoLibraryState?.slug === profileSlug ? photoLibraryState : null;
@@ -181,9 +191,44 @@ export function useAlbumsWorkspace({ profileSlug, albumId, locationHash, canMana
     };
   }, [albumId, authLoading, canManage]);
 
+  function onAlbumOrderDragEnd(event: DragEndEvent) {
+    if (albumOrderSaving || !currentAlbumListState) {
+      return;
+    }
+
+    const { active, over } = event;
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex = currentAlbumListState.albums.findIndex((albumSummary) => albumSummary.albumId === String(active.id));
+    const newIndex = currentAlbumListState.albums.findIndex((albumSummary) => albumSummary.albumId === String(over.id));
+
+    if (oldIndex === -1 || newIndex === -1) {
+      return;
+    }
+
+    const previousAlbums = currentAlbumListState.albums;
+    const nextAlbums = arrayMove(previousAlbums, oldIndex, newIndex);
+
+    setAlbumListState({ slug: profileSlug, albums: nextAlbums, error: null });
+    setAlbumOrderSaving(true);
+    setAlbumOrderError(null);
+
+    void reorderManagedAlbums(profileSlug, nextAlbums.map((albumSummary) => albumSummary.albumId))
+      .catch((caughtError) => {
+        setAlbumListState({ slug: profileSlug, albums: previousAlbums, error: null });
+        setAlbumOrderError(readErrorMessage(caughtError, "Failed to save the collection order."));
+      })
+      .finally(() => {
+        setAlbumOrderSaving(false);
+      });
+  }
+
   async function refreshAlbums() {
     const nextAlbums = await fetchManageableAlbums(profileSlug);
     setAlbumListState({ slug: profileSlug, albums: nextAlbums, error: null });
+    setAlbumOrderError(null);
     return nextAlbums;
   }
 
@@ -238,6 +283,9 @@ export function useAlbumsWorkspace({ profileSlug, albumId, locationHash, canMana
     activeAlbumId,
     albumListError,
     albumListLoading,
+    albumOrderError,
+    albumOrderSaving,
+    albumOrderSensors,
     albums,
     allPhotos,
     createError,
@@ -247,6 +295,7 @@ export function useAlbumsWorkspace({ profileSlug, albumId, locationHash, canMana
     isCreateOpen,
     newAlbumDescription,
     newAlbumTitle,
+    onAlbumOrderDragEnd,
     photoLibraryError,
     photoLibraryLoading,
     refreshAlbum,

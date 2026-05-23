@@ -7,30 +7,32 @@ import {
   removePhotoFromManagedAlbum,
   reorderManagedAlbumPhotos,
   updateManagedAlbum,
-  uploadManagedPhoto,
 } from "../../../../../../../api/manage";
 import type { AlbumViewResponse, ManagedAlbumResponse, ManagedPhotoResponse } from "../../../../../../../types/types";
-import { useUploadDraftQueue } from "../../../shared/hooks/useUploadDraftQueue";
 import { readErrorMessage } from "../../../shared/utils/manageErrors";
+
+function getPhotoOrderKey(photoIds: string[]) {
+  return photoIds.join(",");
+}
 
 type UseAlbumEditorProps = {
   album: ManagedAlbumResponse;
   allPhotos: ManagedPhotoResponse[];
   onRefreshAlbums: () => Promise<AlbumViewResponse[]>;
   onRefreshAlbum: (albumId: string) => Promise<ManagedAlbumResponse>;
-  onRefreshPhotoLibrary: () => Promise<ManagedPhotoResponse[]>;
   onDeleteAlbum: (albumId: string) => Promise<void>;
 };
 
-export function useAlbumEditor({ album, allPhotos, onRefreshAlbums, onRefreshAlbum, onRefreshPhotoLibrary, onDeleteAlbum }: UseAlbumEditorProps) {
+export function useAlbumEditor({ album, allPhotos, onRefreshAlbums, onRefreshAlbum, onDeleteAlbum }: UseAlbumEditorProps) {
   const [title, setTitle] = useState(album.title);
   const [description, setDescription] = useState(album.description ?? "");
   const [orderedPhotoIds, setOrderedPhotoIds] = useState<string[]>(album.photos.map((photo) => photo.id));
-  const [saving, setSaving] = useState(false);
+  const [savedPhotoIds, setSavedPhotoIds] = useState<string[]>(album.photos.map((photo) => photo.id));
+  const [savingDetails, setSavingDetails] = useState(false);
+  const [savingPhotos, setSavingPhotos] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const { drafts, keepDraftsById, setDrafts } = useUploadDraftQueue();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -54,70 +56,24 @@ export function useAlbumEditor({ album, allPhotos, onRefreshAlbums, onRefreshAlb
     .map((photoId) => allPhotosById.get(photoId))
     .filter((photo): photo is ManagedPhotoResponse => photo != null);
 
-  function togglePhoto(photoId: string) {
-    setOrderedPhotoIds((currentPhotoIds) => (
-      currentPhotoIds.includes(photoId)
-        ? currentPhotoIds.filter((currentId) => currentId !== photoId)
-        : [...currentPhotoIds, photoId]
-    ));
-    setError(null);
-    setSuccess(null);
-  }
+  const hasPendingPhotoChanges = getPhotoOrderKey(orderedPhotoIds) !== getPhotoOrderKey(savedPhotoIds);
 
-  function onDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-
-    if (!over || active.id === over.id) {
-      return;
-    }
-
-    setOrderedPhotoIds((currentPhotoIds) => {
-      const oldIndex = currentPhotoIds.indexOf(String(active.id));
-      const newIndex = currentPhotoIds.indexOf(String(over.id));
-
-      if (oldIndex === -1 || newIndex === -1) {
-        return currentPhotoIds;
-      }
-
-      return arrayMove(currentPhotoIds, oldIndex, newIndex);
-    });
-    setError(null);
-    setSuccess(null);
-  }
-
-  async function onSave() {
-    const normalizedTitle = title.trim();
-
-    if (!normalizedTitle) {
-      setError("Album title is required.");
-      return;
-    }
-
-    setSaving(true);
+  async function persistPhotoChanges(nextPhotoIds: string[]) {
+    setSavingPhotos(true);
     setError(null);
     setSuccess(null);
 
     const failures: string[] = [];
-    const initialIds = album.photos.map((photo) => photo.id);
-    const nextIds = orderedPhotoIds;
-    const initialIdSet = new Set(initialIds);
-    const nextIdSet = new Set(nextIds);
-    const toRemove = initialIds.filter((photoId) => !nextIdSet.has(photoId));
-    const toAdd = nextIds.filter((photoId) => !initialIdSet.has(photoId));
-    const failedDraftIds = new Set<string>();
-    const uploadedPhotoIds: string[] = [];
-
-    try {
-      await updateManagedAlbum(album.albumId, { title: normalizedTitle, description });
-    } catch (caughtError) {
-      failures.push(readErrorMessage(caughtError, "Failed to save the album details."));
-    }
+    const savedPhotoIdSet = new Set(savedPhotoIds);
+    const nextPhotoIdSet = new Set(nextPhotoIds);
+    const toRemove = savedPhotoIds.filter((photoId) => !nextPhotoIdSet.has(photoId));
+    const toAdd = nextPhotoIds.filter((photoId) => !savedPhotoIdSet.has(photoId));
 
     for (const photoId of toRemove) {
       try {
         await removePhotoFromManagedAlbum(album.albumId, photoId);
       } catch (caughtError) {
-        failures.push(readErrorMessage(caughtError, `Failed to remove photo ${photoId} from the album.`));
+        failures.push(readErrorMessage(caughtError, `Failed to remove photo ${photoId} from the collection.`));
       }
     }
 
@@ -125,55 +81,104 @@ export function useAlbumEditor({ album, allPhotos, onRefreshAlbums, onRefreshAlb
       try {
         await addPhotoToManagedAlbum(album.albumId, photoId);
       } catch (caughtError) {
-        failures.push(readErrorMessage(caughtError, `Failed to add photo ${photoId} to the album.`));
+        failures.push(readErrorMessage(caughtError, `Failed to add photo ${photoId} to the collection.`));
       }
     }
 
-    for (const draft of drafts) {
-      try {
-        const uploadedPhoto = await uploadManagedPhoto(draft, album.albumId);
-        uploadedPhotoIds.push(uploadedPhoto.id);
-      } catch (caughtError) {
-        failedDraftIds.add(draft.id);
-        failures.push(readErrorMessage(caughtError, `Failed to upload ${draft.file.name}.`));
-      }
+    try {
+      await reorderManagedAlbumPhotos(album.albumId, nextPhotoIds);
+    } catch (caughtError) {
+      failures.push(readErrorMessage(caughtError, "Failed to save the collection photo order automatically."));
     }
-
-    const finalOrder = [...nextIds, ...uploadedPhotoIds];
-    if (finalOrder.length > 0) {
-      try {
-        await reorderManagedAlbumPhotos(album.albumId, finalOrder);
-      } catch (caughtError) {
-        failures.push(readErrorMessage(caughtError, "Failed to save the album photo order."));
-      }
-    }
-
-    keepDraftsById(failedDraftIds);
 
     try {
       await onRefreshAlbums();
       const refreshedAlbum = await onRefreshAlbum(album.albumId);
-      setTitle(refreshedAlbum.title);
-      setDescription(refreshedAlbum.description ?? "");
-      setOrderedPhotoIds(refreshedAlbum.photos.map((photo) => photo.id));
-      if (uploadedPhotoIds.length > 0) {
-        await onRefreshPhotoLibrary();
+      const refreshedPhotoIds = refreshedAlbum.photos.map((photo) => photo.id);
+
+      setSavedPhotoIds(refreshedPhotoIds);
+      if (failures.length === 0) {
+        setOrderedPhotoIds(refreshedPhotoIds);
       }
     } catch (caughtError) {
-      failures.push(readErrorMessage(caughtError, "Saved some changes, but the workspace could not refresh."));
+      failures.push(readErrorMessage(caughtError, "Saved some collection changes, but the workspace could not refresh."));
     }
 
     if (failures.length > 0) {
       setError(failures.join(" "));
+      setSuccess("Partial collection autosave completed.");
+    } else {
+      setSuccess(`Collection changes saved automatically. ${nextPhotoIds.length} photo${nextPhotoIds.length === 1 ? "" : "s"} currently in the collection.`);
     }
 
-    if (failures.length === 0) {
-      setSuccess(`Album saved. ${finalOrder.length} photo${finalOrder.length === 1 ? "" : "s"} currently in the album.`);
-    } else if (finalOrder.length > 0 || uploadedPhotoIds.length > 0) {
-      setSuccess("Partial save completed.");
+    setSavingPhotos(false);
+  }
+
+  function togglePhoto(photoId: string) {
+    if (savingPhotos || deleting) {
+      return;
     }
 
-    setSaving(false);
+    const nextPhotoIds = orderedPhotoIds.includes(photoId)
+      ? orderedPhotoIds.filter((currentId) => currentId !== photoId)
+      : [...orderedPhotoIds, photoId];
+
+    setOrderedPhotoIds(nextPhotoIds);
+    setError(null);
+    setSuccess(null);
+    void persistPhotoChanges(nextPhotoIds);
+  }
+
+  function onDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (savingPhotos || deleting || !over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex = orderedPhotoIds.indexOf(String(active.id));
+    const newIndex = orderedPhotoIds.indexOf(String(over.id));
+
+    if (oldIndex === -1 || newIndex === -1) {
+      return;
+    }
+
+    const nextPhotoIds = arrayMove(orderedPhotoIds, oldIndex, newIndex);
+    setOrderedPhotoIds(nextPhotoIds);
+    setError(null);
+    setSuccess(null);
+    void persistPhotoChanges(nextPhotoIds);
+  }
+
+  async function onSaveDetails() {
+    const normalizedTitle = title.trim();
+
+    if (!normalizedTitle) {
+      setError("Album title is required.");
+      return;
+    }
+
+    setSavingDetails(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      await updateManagedAlbum(album.albumId, { title: normalizedTitle, description });
+      await onRefreshAlbums();
+      const refreshedAlbum = await onRefreshAlbum(album.albumId);
+      setTitle(refreshedAlbum.title);
+      setDescription(refreshedAlbum.description ?? "");
+      const refreshedPhotoIds = refreshedAlbum.photos.map((photo) => photo.id);
+      setSavedPhotoIds(refreshedPhotoIds);
+      if (!hasPendingPhotoChanges) {
+        setOrderedPhotoIds(refreshedPhotoIds);
+      }
+      setSuccess("Collection details saved.");
+    } catch (caughtError) {
+      setError(readErrorMessage(caughtError, "Failed to save the collection details."));
+    }
+
+    setSavingDetails(false);
   }
 
   async function onDelete() {
@@ -196,19 +201,25 @@ export function useAlbumEditor({ album, allPhotos, onRefreshAlbums, onRefreshAlb
   return {
     deleting,
     description,
-    drafts,
     error,
-    isBusy: saving || deleting,
+    hasPendingPhotoChanges,
+    isBusy: savingDetails || savingPhotos || deleting,
+    isPhotoBusy: savingPhotos || deleting,
     libraryPhotoIds: new Set(orderedPhotoIds),
     onDelete,
     onDragEnd,
-    onSave,
+    onSaveDetails,
     orderedPhotoIds,
     orderedPhotos,
-    saving,
+    retryPhotoSave: () => {
+      if (!savingPhotos && !deleting && hasPendingPhotoChanges) {
+        void persistPhotoChanges(orderedPhotoIds);
+      }
+    },
+    savingDetails,
+    savingPhotos,
     sensors,
     setDescription,
-    setDrafts,
     setTitle,
     success,
     title,

@@ -17,6 +17,9 @@ export default function ManageAlbumsPage() {
     activeAlbumId,
     albumListError,
     albumListLoading,
+    albumOrderError,
+    albumOrderSaving,
+    albumOrderSensors,
     albums,
     allPhotos,
     createError,
@@ -26,11 +29,11 @@ export default function ManageAlbumsPage() {
     isCreateOpen,
     newAlbumDescription,
     newAlbumTitle,
+    onAlbumOrderDragEnd,
     photoLibraryError,
     photoLibraryLoading,
     refreshAlbum,
     refreshAlbums,
-    refreshPhotoLibrary,
     selectedAlbum,
     selectedAlbumError,
     selectedAlbumLoading,
@@ -73,14 +76,18 @@ export default function ManageAlbumsPage() {
               />
             )}
 
-            <AlbumListSidebar
-              albums={albums}
-              profileSlug={profileSlug}
-              activeAlbumId={activeAlbumId}
-              albumListError={albumListError}
-              onSelect={(targetAlbumId) => navigate(getManageAlbumPath(profileSlug, targetAlbumId))}
-            />
-          </aside>
+              <AlbumListSidebar
+                albums={albums}
+                profileSlug={profileSlug}
+                activeAlbumId={activeAlbumId}
+                albumListError={albumListError}
+                albumOrderError={albumOrderError}
+                albumOrderSaving={albumOrderSaving}
+                sensors={albumOrderSensors}
+                onDragEnd={onAlbumOrderDragEnd}
+                onSelect={(targetAlbumId) => navigate(getManageAlbumPath(profileSlug, targetAlbumId))}
+              />
+            </aside>
 
           {photoLibraryError && <p className="manage-status manage-status--error">{photoLibraryError}</p>}
 
@@ -93,16 +100,15 @@ export default function ManageAlbumsPage() {
               <p className="manage-status manage-status--error">{selectedAlbumError}</p>
             </div>
           ) : selectedAlbum ? (
-            <AlbumEditorPanel
-              key={selectedAlbum.albumId}
-              profileSlug={profileSlug}
-              album={selectedAlbum}
-              allPhotos={allPhotos}
-              onRefreshAlbums={refreshAlbums}
-              onRefreshAlbum={refreshAlbum}
-              onRefreshPhotoLibrary={refreshPhotoLibrary}
-              onDeleteAlbum={handleDeleteAlbum}
-            />
+              <AlbumEditorPanel
+                key={selectedAlbum.albumId}
+                profileSlug={profileSlug}
+                album={selectedAlbum}
+                allPhotos={allPhotos}
+                onRefreshAlbums={refreshAlbums}
+                onRefreshAlbum={refreshAlbum}
+                onDeleteAlbum={handleDeleteAlbum}
+              />
           ) : (
             <div className="manage-card manage-detail">
               <p className="manage-empty">Select a collection from the left or open New collection.</p>

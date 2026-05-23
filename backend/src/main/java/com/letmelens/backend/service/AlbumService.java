@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -68,6 +70,7 @@ public class AlbumService {
                 .createdBy(currentUser)
                 .title(title)
                 .description(description)
+                .position(nextAlbumPosition(profile))
                 .isPublic(true)
                 .build();
 
@@ -150,6 +153,34 @@ public class AlbumService {
         albumPhotoRepository.saveAll(relations);
     }
 
+    @Transactional
+    public void reorderManageableAlbums(String slug, List<UUID> albumIds, Authentication authentication) {
+        if (albumIds == null) {
+            throw new IllegalArgumentException("Album order is required");
+        }
+
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+        Profile profile = accessService.requireManageableProfile(currentUser.getId(), slug);
+        ensureAlbumPositions(profile);
+
+        List<Album> albums = albumRepository.findAllByOwnerProfile_IdOrderByPositionAscCreatedAtDesc(profile.getId());
+        LinkedHashMap<UUID, Album> albumsById = new LinkedHashMap<>();
+        albums.forEach(album -> albumsById.put(album.getId(), album));
+
+        LinkedHashSet<UUID> orderedIds = new LinkedHashSet<>(albumIds);
+        if (albumIds.size() != albums.size() || orderedIds.size() != albumIds.size() || !albumsById.keySet().equals(orderedIds)) {
+            throw new IllegalArgumentException("Album order must include every manageable album exactly once");
+        }
+
+        int index = 0;
+        for (UUID albumId : albumIds) {
+            albumsById.get(albumId).setPosition(index);
+            index += 1;
+        }
+
+        albumRepository.saveAll(albums);
+    }
+
     //Done
     @Transactional
     public AlbumResponse updateAlbum(
@@ -183,10 +214,11 @@ public class AlbumService {
         return AlbumResponse.from(album);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<AlbumViewResponse> getManageableAlbums(String slug, Authentication authentication) {
         AppUser currentUser = currentUserService.requireCurrentUser(authentication);
         Profile profile = accessService.requireManageableProfile(currentUser.getId(), slug);
+        ensureAlbumPositions(profile);
         List<AlbumViewRow> rows = albumRepository.findManageableAlbumViews(profile.getSlug());
         return AlbumViewResponse.from(rows);
     }
@@ -229,8 +261,10 @@ public class AlbumService {
 
 
     /*********************   Homepage(Album)   *********************/
-    @Transactional(readOnly = true)
+    @Transactional
     public List<AlbumViewResponse> getAlbums(String profileSlug) {
+            profileRepository.findBySlug(profileSlug)
+                    .ifPresent(this::ensureAlbumPositions);
             List<AlbumViewRow> rows = albumRepository.findAlbumViews(profileSlug);
         return AlbumViewResponse.from(rows);
         }
@@ -251,6 +285,25 @@ public class AlbumService {
         }
         return AlbumViewResponse.from(albumDetails);
 
+    }
+
+    private int nextAlbumPosition(Profile profile) {
+        ensureAlbumPositions(profile);
+        return albumRepository.findNextPositionByOwnerProfileId(profile.getId());
+    }
+
+    private void ensureAlbumPositions(Profile profile) {
+        List<Album> albums = albumRepository.findAllByOwnerProfile_IdOrderByCreatedAtDesc(profile.getId());
+        boolean hasMissingPositions = albums.stream().anyMatch(album -> album.getPosition() == null);
+        if (!hasMissingPositions) {
+            return;
+        }
+
+        for (int index = 0; index < albums.size(); index++) {
+            albums.get(index).setPosition(index);
+        }
+
+        albumRepository.saveAll(albums);
     }
 
 
