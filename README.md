@@ -1,6 +1,13 @@
 # photo_gallery
 
-Portofolio Photographique multi-users built with Typescript React, Java Spring Boot and PostgreSQL database.
+Portofolio Photographique multi-users built with Typescript React, Java Spring Boot, PostgreSQL database and Docker.
+
+# Portfolio Notice
+
+This project is a public portfolio project and is not open source.
+The source code is visible for review and evaluation only.
+Reuse, copying, modification, or redistribution of any part of this codebase is not permitted without prior written permission.
+
 # Important
 
 .env is added in the .getignore for privacy reasons
