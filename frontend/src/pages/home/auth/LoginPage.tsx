@@ -29,12 +29,22 @@ function readRedirectTarget(state: unknown) {
   return null;
 }
 
+function readPageMessage(state: unknown) {
+  if (!state || typeof state !== "object" || !("message" in state)) {
+    return null;
+  }
+
+  const value = (state as { message: unknown }).message;
+  return typeof value === "string" ? value : null;
+}
+
 export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, loading, refreshSession, session } = useAuth();
   const searchParams = new URLSearchParams(location.search);
   const redirectTarget = readRedirectTarget(location.state);
+  const pageMessage = readPageMessage(location.state);
   const [form, setForm] = useState({
     email: readEmailFromSearch(location.search),
     password: "",
@@ -98,6 +108,8 @@ export default function LoginPage() {
                 <p className="auth-success">Email verified. You can sign in now.</p>
               )}
 
+              {pageMessage && <p className="auth-message">{pageMessage}</p>}
+
               {(error ?? oauthError) && <p className="auth-error">{error ?? oauthError}</p>}
 
               <button className="auth-provider-btn" type="button" onClick={handleGoogleSignIn} disabled={submitting}>
@@ -135,6 +147,12 @@ export default function LoginPage() {
                   required
                 />
               </label>
+
+              <div className="auth-secondary-actions auth-secondary-actions--end">
+                <Link className="auth-inline-link" to={`/forgot-password?email=${encodeURIComponent(form.email.trim())}`}>
+                  Forgot password?
+                </Link>
+              </div>
 
               <div className="auth-actions">
                 <button className="auth-primary-btn" type="submit" disabled={submitting}>

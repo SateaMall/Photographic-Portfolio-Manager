@@ -1,36 +1,23 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-import { deleteCurrentUser as deleteCurrentUserRequest } from "../../../../../../../api/auth";
-import { fetchManagedProfileStats, updateManagedProfile } from "../../../../../../../api/manage";
+import { updateManagedProfile } from "../../../../../../../api/manage";
 import { useGalleryProfile } from "../../../../../../../layouts/GalleryProfileContext";
-import type { ManagedProfileStatsResponse } from "../../../../../../../types/types";
 import { useManageAccess } from "../../../shared/hooks/useManageAccess";
 import { readErrorMessage } from "../../../shared/utils/manageErrors";
 import "../../../ManagePage.css";
-import { DeleteAccountSection } from "../components/DeleteAccountSection";
 import { ProfileColorsSection } from "../components/ProfileColorsSection";
 import { ProfileIdentitySection } from "../components/ProfileIdentitySection";
-import { ProfileStatisticsSection } from "../components/ProfileStatisticsSection";
 import { ProfileSocialSection } from "../components/ProfileSocialSection";
 import { isHexColor } from "../utils/profileColors";
 import { draftFromProfile, type ProfileDraft } from "../utils/profileDraft";
 
 export default function ProfileSettingsPage() {
-  const navigate = useNavigate();
   const { authLoading, canManage, profileSlug, refreshSession } = useManageAccess();
   const { profile, refreshProfile } = useGalleryProfile();
   const [draft, setDraft] = useState<ProfileDraft>(() => draftFromProfile(profile));
   const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [statsLoading, setStatsLoading] = useState(false);
-  const [statsState, setStatsState] = useState<{
-    slug: string;
-    stats: ManagedProfileStatsResponse | null;
-    error: string | null;
-  } | null>(null);
 
   useEffect(() => {
     if (!canManage) {
@@ -40,45 +27,6 @@ export default function ProfileSettingsPage() {
     setDraft(draftFromProfile(profile));
     setError(null);
   }, [canManage, profile]);
-
-  useEffect(() => {
-    if (authLoading || !canManage || !profileSlug) {
-      return;
-    }
-
-    let cancelled = false;
-    setStatsLoading(true);
-    setStatsState((currentState) => (
-      currentState?.slug === profileSlug
-        ? { ...currentState, error: null }
-        : { slug: profileSlug, stats: null, error: null }
-    ));
-
-    fetchManagedProfileStats(profileSlug)
-      .then((stats) => {
-        if (!cancelled) {
-          setStatsState({ slug: profileSlug, stats, error: null });
-        }
-      })
-      .catch((caughtError) => {
-        if (!cancelled) {
-          setStatsState({
-            slug: profileSlug,
-            stats: null,
-            error: readErrorMessage(caughtError, "Failed to load your portfolio statistics."),
-          });
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setStatsLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [authLoading, canManage, profileSlug]);
 
   function updateField(field: keyof ProfileDraft, value: string) {
     setDraft((currentDraft) => ({ ...currentDraft, [field]: value }));
@@ -126,26 +74,6 @@ export default function ProfileSettingsPage() {
     }
   }
 
-  async function onDeleteAccount() {
-    const confirmation = window.prompt("Type DELETE to permanently remove your account, photos, albums, and profile.");
-    if (confirmation !== "DELETE") {
-      return;
-    }
-
-    setDeleting(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      await deleteCurrentUserRequest();
-      await refreshSession();
-      navigate("/", { replace: true });
-    } catch (caughtError) {
-      setError(readErrorMessage(caughtError, "Failed to delete your account."));
-      setDeleting(false);
-    }
-  }
-
   if (authLoading) {
     return <p className="manage-empty">Loading profile settings...</p>;
   }
@@ -153,11 +81,6 @@ export default function ProfileSettingsPage() {
   if (!canManage) {
     return <p className="manage-status manage-status--error">This page is only available for your own main profile.</p>;
   }
-
-  const currentStatsState = statsState?.slug === profileSlug ? statsState : null;
-  const isStatsLoading = statsLoading && currentStatsState?.stats === null;
-  const stats = currentStatsState?.stats ?? null;
-  const statsError = currentStatsState?.error ?? null;
 
   return (
     <div className="manage-panel">
@@ -169,23 +92,16 @@ export default function ProfileSettingsPage() {
 
       <div className="manage-profile-grid">
         <div className="manage-profile-grid__main">
-          <ProfileIdentitySection draft={draft} disabled={saving || deleting} onChange={updateField} />
-          <ProfileColorsSection draft={draft} disabled={saving || deleting} onChange={updateField} />
-          <ProfileSocialSection draft={draft} disabled={saving || deleting} onChange={updateField} />
-          <ProfileStatisticsSection
-            stats={stats}
-            loading={isStatsLoading}
-            refreshing={statsLoading && currentStatsState?.stats !== null}
-            error={statsError}
-          />
-          <DeleteAccountSection disabled={saving || deleting} deleting={deleting} onDelete={onDeleteAccount} />
+          <ProfileIdentitySection draft={draft} disabled={saving} onChange={updateField} />
+          <ProfileColorsSection draft={draft} disabled={saving} onChange={updateField} />
+          <ProfileSocialSection draft={draft} disabled={saving} onChange={updateField} />
 
           {error && <p className="manage-status manage-status--error">{error}</p>}
           {success && <p className="manage-status manage-status--success">{success}</p>}
 
           <div className="manage-actions">
             <div className="manage-actions__group">
-              <button type="button" className="manage-button manage-button--primary" onClick={onSave} disabled={saving || deleting}>
+              <button type="button" className="manage-button manage-button--primary" onClick={onSave} disabled={saving}>
                 {saving ? "Saving..." : "Save profile"}
               </button>
             </div>

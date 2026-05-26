@@ -32,9 +32,18 @@ export const MANAGE_NAVIGATION_SECTIONS: ManageNavSection[] = [
       { label: "About me", path: "/profile", hash: "#about-me", nested: true },
       { label: "Social media", path: "/profile", hash: "#social-media", nested: true },
       { label: "Colors", path: "/profile", hash: "#colors", nested: true },
-      { label: "Statistics", path: "/profile", hash: "#statistics", nested: true },
-      { label: "Privacy", path: "/profile", hash: "#privacy", nested: true },
       { label: "Carousel / Slides", path: "/profile/carousel" },
+    ],
+  },
+  {
+    heading: "Account",
+    items: [
+      { label: "Statistics", path: "/account/statistics"},
+      { label: "Account overview", path: "/account" },
+      { label: "Profile link", path: "/account", hash: "#profile-link", nested: true },
+      { label: "Password", path: "/account", hash: "#password", nested: true },
+      { label: "Delete account", path: "/account", hash: "#account-removal", nested: true },
+
     ],
   },
 ];

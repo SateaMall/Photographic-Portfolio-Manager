@@ -2,6 +2,7 @@ package com.letmelens.backend.controller;
 
 import com.letmelens.backend.dto.ManagedProfileStatsResponse;
 import com.letmelens.backend.dto.ProfileRequest;
+import com.letmelens.backend.dto.UpdateProfileSlugRequest;
 import com.letmelens.backend.service.AuthService;
 import com.letmelens.backend.service.ProfileUserService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,14 @@ public class ManagementProfileController {
                                            Authentication authentication) {
         profileService.updateProfile(profileSlug, request, authentication);
         return ResponseEntity.ok(Map.of("message", "Profile updated successfully"));
+    }
+
+    @PutMapping("/profile/{profileSlug}/slug")
+    public ResponseEntity<?> updateProfileSlug(@PathVariable String profileSlug,
+                                               @RequestBody UpdateProfileSlugRequest request,
+                                               Authentication authentication) {
+        String slug = profileService.updateProfileSlug(profileSlug, request.slug(), authentication);
+        return ResponseEntity.ok(Map.of("message", "Profile link updated successfully", "slug", slug));
     }
 
     @GetMapping("/profile/{profileSlug}/stats")

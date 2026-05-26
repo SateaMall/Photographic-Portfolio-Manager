@@ -1,11 +1,15 @@
 package com.letmelens.backend.controller;
 
 import com.letmelens.backend.dto.AuthMeResponse;
+import com.letmelens.backend.dto.ChangePasswordRequest;
+import com.letmelens.backend.dto.ForgotPasswordRequest;
 import com.letmelens.backend.dto.LoginRequest;
+import com.letmelens.backend.dto.ResetPasswordRequest;
 import com.letmelens.backend.dto.SignupRequest;
 import com.letmelens.backend.dto.VerifyEmailRequest;
 import com.letmelens.backend.service.AuthService;
 import com.letmelens.backend.service.EmailVerificationService;
+import com.letmelens.backend.service.PasswordResetService;
 import com.letmelens.backend.service.TestService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +31,7 @@ public class AuthController {
     private final TestService testService;
     private final AuthService authService;
     private final EmailVerificationService  emailVerificationService;
+    private final PasswordResetService passwordResetService;
 
     @PostMapping("/signupTest")
     public String signup() throws ServletException {
@@ -70,12 +75,31 @@ public class AuthController {
         emailVerificationService.resendVerificationCode(email);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        passwordResetService.requestPasswordReset(request);
+        return ResponseEntity.ok(Map.of("message", "If an account exists for that email, a reset link has been sent."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request);
+        return ResponseEntity.ok(Map.of("message", "Password updated successfully"));
+    }
     @DeleteMapping("/me")
     public ResponseEntity<?> deleteCurrentUser(Authentication authentication, HttpServletRequest request) throws ServletException {
         authService.deleteCurrentUser(authentication);
         request.logout();
         request.getSession().invalidate();
         return ResponseEntity.ok(Map.of("message", "User deleted successfully"));
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<?> changeCurrentPassword(@RequestBody ChangePasswordRequest request,
+                                                   Authentication authentication) {
+        authService.changeCurrentPassword(request, authentication);
+        return ResponseEntity.ok(Map.of("message", "Password updated successfully"));
     }
 
 

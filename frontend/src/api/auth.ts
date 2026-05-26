@@ -23,6 +23,20 @@ export type VerifyEmailInput = {
   code: string;
 };
 
+export type ChangePasswordInput = {
+  currentPassword: string;
+  newPassword: string;
+};
+
+export type ForgotPasswordInput = {
+  email: string;
+};
+
+export type ResetPasswordInput = {
+  token: string;
+  newPassword: string;
+};
+
 
 export function getMe() {
   return httpJson<AuthMeResponse>("/api/auth/me", {
@@ -48,6 +62,24 @@ export function logout() {
 export function deleteCurrentUser() {
   return httpJson<{ message: string }>("/api/auth/me", {
     method: "DELETE",
+  });
+}
+export function changeCurrentPassword(input: ChangePasswordInput) {
+  return httpJson<{ message: string }>("/api/auth/me/password", {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+export function forgotPassword(input: ForgotPasswordInput) {
+  return httpJson<{ message: string }>("/api/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+export function resetPassword(input: ResetPasswordInput) {
+  return httpJson<{ message: string }>("/api/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify(input),
   });
 }
 export function signup(input: SignupInput) {
