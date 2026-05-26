@@ -153,12 +153,12 @@ export function PhotoUploadQueue({ drafts, onDraftsChange, disabled = false }: P
             {drafts.map((draft) => (
               <article className="manage-draft-card" key={draft.id}>
                 <div className="manage-draft-card__media">
-                  <img src={draft.previewUrl} alt={draft.title} className="manage-draft-card__image" />
+                  <img src={draft.previewUrl} alt={draft.title.trim() || draft.file.name} className="manage-draft-card__image" />
                   <button
                     type="button"
                     className="manage-draft-card__remove"
                     onClick={() => removeDraft(draft.id)}
-                    aria-label={`Remove ${draft.title}`}
+                    aria-label={`Remove ${draft.title.trim() || draft.file.name}`}
                     disabled={isBusy}
                   >
                     ×

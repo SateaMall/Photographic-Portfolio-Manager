@@ -153,11 +153,6 @@ export default function PhotoPage({ lightboxPortalContainer, lightboxKey }: Phot
     const normalizedTitle = editDraft.title.trim();
     const normalizedCaptureYear = editDraft.captureYear.trim();
 
-    if (!normalizedTitle) {
-      setActionError("Title is required.");
-      return;
-    }
-
     if (normalizedCaptureYear && !/^\d{4}$/.test(normalizedCaptureYear)) {
       setActionError("Capture year must be a 4-digit year.");
       return;
