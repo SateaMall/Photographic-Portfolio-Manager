@@ -155,10 +155,10 @@ public class PhotoService {
         String thumbKey = null;
 
         try {
-            validateUploadInputs(file, title, captureYear);
+            validateUploadInputs(file, captureYear);
 
             String originalFilename = safeName(file.getOriginalFilename());
-            String normalizedTitle = normalizeUploadedTitle(title, originalFilename);
+            String normalizedTitle = normalizeOptionalText(title);
             String detectedContentType = file.getContentType();
             String normalizedContentType = normalizeContentType(detectedContentType, originalFilename);
 
@@ -250,7 +250,7 @@ public class PhotoService {
             throw e;
         }
     }
-    private void validateUploadInputs(MultipartFile file, String title, Integer captureYear) {
+    private void validateUploadInputs(MultipartFile file, Integer captureYear) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File is empty");
         }
@@ -260,19 +260,12 @@ public class PhotoService {
         }
     }
 
-    private String normalizeUploadedTitle(String title, String originalFilename) {
-        if (title != null && !title.isBlank()) {
-            return title.trim();
-        }
-
-        if (originalFilename == null || originalFilename.isBlank()) {
+    private String normalizeOptionalText(String value) {
+        if (value == null || value.isBlank()) {
             return null;
         }
 
-        int extensionIndex = originalFilename.lastIndexOf('.');
-        String baseName = extensionIndex > 0 ? originalFilename.substring(0, extensionIndex) : originalFilename;
-        String normalized = baseName.replace('_', ' ').replace('-', ' ').trim();
-        return normalized.isEmpty() ? null : normalized;
+        return value.trim();
     }
     private void validateSupportedImageType(String contentType, String filename) {
         boolean allowedMimeType = contentType != null && ALLOWED_CONTENT_TYPES.contains(contentType);
@@ -376,10 +369,7 @@ public class PhotoService {
         }
 
         if (title != null) {
-            if (title.isBlank()) {
-                throw new IllegalArgumentException("Title cannot be blank");
-            }
-            photo.setTitle(title.trim());
+            photo.setTitle(normalizeOptionalText(title));
         }
 
         if (description != null) {
