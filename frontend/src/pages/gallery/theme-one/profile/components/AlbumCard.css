@@ -5,6 +5,7 @@
   background: rgba(255, 255, 255, 0.04);
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .album-cover {

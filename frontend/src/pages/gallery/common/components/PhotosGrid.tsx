@@ -44,7 +44,7 @@ function resolvePhotoDimensions(photo: PhotoResponse) {
 function getRowsLayoutConfig(containerWidth?: number): RowsLayoutConfig {
   if (!containerWidth || containerWidth >= 900) {
     return {
-      spacing: 18,
+      spacing: 10,
       targetRowHeight: 280,
       rowConstraints: {
         maxPhotos: 4,
@@ -55,7 +55,7 @@ function getRowsLayoutConfig(containerWidth?: number): RowsLayoutConfig {
 
   if (containerWidth < 540) {
     return {
-      spacing: 10,
+      spacing: 8,
       targetRowHeight: 190,
       rowConstraints: {
         maxPhotos: 2,
