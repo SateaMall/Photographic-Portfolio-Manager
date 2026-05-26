@@ -21,6 +21,6 @@ This folder defines six repo-specific agents that can be used as task handoff te
 ## Common Rules
 
 - Read `AGENTS.md` first.
-- Do not expose secrets from `backend/src/main/resources/application.yml` or local environment files.
+- Do not expose secrets from `backend/.env.server`, `backend/.env.local`, or active service environment files.
 - Prefer focused changes over cleanup-only edits.
 - Preserve the existing architecture unless the task explicitly requests refactoring.

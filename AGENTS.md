@@ -8,7 +8,9 @@
 ## Repository Layout
 - `frontend/` - Vite + React + TypeScript app.
 - `backend/` - Spring Boot 4 / Java 17 REST API.
-- `backend/src/main/resources/application.yml` and `backend/src/main/resources/application-dev.yml` - sensitive local config.
+- `backend/src/main/resources/application.yml` - shared non-secret backend defaults.
+- `backend/src/main/resources/application-dev.yml` - dev-profile overrides for H2 and local testing.
+- `backend/.env.server` and `backend/.env.local` - ignored environment-specific config.
 - `storage/` - local photo storage root.
 - Top-level `package.json` is not the main app entry point; use `frontend/package.json` for frontend work.
 
@@ -119,7 +121,7 @@
 - When adding derived fields or storage keys, update persistence and DTO mapping together.
 
 ## Security and Sensitive Data
-- Treat `application.yml` and mail/auth settings as sensitive configuration.
+- Treat `backend/.env.server`, `backend/.env.local`, and mail/auth settings as sensitive configuration.
 - Do not duplicate secrets into code comments, docs, tests, or commits.
 - Prefer environment-specific overrides or ignored local config for new secrets.
 - `.env` is intended to remain ignored.

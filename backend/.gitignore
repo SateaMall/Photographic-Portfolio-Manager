@@ -33,5 +33,4 @@ build/
 .vscode/
 
 
-### Sercet ###
-application.yml
+### Secret ###

@@ -1,5 +1,5 @@
 How to deploy those modifications on the server
-Because you already made some hotfixes directly on the VPS, do this safely.
+Works even with already made hotfixes directly on the VPS.
 
 1. Pull your new commit
 cd /home/ubuntu/Photographic-Portfolio-Manager
