@@ -32,6 +32,10 @@ public class SlugService {
         return candidate;
     }
 
+    public String normalizeSlug(String input) {
+        return slugify(input);
+    }
+
     private String slugify(String input) {
         if (input == null) return "";
 

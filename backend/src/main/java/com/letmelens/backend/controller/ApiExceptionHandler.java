@@ -1,6 +1,7 @@
 package com.letmelens.backend.controller;
 
 import com.letmelens.backend.exception.TooManyVerificationCodeRequestsException;
+import com.letmelens.backend.exception.TooManyPasswordResetRequestsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -46,6 +47,13 @@ public class ApiExceptionHandler {
                 .body(Map.of("message", exception.getMessage()));
     }
 
+    @ExceptionHandler(TooManyPasswordResetRequestsException.class)
+    public ResponseEntity<Map<String, String>> handleTooManyPasswordResetRequests(TooManyPasswordResetRequestsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(Map.of("message", exception.getMessage()));
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, String>> handleAuthentication(AuthenticationException exception) {
         return ResponseEntity
@@ -78,6 +86,6 @@ public class ApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleMailException(MailException exception) {
         return ResponseEntity
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(Map.of("message", "Unable to send verification email right now. Please try again later."));
+                .body(Map.of("message", "Unable to send email right now. Please try again later."));
     }
 }

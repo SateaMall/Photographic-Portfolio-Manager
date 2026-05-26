@@ -1,6 +1,7 @@
 package com.letmelens.backend.service;
 
 import com.letmelens.backend.dto.AuthMeResponse;
+import com.letmelens.backend.dto.ChangePasswordRequest;
 import com.letmelens.backend.dto.LoginRequest;
 import com.letmelens.backend.dto.SignupRequest;
 import com.letmelens.backend.model.profile.Profile;
@@ -14,6 +15,7 @@ import com.letmelens.backend.repo.AlbumRepository;
 import com.letmelens.backend.repo.EmailVerificationCodeRepository;
 import com.letmelens.backend.repo.PhotoFeatureRepository;
 import com.letmelens.backend.repo.PhotoRepository;
+import com.letmelens.backend.repo.PasswordResetTokenRepository;
 import com.letmelens.backend.repo.ProfileRepository;
 import com.letmelens.backend.repo.ProfileUserRepository;
 import com.letmelens.backend.security.CurrentUserService;
@@ -52,6 +54,7 @@ public class AuthService {
     private final AlbumRepository albumRepository;
     private final PhotoFeatureRepository photoFeatureRepository;
     private final EmailVerificationCodeRepository emailVerificationCodeRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final CurrentUserService currentUserService;
     private final StorageService storageService;
     private final PasswordEncoder passwordEncoder;
@@ -203,7 +206,36 @@ public class AuthService {
         }
 
         emailVerificationCodeRepository.deleteByUser_Id(userId);
+        passwordResetTokenRepository.deleteByUser_Id(userId);
         appUserRepository.delete(currentUser);
+    }
+
+    @Transactional
+    public void changeCurrentPassword(ChangePasswordRequest request, Authentication authentication) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+
+        String newPassword = clean(request.newPassword());
+        if (!hasText(newPassword)) {
+            throw new IllegalArgumentException("New password is required.");
+        }
+
+        if (newPassword.length() < 8 || newPassword.length() > 100) {
+            throw new IllegalArgumentException("New password must be between 8 and 100 characters.");
+        }
+
+        String currentPassword = clean(request.currentPassword());
+        if (hasText(currentUser.getPasswordHash())) {
+            if (!hasText(currentPassword)) {
+                throw new IllegalArgumentException("Current password is required.");
+            }
+
+            if (!passwordEncoder.matches(currentPassword, currentUser.getPasswordHash())) {
+                throw new IllegalArgumentException("Current password is incorrect.");
+            }
+        }
+
+        currentUser.setPasswordHash(passwordEncoder.encode(newPassword));
+        appUserRepository.save(currentUser);
     }
 
     private AppUser linkOrCreateGoogleUser(GoogleUser googleUser) {

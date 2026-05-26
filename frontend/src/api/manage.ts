@@ -228,6 +228,13 @@ export function updateManagedProfile(profileSlug: string, input: ManagedProfileR
   });
 }
 
+export function updateManagedProfileSlug(profileSlug: string, slug: string) {
+  return httpJson<{ message: string; slug: string }>(`/api/manage/profile/profile/${encodeURIComponent(profileSlug)}/slug`, {
+    method: "PUT",
+    body: JSON.stringify({ slug }),
+  });
+}
+
 export function fetchManagedProfileStats(profileSlug: string) {
   return httpJson<ManagedProfileStatsResponse>(`/api/manage/profile/profile/${encodeURIComponent(profileSlug)}/stats`);
 }

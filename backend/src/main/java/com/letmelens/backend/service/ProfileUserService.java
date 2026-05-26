@@ -41,6 +41,7 @@ public class ProfileUserService {
     private final ProfileViewDailyStatRepository profileViewDailyStatRepository;
     private final AccessService accessService;
     private final CurrentUserService currentUserService;
+    private final SlugService slugService;
 
     @Transactional(readOnly = true)
     public Optional<PublicProfileResponse> getPublicProfile(String slug) {
@@ -138,6 +139,41 @@ public class ProfileUserService {
         applyChanges(profile, request);
 
         profileRepository.save(profile);
+    }
+
+    @Transactional
+    public String updateProfileSlug(String profileSlug, String requestedSlug, Authentication authentication) {
+        AppUser currentUser = currentUserService.requireCurrentUser(authentication);
+
+        Profile profile = profileRepository.findBySlugAndMemberships_User_Id(profileSlug.trim().toLowerCase(), currentUser.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Profile not found or access denied"));
+
+        String normalizedSlug = slugService.normalizeSlug(requestedSlug);
+        if (normalizedSlug.isBlank()) {
+            throw new IllegalArgumentException("Profile slug is required.");
+        }
+
+        if (normalizedSlug.length() < 3) {
+            throw new IllegalArgumentException("Profile slug must be at least 3 characters.");
+        }
+
+        if (normalizedSlug.length() > 80) {
+            throw new IllegalArgumentException("Profile slug must be 80 characters or fewer.");
+        }
+
+        if (normalizedSlug.equals(profile.getSlug())) {
+            return profile.getSlug();
+        }
+
+        profileRepository.findBySlug(normalizedSlug)
+                .filter(existingProfile -> !existingProfile.getId().equals(profile.getId()))
+                .ifPresent(existingProfile -> {
+                    throw new IllegalArgumentException("That profile link is already taken.");
+                });
+
+        profile.setSlug(normalizedSlug);
+        profileRepository.save(profile);
+        return profile.getSlug();
     }
 
     private void applyChanges(Profile profile, ProfileRequest request) {
