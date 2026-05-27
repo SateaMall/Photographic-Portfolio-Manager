@@ -73,7 +73,7 @@ function buildPhotoDescription(photo: MainPhotoResponse | null, photographerName
     return `Discover a photograph by ${photographerName} captured in ${location}.`;
   }
 
-  return `Discover a photograph by ${photographerName} on Let Me Lens.`;
+  return `Discover a photograph by ${photographerName}.`;
 }
 
 export default function PhotoPage({ lightboxPortalContainer, lightboxKey }: PhotoPageProps) {
@@ -98,7 +98,7 @@ export default function PhotoPage({ lightboxPortalContainer, lightboxKey }: Phot
   const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() === slug?.trim().toLowerCase();
   const isSubmitting = isSaving || isDeleting;
   const photographerName = mainProfile.displayName?.trim() || mainProfile.slug;
-  const photoTitle = mainPhoto?.title?.trim() ? `${mainPhoto.title.trim()} | ${photographerName} | Let Me Lens` : `Photo by ${photographerName} | Let Me Lens`;
+  const photoTitle = mainPhoto?.title?.trim() ? `${mainPhoto.title.trim()} | ${photographerName}` : `Photo by ${photographerName}`;
   const photoDescription = buildPhotoDescription(mainPhoto, photographerName);
   const photoPreviewImage = slug && photoId ? photoFileUrl(photoId, slug) : undefined;
 

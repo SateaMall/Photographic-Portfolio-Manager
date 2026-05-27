@@ -37,11 +37,11 @@ export default function AlbumPage() {
   }, [albumId])
 
   const albumTitle = album?.title?.trim() || `Collection by ${profile.displayName}`;
-  const albumDescription = album?.description?.trim() || `Explore the ${albumTitle} collection by ${profile.displayName} on Let Me Lens.`;
+  const albumDescription = album?.description?.trim() || `Explore the ${albumTitle} collection by ${profile.displayName}`;
   const albumPreviewImage = album?.firstPhotoId ? photoFileUrl(album.firstPhotoId, profile.slug) : undefined;
 
   usePageMetadata({
-    title: `${albumTitle} | ${profile.displayName} | Let Me Lens`,
+    title: `${albumTitle} | ${profile.displayName}`,
     description: albumDescription,
     canonicalPath: albumId ? `/${profile.slug}/album/${albumId}` : `/${profile.slug}`,
     imageUrl: albumPreviewImage,

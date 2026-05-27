@@ -94,11 +94,11 @@ const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() =
   const heroPhotos = heroPhotoState?.slug === profileSlug ? heroPhotoState.photos : [];
   const topperPhotos = heroPhotos.length > 0 ? heroPhotos : photos.slice(0,5);
   const profileName = profile.displayName.trim() || profile.slug || DEFAULT_SITE_TITLE;
-  const profileDescription = profile.bio?.trim() || `Explore the photography portfolio of ${profileName} on Let Me Lens.`;
+  const profileDescription = profile.bio?.trim() || `Explore the portfolio of ${profileName}.`;
   const previewImage = topperPhotos[0] ? photoFileUrl(topperPhotos[0].id, profile.slug) : undefined;
 
   usePageMetadata({
-    title: `${profileName} | Let Me Lens`,
+    title: `${profileName}`,
     description: profileDescription,
     canonicalPath: `/${profile.slug}`,
     imageUrl: previewImage,
