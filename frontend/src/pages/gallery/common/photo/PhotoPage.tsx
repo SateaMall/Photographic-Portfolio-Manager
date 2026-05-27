@@ -3,8 +3,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { deleteManagedPhoto, updateManagedPhoto } from "../../../../api/manage";
 import { fetchAlbumItemsAsPhotos, fetchMainPhoto } from "../../../../api/photo-album";
+import { photoFileUrl } from "../../../../api/photos";
 import { useAuth } from "../../../../auth/AuthContext";
 import { useGalleryProfile } from "../../../../layouts/GalleryProfileContext";
+import { usePageMetadata } from "../../../../seo/usePageMetadata";
 import type { MainPhotoResponse, PhotoResponse } from "../../../../types/types";
 import { emitPhotoDeleted, emitPhotoUpdated } from "./components/photoEvents";
 import { PhotoNavbar } from "./components/PhotoNavbar";
@@ -57,6 +59,23 @@ function readErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
+function buildPhotoDescription(photo: MainPhotoResponse | null, photographerName: string) {
+  const normalizedDescription = photo?.description?.trim();
+  if (normalizedDescription) {
+    return normalizedDescription;
+  }
+
+  const location = [photo?.city?.trim(), photo?.country?.trim(), photo?.captureYear != null ? String(photo.captureYear) : null]
+    .filter(Boolean)
+    .join(", ");
+
+  if (location) {
+    return `Discover a photograph by ${photographerName} captured in ${location}.`;
+  }
+
+  return `Discover a photograph by ${photographerName} on Let Me Lens.`;
+}
+
 export default function PhotoPage({ lightboxPortalContainer, lightboxKey }: PhotoPageProps) {
   const { profile: mainProfile } = useGalleryProfile();
   const [mainPhoto, setMainPhoto] = useState<MainPhotoResponse | null>(null);
@@ -79,6 +98,19 @@ export default function PhotoPage({ lightboxPortalContainer, lightboxKey }: Phot
   const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() === slug?.trim().toLowerCase();
   const isSubmitting = isSaving || isDeleting;
   const photographerName = mainProfile.displayName?.trim() || mainProfile.slug;
+  const photoTitle = mainPhoto?.title?.trim() ? `${mainPhoto.title.trim()} | ${photographerName} | Let Me Lens` : `Photo by ${photographerName} | Let Me Lens`;
+  const photoDescription = buildPhotoDescription(mainPhoto, photographerName);
+  const photoPreviewImage = slug && photoId ? photoFileUrl(photoId, slug) : undefined;
+
+  usePageMetadata({
+    title: photoTitle,
+    description: photoDescription,
+    canonicalPath: slug && photoId ? `/${slug}/photo/${photoId}` : "/",
+    imageUrl: photoPreviewImage,
+    imageAlt: mainPhoto?.title?.trim() || `Photo by ${photographerName}`,
+    robots: "index,follow",
+    type: "website",
+  });
 
   useEffect(() => {
     if (!photoId || !slug) return;
@@ -109,11 +141,6 @@ export default function PhotoPage({ lightboxPortalContainer, lightboxKey }: Phot
       }
     })();
   }, [slug, photoId, inAlbum, albumId]);
-
-  useEffect(() => {
-    if (!mainPhoto) return;
-    document.title = mainPhoto.title?.trim() || "Let Me Lens";
-  }, [mainPhoto]);
 
   if (!photoId || !slug) return null;
 

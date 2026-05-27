@@ -5,6 +5,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { ScrollIndicator } from "../../components/indicator/ScrollIndicator";
 import { ScrollToHash } from "../../layouts/components/ScrollToHash";
 import { ScrollToTop } from "../../layouts/components/ScrollToTop";
+import { buildSiteMetadata, usePageMetadata } from "../../seo/usePageMetadata";
 import { MarketingNavbar } from "./components/navigation/MarketingNavbar";
 import "./HomePage.css";
 
@@ -19,6 +20,8 @@ export default function HomePage() {
     : "/signup";
 
   const actionLabel = isAuthenticated ? "Open gallery" : "Start the journey";
+
+  usePageMetadata(buildSiteMetadata());
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-home-reveal]"));

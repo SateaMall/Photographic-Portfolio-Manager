@@ -81,6 +81,25 @@ public class SecurityConfig {
                         .requestMatchers("/oauth2/**", "/login/oauth2/**", "/error").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/manage/**").authenticated()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/",
+                                "/privacy",
+                                "/login",
+                                "/signup",
+                                "/forgot-password",
+                                "/reset-password",
+                                "/verify-email",
+                                "/preview/default-image",
+                                "/robots.txt",
+                                "/sitemap.xml",
+                                "/*",
+                                "/*/album/*",
+                                "/*/photo/*",
+                                "/*/album/*/photo/*",
+                                "/*/manage",
+                                "/*/manage/**"
+                        ).permitAll()
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());

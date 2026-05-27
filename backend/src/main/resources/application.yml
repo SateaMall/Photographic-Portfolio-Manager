@@ -56,6 +56,7 @@ server:
 app:
   frontend:
     base-url: ${APP_FRONTEND_BASE_URL:http://localhost:5173}
+    preview-source-url: ${APP_FRONTEND_PREVIEW_SOURCE_URL:${APP_FRONTEND_BASE_URL:http://localhost:5173}}
   storage:
     type: local
     local:
