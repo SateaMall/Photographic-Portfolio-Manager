@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { fetchAlbums, fetchProfileHeroPhotos } from "../../../../api/profile";
 import type { AlbumViewResponse, PhotoResponse } from "../../../../types/types";
-import {AlbumsRow} from "./components/AlbumsRow"
+import {AlbumsRow} from "../components/AlbumsRow"
 import "./ProfilePage.css";
 import { useParams } from "react-router-dom";
-import { SocialBioSection } from "./components/SocialBioSection";
+import { SocialBioSection } from "../components/SocialBioSection";
 import { PhotosGrid } from "../../common/components/PhotosGrid";
 import { CarrouselTopper } from "../../../../components/carousel/CarrouselTopper";
 import { Navbar } from "../navigation/Navbar";

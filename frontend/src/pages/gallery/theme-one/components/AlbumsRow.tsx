@@ -1,7 +1,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
 import { AlbumCard } from "./AlbumCard";
-import type { AlbumViewResponse } from "../../../../../types/types";
+import type { AlbumViewResponse } from "../../../../types/types";
 
 
 import "./AlbumsRow.css"

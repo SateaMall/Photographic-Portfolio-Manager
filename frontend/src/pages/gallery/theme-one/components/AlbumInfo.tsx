@@ -1,5 +1,5 @@
 import "./AlbumInfo.css";
-import type { AlbumViewResponse } from "../../../../../types/types";
+import type { AlbumViewResponse } from "../../../../types/types";
 type AlbumInfoProps = {
   album: AlbumViewResponse | null;
   displayName?: string | null;

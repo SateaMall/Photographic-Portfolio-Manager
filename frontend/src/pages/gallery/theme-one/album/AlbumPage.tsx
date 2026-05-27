@@ -9,7 +9,7 @@ import "./AlbumPage.css"
 import { fetchAlbumInfo } from "../../../../api/photo-album";
 import type { AlbumViewResponse, PhotoResponse } from "../../../../types/types";
 import { useEffect, useState } from "react";
-import { AlbumInfo } from "./components/AlbumInfo";
+import { AlbumInfo } from "../components/AlbumInfo";
 import { GalleryFooter } from "../components/GalleryFooter";
 
 export default function AlbumPage() {

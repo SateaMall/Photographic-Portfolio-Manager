@@ -63,9 +63,11 @@
   font-weight: 600;
 }
 
-.hp-more-btn:hover {
-  color: rgb(254, 254, 254); ;
-  background: var(--primaryColor, rgba(0, 0, 0, 0.967));
+@media (hover: hover) and (pointer: fine) {
+  .hp-more-btn:hover {
+    color: rgb(254, 254, 254);
+    background: var(--primaryColor, rgba(0, 0, 0, 0.967));
+  }
 }
 
 
