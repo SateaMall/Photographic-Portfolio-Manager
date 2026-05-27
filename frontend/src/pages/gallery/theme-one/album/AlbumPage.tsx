@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
+import { photoFileUrl } from "../../../../api/photos";
 import { CarrouselTopper } from "../../../../components/carousel/CarrouselTopper";
 import { ScrollIndicator } from "../../../../components/indicator/ScrollIndicator";
 import { useGalleryProfile } from "../../../../layouts/GalleryProfileContext";
+import { usePageMetadata } from "../../../../seo/usePageMetadata";
 import { Navbar } from "../navigation/Navbar";
 import { PhotosGrid } from "../../common/components/PhotosGrid";
 
@@ -34,10 +36,19 @@ export default function AlbumPage() {
   };
   }, [albumId])
 
-  useEffect(() => {
-    if (!album) return;
-    document.title = album.title?.trim() || "Let Me Lens";
-  }, [album]);
+  const albumTitle = album?.title?.trim() || `Collection by ${profile.displayName}`;
+  const albumDescription = album?.description?.trim() || `Explore the ${albumTitle} collection by ${profile.displayName}`;
+  const albumPreviewImage = album?.firstPhotoId ? photoFileUrl(album.firstPhotoId, profile.slug) : undefined;
+
+  usePageMetadata({
+    title: `${albumTitle} | ${profile.displayName}`,
+    description: albumDescription,
+    canonicalPath: albumId ? `/${profile.slug}/album/${albumId}` : `/${profile.slug}`,
+    imageUrl: albumPreviewImage,
+    imageAlt: `Preview image from the ${albumTitle} collection`,
+    robots: "index,follow",
+    type: "website",
+  });
 
   return (
     <div className="AlbumPage">

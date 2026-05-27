@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { fetchAlbums, fetchProfileHeroPhotos } from "../../../../api/profile";
+import { photoFileUrl } from "../../../../api/photos";
 import type { AlbumViewResponse, PhotoResponse } from "../../../../types/types";
 import {AlbumsRow} from "../components/AlbumsRow"
 import "./ProfilePage.css";
 import { useParams } from "react-router-dom";
 import { SocialBioSection } from "../components/SocialBioSection";
+import { DEFAULT_SITE_TITLE, usePageMetadata } from "../../../../seo/usePageMetadata";
 import { PhotosGrid } from "../../common/components/PhotosGrid";
 import { CarrouselTopper } from "../../../../components/carousel/CarrouselTopper";
 import { Navbar } from "../navigation/Navbar";
@@ -26,10 +28,6 @@ const profileSlug = slug?.trim().toLowerCase() ?? "";
 const { session, isAuthenticated } = useAuth();
 const { profile } = useGalleryProfile();
 const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() === profileSlug;
-
-  useEffect(() => {
-    document.title = profile.displayName.trim() || profile.slug || "Let Me Lens";
-  }, [profile.displayName, profile.slug]);
 
 
 /**** **** **** **** ALBUMS **** **** **** ****/
@@ -95,6 +93,19 @@ const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() =
   const error = currentAlbumState?.error ?? null;
   const heroPhotos = heroPhotoState?.slug === profileSlug ? heroPhotoState.photos : [];
   const topperPhotos = heroPhotos.length > 0 ? heroPhotos : photos.slice(0,5);
+  const profileName = profile.displayName.trim() || profile.slug || DEFAULT_SITE_TITLE;
+  const profileDescription = profile.bio?.trim() || `Explore the portfolio of ${profileName}.`;
+  const previewImage = topperPhotos[0] ? photoFileUrl(topperPhotos[0].id, profile.slug) : undefined;
+
+  usePageMetadata({
+    title: `${profileName}`,
+    description: profileDescription,
+    canonicalPath: `/${profile.slug}`,
+    imageUrl: previewImage,
+    imageAlt: `Preview image from ${profileName}'s portfolio`,
+    robots: "index,follow",
+    type: "website",
+  });
 
 
    

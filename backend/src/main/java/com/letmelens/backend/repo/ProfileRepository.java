@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface ProfileRepository  extends JpaRepository<Profile, UUID> {
     Optional<Profile> findBySlug(String slug);
     Optional<Profile> findBySlugAndIsPublicTrue(String slug);
+    List<Profile> findAllByIsPublicTrueOrderByUpdatedAtDesc();
     boolean existsBySlug(String slug);
     Optional<Profile> findFirstByMemberships_User_IdOrderByCreatedAtAsc(UUID userId);
     List<Profile> findAllByMemberships_User_Id(UUID userId);

@@ -4,6 +4,7 @@
 - `src/main/resources/application-dev.yml` contains only dev-profile overrides like the in-memory H2 datasource.
 - `backend/.env.server` and `backend/.env.local` stay ignored and hold real local or server-only values.
 - Production can also provide the same values through the systemd environment file.
+- `APP_FRONTEND_PREVIEW_SOURCE_URL` can point at the frontend HTML source the backend should reuse when it injects preview metadata for public pages. It defaults to `APP_FRONTEND_BASE_URL`.
 
 ## Local dev
 
@@ -16,6 +17,8 @@ mvn spring-boot:run
 
 Local-only overrides can go in `backend/.env.local`.
 That file is loaded after `backend/.env.server`, so values like `APP_FRONTEND_BASE_URL=http://localhost:5173` can stay local.
+
+If public gallery routes are rendered through the backend for crawler-friendly previews, keep the frontend assets reachable from the URL configured in `APP_FRONTEND_PREVIEW_SOURCE_URL`.
 
 ## Upload test
 

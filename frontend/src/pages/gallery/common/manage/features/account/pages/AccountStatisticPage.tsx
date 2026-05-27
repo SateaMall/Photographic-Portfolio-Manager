@@ -12,10 +12,8 @@ export default function AccountStatisticPage() {
     slug: string;
     stats: ManagedProfileStatsResponse | null;
     error: string | null; } | null>(null);
-
-    const [statsLoading, setStatsLoading] = useState(false);
     const currentStatsState = statsState?.slug === profileSlug ? statsState : null;
-    const isStatsLoading = statsLoading && currentStatsState?.stats === null;
+    const isStatsLoading = !authLoading && canManage && Boolean(profileSlug) && currentStatsState?.stats == null;
     const stats = currentStatsState?.stats ?? null;
     const statsError = currentStatsState?.error ?? null;
 
@@ -25,12 +23,6 @@ export default function AccountStatisticPage() {
     }
 
     let cancelled = false;
-    setStatsLoading(true);
-    setStatsState((currentState) => (
-      currentState?.slug === profileSlug
-        ? { ...currentState, error: null }
-        : { slug: profileSlug, stats: null, error: null }
-    ));
 
     fetchManagedProfileStats(profileSlug)
       .then((stats) => {
@@ -46,11 +38,6 @@ export default function AccountStatisticPage() {
             error: readErrorMessage(caughtError, "Failed to load your portfolio statistics."),
           });
         }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setStatsLoading(false);
-        }
       });
 
     return () => {
@@ -62,7 +49,7 @@ export default function AccountStatisticPage() {
               <ProfileStatisticsSection
                 stats={stats}
                 loading={isStatsLoading}
-                refreshing={statsLoading && currentStatsState?.stats !== null}
+                refreshing={false}
                 error={statsError}
               />
     );
