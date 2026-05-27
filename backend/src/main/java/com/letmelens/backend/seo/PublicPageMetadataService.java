@@ -140,7 +140,7 @@ public class PublicPageMetadataService {
         String collectionLabel = albumTitle != null ? albumTitle : "Collection";
 
         return Optional.of(page(
-                collectionLabel + " | " + profileName + " | Let Me Lens",
+                collectionLabel + " | " + profileName,
                 buildAlbumDescription(collectionLabel, profileName, album.description()),
                 "/" + normalizePathSegment(profileSlug) + "/album/" + encodePathSegment(albumId.toString()),
                 INDEX_ROBOTS,
@@ -166,8 +166,8 @@ public class PublicPageMetadataService {
 
             return Optional.of(page(
                     photoTitle != null
-                            ? photoTitle + " | " + profileName + " | Let Me Lens"
-                            : "Photo by " + profileName + " | Let Me Lens",
+                            ? photoTitle + " | " + profileName
+                            : "Photo by " + profileName ,
                     buildPhotoDescription(photo, profileName),
                     "/" + normalizePathSegment(profileSlug) + "/photo/" + encodePathSegment(photoId.toString()),
                     INDEX_ROBOTS,
@@ -237,7 +237,7 @@ public class PublicPageMetadataService {
             return normalizedBio;
         }
 
-        return "Explore the photography portfolio of " + profileName + " on Let Me Lens.";
+        return "Explore the photography portfolio of " + profileName + ".";
     }
 
     private String buildAlbumDescription(String collectionLabel, String profileName, String description) {
@@ -246,7 +246,7 @@ public class PublicPageMetadataService {
             return normalizedDescription;
         }
 
-        return "Explore the " + collectionLabel + " collection by " + profileName + " on Let Me Lens.";
+        return "Explore the " + collectionLabel + " collection by " + profileName + ".";
     }
 
     private String buildPhotoDescription(MainPhotoResponse photo, String profileName) {
@@ -272,7 +272,7 @@ public class PublicPageMetadataService {
             return "Discover a photograph by " + profileName + " captured in " + String.join(", ", locationParts) + ".";
         }
 
-        return "Discover a photograph by " + profileName + " on Let Me Lens.";
+        return "Discover a photograph by " + profileName + ".";
     }
 
     private String buildPhotoImageUrl(String profileSlug, UUID photoId) {
