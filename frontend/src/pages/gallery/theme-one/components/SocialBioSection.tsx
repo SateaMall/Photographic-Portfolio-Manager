@@ -1,6 +1,6 @@
 import { BsLinkedin, BsInstagram, BsEnvelope } from "react-icons/bs";
 
-import { useGalleryProfile } from "../../../../../layouts/GalleryProfileContext";
+import { useGalleryProfile } from "../../../../layouts/GalleryProfileContext";
 import "./SocialBioSection.css";
 
 

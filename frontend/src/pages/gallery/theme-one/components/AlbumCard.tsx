@@ -1,5 +1,5 @@
-import type { AlbumViewResponse } from "../../../../../types/types";
-import { photoFileUrl } from "../../../../../api/photos";
+import type { AlbumViewResponse } from "../../../../types/types";
+import { photoFileUrl } from "../../../../api/photos";
 import { useNavigate, useParams } from "react-router-dom";
 
 

@@ -44,32 +44,32 @@ function resolvePhotoDimensions(photo: PhotoResponse) {
 function getRowsLayoutConfig(containerWidth?: number): RowsLayoutConfig {
   if (!containerWidth || containerWidth >= 900) {
     return {
-      spacing: 10,
-      targetRowHeight: 280,
+      spacing: 2,
+      targetRowHeight: 300,
       rowConstraints: {
         maxPhotos: 4,
-        singleRowMaxHeight: 360,
+        singleRowMaxHeight: 400,
       },
     };
   }
 
   if (containerWidth < 540) {
     return {
-      spacing: 8,
-      targetRowHeight: 190,
+      spacing: 3,
+      targetRowHeight: 300,
       rowConstraints: {
         maxPhotos: 2,
-        singleRowMaxHeight: 250,
+        singleRowMaxHeight: 400,
       },
     };
   }
 
   return {
-    spacing: 18,
-    targetRowHeight: 230,
+    spacing: 4,
+    targetRowHeight: 300,
     rowConstraints: {
       maxPhotos: 3,
-      singleRowMaxHeight: 300,
+      singleRowMaxHeight: 400,
     },
   };
 }
