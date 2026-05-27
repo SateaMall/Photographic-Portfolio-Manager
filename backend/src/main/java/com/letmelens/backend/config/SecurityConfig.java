@@ -77,12 +77,32 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                        .requestMatchers(HttpMethod.HEAD, "/api/public/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/public/profiles/*/open").permitAll()
                         .requestMatchers("/oauth2/**", "/login/oauth2/**", "/error").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/manage/**").authenticated()
                         .requestMatchers(
                                 HttpMethod.GET,
+                                "/",
+                                "/privacy",
+                                "/login",
+                                "/signup",
+                                "/forgot-password",
+                                "/reset-password",
+                                "/verify-email",
+                                "/preview/default-image",
+                                "/robots.txt",
+                                "/sitemap.xml",
+                                "/*",
+                                "/*/album/*",
+                                "/*/photo/*",
+                                "/*/album/*/photo/*",
+                                "/*/manage",
+                                "/*/manage/**"
+                        ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.HEAD,
                                 "/",
                                 "/privacy",
                                 "/login",
