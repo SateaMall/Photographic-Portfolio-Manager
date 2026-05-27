@@ -108,7 +108,7 @@ public class PublicPageMetadataService {
         String profileSlug = profile.slug();
 
         return Optional.of(page(
-                profileName + " | Let Me Lens",
+                profileName ,
                 buildProfileDescription(profileName, profile.bio()),
                 "/" + normalizePathSegment(profileSlug),
                 INDEX_ROBOTS,
