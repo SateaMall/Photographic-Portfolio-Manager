@@ -41,4 +41,4 @@ uploads/
 storage/
 
 # junkins secret
-junkins.txt
+Jenkins/jenkins.txt
