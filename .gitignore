@@ -39,3 +39,6 @@ backend/.env.local
 # uploads / images
 uploads/
 storage/
+
+# junkins secret
+junkins.txt
