@@ -52,7 +52,16 @@ pipeline {
     stage('Verify') {
       steps {
         sh '''
-          systemctl is-active --quiet photographic-portfolio-manager
+          for i in $(seq 1 12); do
+            if curl -fsS http://127.0.0.1:8080/robots.txt > /dev/null; then
+              break
+            fi
+            if [ "$i" -eq 12 ]; then
+              echo "Backend did not become ready in time"
+              exit 1
+            fi
+            sleep 2
+          done
           curl -fsS http://127.0.0.1:8080/robots.txt > /dev/null
           curl -fsS http://127.0.0.1:8080/login > /dev/null
           curl -fI https://www.letmelens.com
