@@ -255,12 +255,6 @@ Recommended validation today:
 - `/api/public/**`
 - `/api/manage/**`
 
-## Current Limitations
-
-- The repository still contains some generated/template docs in subfolders that do not describe the real app yet.
-- Frontend and backend formatting are not fully consistent across the codebase.
-- Test coverage is still limited, especially on the frontend.
-
 ## Deployment Notes
 
 - The project is intended to run with Docker-backed PostgreSQL and local file storage.
