@@ -4,6 +4,10 @@ import com.letmelens.backend.dto.AlbumViewResponse;
 import com.letmelens.backend.dto.MainPhotoResponse;
 import com.letmelens.backend.dto.PhotoResponse;
 import com.letmelens.backend.dto.PublicProfileResponse;
+import com.letmelens.backend.model.Interface.AlbumViewRow;
+import com.letmelens.backend.repo.AlbumPhotoRepository;
+import com.letmelens.backend.repo.AlbumRepository;
+import com.letmelens.backend.repo.PhotoRepository;
 import com.letmelens.backend.repo.ProfileRepository;
 import com.letmelens.backend.service.AlbumService;
 import com.letmelens.backend.service.PhotoService;
@@ -32,11 +36,16 @@ public class PublicPageMetadataService {
     private static final String DEFAULT_OG_TYPE = "website";
     private static final String INDEX_ROBOTS = "index,follow";
     private static final String NO_INDEX_ROBOTS = "noindex,nofollow";
+    // Google accepts at most 1,000 images per sitemap <url>
+    private static final int MAX_SITEMAP_IMAGES_PER_URL = 1000;
 
     private final ProfileUserService profileUserService;
     private final PhotoService photoService;
     private final AlbumService albumService;
     private final ProfileRepository profileRepository;
+    private final AlbumRepository albumRepository;
+    private final AlbumPhotoRepository albumPhotoRepository;
+    private final PhotoRepository photoRepository;
 
     @Value("${app.frontend.base-url:http://localhost:5173}")
     private String siteBaseUrl;
@@ -108,7 +117,7 @@ public class PublicPageMetadataService {
         String profileSlug = profile.slug();
 
         return Optional.of(page(
-                profileName ,
+                profileName + " - Photography Portfolio | " + SITE_NAME,
                 buildProfileDescription(profileName, profile.bio()),
                 "/" + normalizePathSegment(profileSlug),
                 INDEX_ROBOTS,
@@ -182,16 +191,39 @@ public class PublicPageMetadataService {
     @Transactional(readOnly = true)
     public List<SitemapEntry> sitemapEntries() {
         List<SitemapEntry> entries = new ArrayList<>();
-        entries.add(new SitemapEntry(buildPublicUrl("/"), null));
+        entries.add(new SitemapEntry(buildPublicUrl("/"), null, List.of()));
 
-        profileRepository.findAllByIsPublicTrueOrderByUpdatedAtDesc().forEach(profile -> entries.add(
-                new SitemapEntry(
-                        buildPublicUrl("/" + normalizePathSegment(profile.getSlug())),
-                        profile.getUpdatedAt()
-                )
-        ));
+        profileRepository.findAllByIsPublicTrueOrderByUpdatedAtDesc().forEach(profile -> {
+            String profileSlug = profile.getSlug();
+            String profilePath = "/" + normalizePathSegment(profileSlug);
+
+            entries.add(new SitemapEntry(
+                    buildPublicUrl(profilePath),
+                    profile.getUpdatedAt(),
+                    buildSitemapImageUrls(profileSlug, photoRepository.findPublicPhotoIdsForProfile(profileSlug))
+            ));
+
+            for (AlbumViewRow album : albumRepository.findAlbumViews(profileSlug)) {
+                if (album.getNumberOfPhotos() == null || album.getNumberOfPhotos() == 0) {
+                    continue;
+                }
+
+                entries.add(new SitemapEntry(
+                        buildPublicUrl(profilePath + "/album/" + encodePathSegment(album.getAlbumId().toString())),
+                        null,
+                        buildSitemapImageUrls(profileSlug, albumPhotoRepository.findOrderedPhotoIdsByAlbumId(album.getAlbumId()))
+                ));
+            }
+        });
 
         return entries;
+    }
+
+    private List<String> buildSitemapImageUrls(String profileSlug, List<UUID> photoIds) {
+        return photoIds.stream()
+                .limit(MAX_SITEMAP_IMAGES_PER_URL)
+                .map(photoId -> buildPhotoImageUrl(profileSlug, photoId))
+                .toList();
     }
 
     public String robotsTxt() {

@@ -177,6 +177,12 @@ export default function HomePage() {
 
       <footer className="home-footer">
         <p>© 2026 Let Me Lens. All rights reserved.</p>
+        <p>
+          Created by{" "}
+          <Link className="home-footer__link" to="/satea-almallouhi">
+            Satea ALMALLOUHI
+          </Link>
+        </p>
         <p>Empowering photographers to share what matters to them</p>
         <p>
           <a className="home-footer__link" href="mailto:support@letmelens.com">

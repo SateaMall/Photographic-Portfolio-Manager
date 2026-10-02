@@ -98,7 +98,7 @@ const canManage = isAuthenticated && session.profileSlug?.trim().toLowerCase() =
   const previewImage = topperPhotos[0] ? photoFileUrl(topperPhotos[0].id, profile.slug) : undefined;
 
   usePageMetadata({
-    title: `${profileName}`,
+    title: `${profileName} - Photography Portfolio | ${DEFAULT_SITE_TITLE}`,
     description: profileDescription,
     canonicalPath: `/${profile.slug}`,
     imageUrl: previewImage,

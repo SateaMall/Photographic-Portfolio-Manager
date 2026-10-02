@@ -242,6 +242,7 @@ return (
               imageSrc={photo.src}
               width={width}
               height={height}
+              href={`/${slug}${albumId ? `/album/${albumId}` : ""}/photo/${photo.item.id}`}
               onClick={() => openPhoto(photo.item.id, "modal", albumId)}
             />
           ),
