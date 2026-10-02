@@ -108,7 +108,7 @@ public class PublicPageMetadataService {
         String profileSlug = profile.slug();
 
         return Optional.of(page(
-                profileName ,
+                profileName + " - Photography Portfolio | " + SITE_NAME,
                 buildProfileDescription(profileName, profile.bio()),
                 "/" + normalizePathSegment(profileSlug),
                 INDEX_ROBOTS,

@@ -6,6 +6,8 @@
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
   cursor: pointer;
   border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
 }
 
 .album-cover {

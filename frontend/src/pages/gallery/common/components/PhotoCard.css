@@ -10,9 +10,17 @@
   cursor: pointer;
 }
 
-.photo-card:focus-visible {
+.photo-card:has(.photo-link:focus-visible) {
   outline: 2px solid rgba(255, 255, 255, 0.92);
   outline-offset: 3px;
+}
+
+.photo-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  outline: none;
 }
 
 .photo-media {
@@ -29,7 +37,7 @@
   transition: transform 220ms ease, opacity 220ms ease;
 }
 
-.photo-card:focus-visible .photo-img {
+.photo-card:has(.photo-link:focus-visible) .photo-img {
   transform: scale(1.02);
   opacity: 0.98;
 }
@@ -54,7 +62,7 @@
   );
 }
 
-.photo-card:focus-visible .photo-overlay {
+.photo-card:has(.photo-link:focus-visible) .photo-overlay {
   opacity: 1;
 }
 
@@ -78,7 +86,7 @@
   transition: opacity 160ms ease, transform 160ms ease, background 160ms ease;
 }
 
-.photo-card:focus-visible .photo-share  {
+.photo-card:has(.photo-link:focus-visible) .photo-share  {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
@@ -120,7 +128,7 @@
 }
 
 
-.photo-card:focus-visible .photo-location {
+.photo-card:has(.photo-link:focus-visible) .photo-location {
   opacity: 1;
   transform: translateY(0) scale(1);
 }

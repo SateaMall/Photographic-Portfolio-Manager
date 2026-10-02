@@ -1,25 +1,20 @@
 import type { AlbumViewResponse } from "../../../../types/types";
 import { photoFileUrl } from "../../../../api/photos";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 
 import "./AlbumCard.css";
 
 export function AlbumCard({ album }: { album: AlbumViewResponse }) {
-  const navigate = useNavigate();
   const { slug } = useParams();
   if (!slug) return null;
   const cover = album.firstPhotoId ? photoFileUrl(album.firstPhotoId, slug) : null;
 
-  function onClickAlbum (){
-    
-    navigate(`album/${album.albumId}`);
-
-  }
+  // draggable={false} keeps the native link drag from fighting the carousel swipe
   return (
-    <article className="album-card" onClick={onClickAlbum}>
+    <Link className="album-card" to={`/${slug}/album/${album.albumId}`} draggable={false}>
       {cover ? (
-        <img className="album-cover" src={cover} alt={album.title} loading="lazy" />
+        <img className="album-cover" src={cover} alt={album.title} loading="lazy" draggable={false} />
       ) : (
         <div className="album-cover album-cover--empty">No cover</div>
       )}
@@ -32,6 +27,6 @@ export function AlbumCard({ album }: { album: AlbumViewResponse }) {
            </div>
          </div>
        </div>
-    </article>
+    </Link>
   );
 }
