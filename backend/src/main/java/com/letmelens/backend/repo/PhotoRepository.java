@@ -34,6 +34,21 @@ public interface PhotoRepository extends JpaRepository<Photo, UUID> {
                                               @Param("slug") String slug);
 
     @Query("""
+        select ph.id
+        from Photo ph
+        where exists (
+              select 1
+              from ProfileUser pu
+              join pu.profile p
+              where p.slug = :slug
+                and p.isPublic = true
+                and pu.user = ph.author
+          )
+        order by ph.createdAt desc
+    """)
+    List<UUID> findPublicPhotoIdsForProfile(@Param("slug") String slug);
+
+    @Query("""
         select p
         from Photo p
         join ProfileUser pu on pu.user = p.author

@@ -164,7 +164,8 @@ public class PublicSiteController {
     private String buildSitemapXml(List<SitemapEntry> entries) {
         StringBuilder xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        xml.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+        xml.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"")
+                .append(" xmlns:image=\"http://www.google.com/schemas/sitemap-image/1.1\">\n");
 
         for (SitemapEntry entry : entries) {
             xml.append("  <url>\n");
@@ -172,6 +173,11 @@ public class PublicSiteController {
             Instant lastModified = entry.lastModified();
             if (lastModified != null) {
                 xml.append("    <lastmod>").append(lastModified).append("</lastmod>\n");
+            }
+            for (String imageUrl : entry.imageUrls()) {
+                xml.append("    <image:image>\n");
+                xml.append("      <image:loc>").append(escapeXml(imageUrl)).append("</image:loc>\n");
+                xml.append("    </image:image>\n");
             }
             xml.append("  </url>\n");
         }
