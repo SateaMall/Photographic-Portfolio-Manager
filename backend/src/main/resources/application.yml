@@ -53,6 +53,14 @@ server:
     max-http-form-post-size: 15MB
     max-swallow-size: 15MB
 
+# OpenAPI docs are off by default (production).
+# Turn them on locally with SPRINGDOC_ENABLED=true in .env.local.
+springdoc:
+  api-docs:
+    enabled: ${SPRINGDOC_ENABLED:false}
+  swagger-ui:
+    enabled: ${SPRINGDOC_ENABLED:false}
+
 app:
   frontend:
     base-url: ${APP_FRONTEND_BASE_URL:http://localhost:5173}

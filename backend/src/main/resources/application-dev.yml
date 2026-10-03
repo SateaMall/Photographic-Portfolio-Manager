@@ -8,3 +8,10 @@ spring:
   h2:
     console:
       enabled: true
+
+# Spec at /v3/api-docs, interactive docs at /swagger-ui.html
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

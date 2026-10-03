@@ -81,6 +81,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/public/profiles/*/open").permitAll()
                         .requestMatchers("/oauth2/**", "/login/oauth2/**", "/error").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        // Only served when springdoc is enabled (dev profile)
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/manage/**").authenticated()
                         .requestMatchers(
                                 HttpMethod.GET,

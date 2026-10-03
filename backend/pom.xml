@@ -91,6 +91,12 @@
 			<artifactId>thumbnailator</artifactId>
 			<version>0.4.20</version>
 		</dependency>
+		<!-- OpenAPI spec (/v3/api-docs) + Swagger UI; 3.0.x targets Spring Boot 4.0 -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>3.0.3</version>
+		</dependency>
 
 	</dependencies>
 
