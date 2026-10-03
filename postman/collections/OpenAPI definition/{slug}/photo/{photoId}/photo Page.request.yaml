@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/:slug/photo/:photoId"
+method: GET
+headers:
+  Accept: text/html
+pathVariables:
+  slug: string
+  photoId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: text
+  content: ""
+examples: ./.resources/photo Page.resources/examples
+order: 1000

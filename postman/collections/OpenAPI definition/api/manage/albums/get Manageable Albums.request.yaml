@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/albums?slug=string"
+method: GET
+headers:
+  Accept: "*/*"
+queryParams:
+  slug: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/get Manageable Albums.resources/examples
+order: 3000

@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/public/profiles/:slug/photos/:id/file?variant=MEDIUM"
+  method: GET
+  headers:
+    Accept: "*/*"
+  queryParams:
+    variant: MEDIUM
+  pathVariables:
+    slug: string
+    id: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: string
+order: 1000

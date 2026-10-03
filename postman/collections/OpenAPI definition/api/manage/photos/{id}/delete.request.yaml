@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/photos/:id"
+method: DELETE
+pathVariables:
+  id: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: text
+  content: ""
+examples: ./.resources/delete.resources/examples
+order: 1000

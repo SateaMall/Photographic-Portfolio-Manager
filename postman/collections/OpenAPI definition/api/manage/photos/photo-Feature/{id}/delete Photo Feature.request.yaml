@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/photos/photo-Feature/:id?slug=string&type=HOMEPAGE\
+  _HERO"
+method: DELETE
+queryParams:
+  slug: string
+  type: HOMEPAGE_HERO
+pathVariables:
+  id: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: text
+  content: ""
+examples: ./.resources/delete Photo Feature.resources/examples
+order: 2000

@@ -1,0 +1,41 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/manage/photos/:photoId?themes=CONCEPTUAL_ARTISTIC&title=s\
+    tring&description=string&country=string&city=string&captureYear=4712&clearC\
+    aptureYear=false"
+  method: PUT
+  headers:
+    Accept: "*/*"
+  queryParams:
+    themes: CONCEPTUAL_ARTISTIC
+    title: string
+    description: string
+    country: string
+    city: string
+    captureYear: "4712"
+    clearCaptureYear: "false"
+  pathVariables:
+    photoId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "id": "2ee5a644-4382-c963-f647-c59cc8015283",
+        "createdAt": "1970-08-16T00:24:00.456Z",
+        "title": "string",
+        "description": "string",
+        "country": "string",
+        "city": "string",
+        "captureYear": 6406,
+        "width": 8225,
+        "height": 2230
+      }
+order: 1000

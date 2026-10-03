@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/photos/:photoId?themes=PEOPLE_EMOTION&themes=CONCE\
+  PTUAL_ARTISTIC&title=string&description=string&country=string&city=string&cap\
+  tureYear=4712&clearCaptureYear=false"
+method: PUT
+headers:
+  Accept: "*/*"
+queryParams:
+  - key: themes
+    value: PEOPLE_EMOTION
+  - key: themes
+    value: CONCEPTUAL_ARTISTIC
+  - key: title
+    value: string
+  - key: description
+    value: string
+  - key: country
+    value: string
+  - key: city
+    value: string
+  - key: captureYear
+    value: "4712"
+  - key: clearCaptureYear
+    value: "false"
+pathVariables:
+  photoId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: text
+  content: ""
+examples: ./.resources/update Photo.resources/examples
+order: 1000

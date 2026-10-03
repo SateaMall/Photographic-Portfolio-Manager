@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/photos/grid?slug=string"
+method: GET
+headers:
+  Accept: "*/*"
+queryParams:
+  slug: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/get Manageable Grid Photos.resources/examples
+order: 2000

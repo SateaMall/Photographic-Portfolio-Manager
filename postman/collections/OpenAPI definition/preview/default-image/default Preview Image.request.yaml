@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/preview/default-image"
+method: GET
+headers:
+  Accept: "*/*"
+body:
+  type: text
+  content: ""
+examples: ./.resources/default Preview Image.resources/examples
+order: 1000

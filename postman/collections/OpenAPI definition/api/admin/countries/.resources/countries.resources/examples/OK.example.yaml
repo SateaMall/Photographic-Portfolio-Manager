@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/admin/countries"
+  method: GET
+  headers:
+    Accept: "*/*"
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      [
+        {
+          "code": "string",
+          "label": "string"
+        },
+        {
+          "code": "string",
+          "label": "string"
+        }
+      ]
+order: 1000

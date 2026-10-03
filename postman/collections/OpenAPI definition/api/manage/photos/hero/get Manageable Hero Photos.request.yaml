@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/photos/hero?slug=string"
+method: GET
+headers:
+  Accept: "*/*"
+queryParams:
+  slug: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/get Manageable Hero Photos.resources/examples
+order: 1000

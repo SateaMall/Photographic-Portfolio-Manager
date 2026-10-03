@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/photos/grid/order?slug=string"
+method: PUT
+headers:
+  Content-Type: application/json
+queryParams:
+  slug: string
+body:
+  type: json
+  content: |-
+    {
+      "photoIds": [
+        "5cf3c368-d6dc-8cc6-3204-b978c3915287",
+        "61464777-d319-83b7-ea8c-7e4994adbbaf"
+      ]
+    }
+examples: ./.resources/reorder Manageable Grid Photos.resources/examples
+order: 1000

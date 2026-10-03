@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/albums/order?slug=string"
+method: PUT
+headers:
+  Content-Type: application/json
+queryParams:
+  slug: string
+body:
+  type: json
+  content: |-
+    {
+      "albumIds": [
+        "9481300d-2bdc-df4b-d4db-9b1f9a4822fe",
+        "5381eec6-34a0-19a7-2e71-f460e2e14015"
+      ]
+    }
+examples: ./.resources/reorder Manageable Albums.resources/examples
+order: 1000

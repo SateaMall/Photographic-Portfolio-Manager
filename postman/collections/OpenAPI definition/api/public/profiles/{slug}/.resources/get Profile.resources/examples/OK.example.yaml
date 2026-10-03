@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/public/profiles/:slug"
+  method: GET
+  headers:
+    Accept: "*/*"
+  pathVariables:
+    slug: string
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "slug": "string",
+        "displayName": "string",
+        "bio": "string",
+        "primaryColor": "string",
+        "secondaryColor": "string",
+        "publicEmail": "string",
+        "linkedIn": "string",
+        "instagram": "string"
+      }
+order: 1000

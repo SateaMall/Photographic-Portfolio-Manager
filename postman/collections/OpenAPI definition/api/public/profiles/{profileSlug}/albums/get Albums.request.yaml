@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/public/profiles/:profileSlug/albums"
+method: GET
+headers:
+  Accept: "*/*"
+pathVariables:
+  profileSlug: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/get Albums.resources/examples
+order: 1000

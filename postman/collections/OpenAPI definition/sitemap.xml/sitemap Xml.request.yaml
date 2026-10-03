@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/sitemap.xml"
+method: GET
+headers:
+  Accept: application/xml
+body:
+  type: text
+  content: ""
+examples: ./.resources/sitemap Xml.resources/examples
+order: 1000

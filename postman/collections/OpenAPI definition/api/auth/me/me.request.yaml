@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/me"
+method: GET
+headers:
+  Accept: "*/*"
+body:
+  type: text
+  content: ""
+examples: ./.resources/me.resources/examples
+order: 2000

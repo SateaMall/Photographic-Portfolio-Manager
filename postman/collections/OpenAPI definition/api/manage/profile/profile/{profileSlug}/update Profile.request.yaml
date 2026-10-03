@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/profile/profile/:profileSlug"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: "*/*"
+pathVariables:
+  profileSlug: string
+body:
+  type: json
+  content: |-
+    {
+      "displayName": "string",
+      "bio": "string",
+      "primaryColor": "string",
+      "secondaryColor": "string",
+      "publicEmail": "string",
+      "linkedIn": "string",
+      "instagram": "string",
+      "phoneNumber": "string"
+    }
+examples: ./.resources/update Profile.resources/examples
+order: 1000

@@ -1,0 +1,40 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/manage/photos/grid?slug=string"
+  method: GET
+  headers:
+    Accept: "*/*"
+  queryParams:
+    slug: string
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      [
+        {
+          "id": "4eb9fcd4-74ab-3334-4b64-1ee8607b139f",
+          "createdAt": "1957-03-02T10:00:14.946Z",
+          "title": "string",
+          "description": "string",
+          "country": "string",
+          "city": "string",
+          "captureYear": 2502
+        },
+        {
+          "id": "6c5d208e-ad85-2b5d-9945-ab3b69b66cc3",
+          "createdAt": "2001-04-15T06:52:58.793Z",
+          "title": "string",
+          "description": "string",
+          "country": "string",
+          "city": "string",
+          "captureYear": 743
+        }
+      ]
+order: 1000

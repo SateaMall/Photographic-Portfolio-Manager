@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/public/albums/:albumId"
+  method: GET
+  headers:
+    Accept: "*/*"
+  pathVariables:
+    albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "albumId": "50cc5dce-b552-468f-8524-bb60ca606d63",
+        "firstPhotoId": "24c971d6-1964-f40c-27de-a7a243aa8eeb",
+        "title": "string",
+        "description": "string",
+        "numberOfPhotos": 5380
+      }
+order: 1000

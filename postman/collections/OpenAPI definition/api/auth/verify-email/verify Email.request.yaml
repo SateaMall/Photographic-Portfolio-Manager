@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/verify-email"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: "*/*"
+body:
+  type: json
+  content: |-
+    {
+      "code": "stri",
+      "email": "jPQvgVyf@vyefpVnankiuQbR.dtph"
+    }
+examples: ./.resources/verify Email.resources/examples
+order: 1000

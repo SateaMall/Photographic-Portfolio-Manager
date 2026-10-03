@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/sitemap.xml"
+  method: GET
+  headers:
+    Accept: application/xml
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/xml
+  body:
+    type: xml
+    content: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <element>(string)</element>
+order: 1000

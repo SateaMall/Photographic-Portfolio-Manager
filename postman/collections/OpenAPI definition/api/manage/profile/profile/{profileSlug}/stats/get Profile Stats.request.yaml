@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/profile/profile/:profileSlug/stats"
+method: GET
+headers:
+  Accept: "*/*"
+pathVariables:
+  profileSlug: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/get Profile Stats.resources/examples
+order: 1000

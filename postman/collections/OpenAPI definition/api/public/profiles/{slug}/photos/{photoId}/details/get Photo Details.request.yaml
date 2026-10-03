@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/api/public/profiles/:slug/photos/:photoId/details"
+method: GET
+headers:
+  Accept: "*/*"
+pathVariables:
+  slug: string
+  photoId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: text
+  content: ""
+examples: ./.resources/get Photo Details.resources/examples
+order: 1000

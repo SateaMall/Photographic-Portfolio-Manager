@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/albums/:albumId/photos/:photoId?position=4712"
+method: POST
+queryParams:
+  position: "4712"
+pathVariables:
+  albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  photoId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: text
+  content: ""
+examples: ./.resources/add Photo To Album.resources/examples
+order: 1000

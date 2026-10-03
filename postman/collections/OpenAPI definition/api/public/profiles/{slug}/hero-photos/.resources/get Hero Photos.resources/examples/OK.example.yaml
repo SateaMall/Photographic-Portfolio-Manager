@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/public/profiles/:slug/hero-photos"
+  method: GET
+  headers:
+    Accept: "*/*"
+  pathVariables:
+    slug: string
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      [
+        {
+          "id": "e4b67368-e890-9741-e299-f123251f5459",
+          "createdAt": "2017-06-15T22:26:42.051Z",
+          "title": "string",
+          "description": "string",
+          "country": "string",
+          "city": "string",
+          "captureYear": 3726,
+          "width": 1609,
+          "height": 2991
+        },
+        {
+          "id": "d9bbb12a-9e6c-eb58-b702-6d768cae363c",
+          "createdAt": "1992-06-06T18:35:35.975Z",
+          "title": "string",
+          "description": "string",
+          "country": "string",
+          "city": "string",
+          "captureYear": 3880,
+          "width": 6948,
+          "height": 1745
+        }
+      ]
+order: 1000
