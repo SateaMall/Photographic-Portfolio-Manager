@@ -206,7 +206,8 @@ function loadMore() {
   setPage((p) => p + 1); // triggers API
 }
 
-const visiblePhotos = photos.slice(0, visibleCount);
+// After the first reveal, show every loaded photo so "Load more" pages appear
+const visiblePhotos = initialRevealDone ? photos : photos.slice(0, visibleCount);
 const albumPhotos: GridAlbumPhoto[] = slug
   ? visiblePhotos.map((photo) => {
       const { width, height } = resolvePhotoDimensions(photo);
