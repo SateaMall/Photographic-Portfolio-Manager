@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/:slug/album/:albumId/photo/:photoId"
+  method: GET
+  headers:
+    Accept: text/html
+  pathVariables:
+    slug: string
+    albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+    photoId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: text/html
+  body:
+    type: text
+    content: string
+order: 1000

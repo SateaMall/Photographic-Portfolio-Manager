@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/manage/albums/:albumId"
+  method: GET
+  headers:
+    Accept: "*/*"
+  pathVariables:
+    albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "albumId": "1fa681f8-607f-afc7-0392-c55a2228045f",
+        "title": "string",
+        "description": "string",
+        "photos": [
+          {
+            "id": "b6dfc1f1-b40c-fd0b-65f1-86f9c0a68e25",
+            "createdAt": "1947-03-24T10:42:30.808Z",
+            "title": "string",
+            "description": "string",
+            "country": "string",
+            "city": "string",
+            "captureYear": 7223
+          },
+          {
+            "id": "56a77cb9-525e-67b7-10bc-137c5810f04a",
+            "createdAt": "1983-10-06T22:04:33.245Z",
+            "title": "string",
+            "description": "string",
+            "country": "string",
+            "city": "string",
+            "captureYear": 9799
+          }
+        ]
+      }
+order: 1000

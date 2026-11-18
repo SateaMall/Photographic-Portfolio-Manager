@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/albums/:albumId/photos/order"
+method: PUT
+headers:
+  Content-Type: application/json
+pathVariables:
+  albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: json
+  content: |-
+    {
+      "photoIds": [
+        "5cf3c368-d6dc-8cc6-3204-b978c3915287",
+        "61464777-d319-83b7-ea8c-7e4994adbbaf"
+      ]
+    }
+examples: ./.resources/reorder Album Photos.resources/examples
+order: 1000

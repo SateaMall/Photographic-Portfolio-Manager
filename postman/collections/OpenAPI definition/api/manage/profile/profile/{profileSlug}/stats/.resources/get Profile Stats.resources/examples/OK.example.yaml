@@ -1,0 +1,45 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/manage/profile/profile/:profileSlug/stats"
+  method: GET
+  headers:
+    Accept: "*/*"
+  pathVariables:
+    profileSlug: string
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "totalOpens": 3460,
+        "opensToday": 4548,
+        "opensLast30Days": 3172,
+        "monthlyCounts": [
+          {
+            "month": "string",
+            "openCount": 7568
+          },
+          {
+            "month": "string",
+            "openCount": 3007
+          }
+        ],
+        "yearlyCounts": [
+          {
+            "year": 1136,
+            "openCount": 6314
+          },
+          {
+            "year": 6261,
+            "openCount": 6370
+          }
+        ]
+      }
+order: 1000

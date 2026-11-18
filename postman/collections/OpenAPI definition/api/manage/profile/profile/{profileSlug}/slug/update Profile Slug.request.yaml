@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/profile/profile/:profileSlug/slug"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: "*/*"
+pathVariables:
+  profileSlug: string
+body:
+  type: json
+  content: |-
+    {
+      "slug": "string"
+    }
+examples: ./.resources/update Profile Slug.resources/examples
+order: 1000

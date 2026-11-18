@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/api/public/albums/:albumId/items?page=0&size=20"
+method: GET
+headers:
+  Accept: "*/*"
+queryParams:
+  page: "0"
+  size: "20"
+pathVariables:
+  albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: text
+  content: ""
+examples: ./.resources/album Items List.resources/examples
+order: 1000

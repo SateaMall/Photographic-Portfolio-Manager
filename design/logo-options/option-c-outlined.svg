@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Let Me Lens</title>
+  <defs>
+    <path id="feather" d="M0 0 C -22 -26 -20 -64 0 -88 C 20 -64 22 -26 0 0 Z"/>
+    <clipPath id="mouth-clip"><path d="M240 354 C 242 376 270 376 272 354 Z"/></clipPath>
+  </defs>
+
+  <g transform="translate(10 -12)" stroke="#1B2A4A" stroke-linejoin="round" stroke-linecap="round">
+    <!-- feet -->
+    <g fill="#F1C08F" stroke-width="7">
+      <circle cx="176" cy="462" r="14"/>
+      <circle cx="216" cy="462" r="14"/>
+      <circle cx="196" cy="468" r="14"/>
+      <circle cx="296" cy="462" r="14"/>
+      <circle cx="336" cy="462" r="14"/>
+      <circle cx="316" cy="468" r="14"/>
+    </g>
+
+    <!-- head tuft -->
+    <g stroke-width="8">
+      <use href="#feather" fill="#8FC0F2" transform="translate(256 150) rotate(-34)"/>
+      <use href="#feather" fill="#8FC0F2" transform="translate(256 150) rotate(34)"/>
+      <use href="#feather" fill="#8FC0F2" transform="translate(256 150)"/>
+    </g>
+
+    <!-- body -->
+    <circle cx="256" cy="295" r="165" fill="#8FC0F2" stroke-width="9"/>
+
+    <!-- waving wing -->
+    <g transform="translate(112 318)" fill="#6BA4E8" stroke-width="8">
+      <use href="#feather" transform="rotate(-58) scale(1.05)"/>
+      <use href="#feather" transform="rotate(-36) scale(1.05)"/>
+      <use href="#feather" transform="rotate(-14) scale(1.05)"/>
+    </g>
+
+    <!-- resting wing -->
+    <g transform="translate(400 300)" fill="#6BA4E8" stroke-width="8">
+      <use href="#feather" transform="rotate(140) scale(1.05)"/>
+      <use href="#feather" transform="rotate(162) scale(1.05)"/>
+      <use href="#feather" transform="rotate(184) scale(1.05)"/>
+    </g>
+
+    <!-- wave marks -->
+    <g stroke-width="7">
+      <line x1="54" y1="205" x2="48" y2="190"/>
+      <line x1="36" y1="216" x2="25" y2="205"/>
+      <line x1="74" y1="202" x2="76" y2="186"/>
+    </g>
+
+    <!-- face plate -->
+    <circle cx="256" cy="285" r="118" fill="#FFFFFF" stroke-width="7"/>
+
+    <!-- lens -->
+    <circle cx="256" cy="250" r="62" fill="#E4EEFA" stroke-width="7"/>
+    <circle cx="256" cy="250" r="48" fill="#2A4374" stroke-width="7"/>
+    <g fill="none" stroke-width="6">
+      <path d="M223.1 238 A35 35 0 0 1 250 215.5" stroke="#3CC4A6"/>
+      <path d="M288.9 262 A35 35 0 0 1 262 284.5" stroke="#8F6FE3"/>
+    </g>
+    <circle cx="256" cy="250" r="24" fill="#0E1628" stroke="none"/>
+    <circle cx="243" cy="237" r="8" fill="#FFFFFF" stroke="none"/>
+    <circle cx="254" cy="246" r="4" fill="#FFFFFF" stroke="none"/>
+
+    <!-- eyes and cheeks -->
+    <g stroke="none">
+      <ellipse cx="202" cy="336" rx="15" ry="17" fill="#1B2A4A"/>
+      <ellipse cx="202" cy="340" rx="9" ry="10" fill="#3E7FD6"/>
+      <circle cx="197" cy="330" r="5" fill="#FFFFFF"/>
+      <ellipse cx="310" cy="336" rx="15" ry="17" fill="#1B2A4A"/>
+      <ellipse cx="310" cy="340" rx="9" ry="10" fill="#3E7FD6"/>
+      <circle cx="305" cy="330" r="5" fill="#FFFFFF"/>
+      <ellipse cx="180" cy="362" rx="11" ry="6" fill="#F9C3CA"/>
+      <ellipse cx="332" cy="362" rx="11" ry="6" fill="#F9C3CA"/>
+    </g>
+
+    <!-- mouth -->
+    <path d="M240 354 C 242 376 270 376 272 354 Z" fill="#D44A5C" stroke-width="6"/>
+    <ellipse cx="256" cy="372" rx="10" ry="6" fill="#F39AA5" stroke="none" clip-path="url(#mouth-clip)"/>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/signup"
+method: GET
+headers:
+  Accept: text/html
+body:
+  type: text
+  content: ""
+examples: ./.resources/signup Page.resources/examples
+order: 1000

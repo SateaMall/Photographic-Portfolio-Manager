@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/:slug/manage/:path"
+method: GET
+headers:
+  Accept: text/html
+pathVariables:
+  slug: string
+  path: ""
+body:
+  type: text
+  content: ""
+examples: ./.resources/manage Page.resources/examples
+order: 1000

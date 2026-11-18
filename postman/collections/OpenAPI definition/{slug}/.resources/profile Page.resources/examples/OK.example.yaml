@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/:slug"
+  method: GET
+  headers:
+    Accept: text/html
+  pathVariables:
+    slug: string
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: text/html
+  body:
+    type: text
+    content: string
+order: 1000

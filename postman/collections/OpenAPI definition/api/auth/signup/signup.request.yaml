@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/signup"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: "*/*"
+body:
+  type: json
+  content: |-
+    {
+      "email": "N-DH@ArafFTHSTHBEeihPUMHiyt.tvqw",
+      "firstName": "string",
+      "lastName": "string",
+      "password": "stringstrin"
+    }
+examples: ./.resources/signup.resources/examples
+order: 1000

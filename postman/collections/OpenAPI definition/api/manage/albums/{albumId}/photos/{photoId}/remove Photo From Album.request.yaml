@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/albums/:albumId/photos/:photoId"
+method: DELETE
+pathVariables:
+  albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  photoId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: text
+  content: ""
+examples: ./.resources/remove Photo From Album.resources/examples
+order: 2000

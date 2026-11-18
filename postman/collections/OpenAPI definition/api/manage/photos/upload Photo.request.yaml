@@ -1,0 +1,34 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/photos?albumId=5c6c0be3-b5c7-71f0-0b7f-8de564259fb\
+  9&themes=PEOPLE_EMOTION&themes=CONCEPTUAL_ARTISTIC&title=string&description=s\
+  tring&country=string&city=string&captureYear=4712"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: "*/*"
+queryParams:
+  - key: albumId
+    value: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  - key: themes
+    value: PEOPLE_EMOTION
+  - key: themes
+    value: CONCEPTUAL_ARTISTIC
+  - key: title
+    value: string
+  - key: description
+    value: string
+  - key: country
+    value: string
+  - key: city
+    value: string
+  - key: captureYear
+    value: "4712"
+body:
+  type: formdata
+  content:
+    - type: file
+      key: file
+      src: ""
+      description: ""
+examples: ./.resources/upload Photo.resources/examples
+order: 4000

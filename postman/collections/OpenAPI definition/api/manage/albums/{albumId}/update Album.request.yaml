@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/albums/:albumId?title=string&description=string"
+method: PUT
+headers:
+  Accept: "*/*"
+queryParams:
+  title: string
+  description: string
+pathVariables:
+  albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+body:
+  type: text
+  content: ""
+examples: ./.resources/update Album.resources/examples
+order: 2000

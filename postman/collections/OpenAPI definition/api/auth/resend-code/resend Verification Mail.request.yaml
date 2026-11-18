@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/resend-code?email=string"
+method: POST
+headers:
+  Accept: "*/*"
+queryParams:
+  email: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/resend Verification Mail.resources/examples
+order: 1000

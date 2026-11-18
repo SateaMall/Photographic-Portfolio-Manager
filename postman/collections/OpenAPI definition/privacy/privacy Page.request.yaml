@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/privacy"
+method: GET
+headers:
+  Accept: text/html
+body:
+  type: text
+  content: ""
+examples: ./.resources/privacy Page.resources/examples
+order: 1000

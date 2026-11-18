@@ -1,0 +1,74 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/public/albums/:albumId/items?page=0&size=20"
+  method: GET
+  headers:
+    Accept: "*/*"
+  queryParams:
+    page: "0"
+    size: "20"
+  pathVariables:
+    albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "totalElements": 3935,
+        "totalPages": 3073,
+        "first": true,
+        "last": true,
+        "numberOfElements": 4831,
+        "size": 3850,
+        "content": [
+          {
+            "photoId": "f3844c94-e86f-18fd-18d5-dbf314631e3f",
+            "title": "string",
+            "description": "string",
+            "country": "string",
+            "city": "string",
+            "captureYear": 8653,
+            "addedAt": "1987-05-14T04:44:48.733Z",
+            "width": 5887,
+            "height": 6843
+          },
+          {
+            "photoId": "e9181eab-7787-7980-a019-93c212f8b426",
+            "title": "string",
+            "description": "string",
+            "country": "string",
+            "city": "string",
+            "captureYear": 4213,
+            "addedAt": "1986-04-15T06:35:48.426Z",
+            "width": 9963,
+            "height": 8420
+          }
+        ],
+        "number": 3251,
+        "sort": {
+          "empty": false,
+          "sorted": true,
+          "unsorted": true
+        },
+        "pageable": {
+          "offset": 581,
+          "sort": {
+            "empty": true,
+            "sorted": false,
+            "unsorted": false
+          },
+          "paged": false,
+          "pageNumber": 1769,
+          "pageSize": 6870,
+          "unpaged": false
+        },
+        "empty": true
+      }
+order: 1000

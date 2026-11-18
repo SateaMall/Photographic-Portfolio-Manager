@@ -1,0 +1,69 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/manage/photos?slug=string&page=0&size=48"
+  method: GET
+  headers:
+    Accept: "*/*"
+  queryParams:
+    slug: string
+    page: "0"
+    size: "48"
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "totalElements": 5496,
+        "totalPages": 8170,
+        "first": false,
+        "last": false,
+        "numberOfElements": 2063,
+        "size": 8017,
+        "content": [
+          {
+            "id": "cc1d7d22-0f85-d1ad-c7f9-47105a66c2c1",
+            "createdAt": "2021-08-07T08:58:30.919Z",
+            "title": "string",
+            "description": "string",
+            "country": "string",
+            "city": "string",
+            "captureYear": 401
+          },
+          {
+            "id": "44133966-2d8b-619f-f894-e7c6d0869c9b",
+            "createdAt": "1970-12-16T17:44:10.945Z",
+            "title": "string",
+            "description": "string",
+            "country": "string",
+            "city": "string",
+            "captureYear": 2751
+          }
+        ],
+        "number": 7325,
+        "sort": {
+          "empty": true,
+          "sorted": false,
+          "unsorted": true
+        },
+        "pageable": {
+          "offset": 726,
+          "sort": {
+            "empty": true,
+            "sorted": true,
+            "unsorted": true
+          },
+          "paged": true,
+          "pageNumber": 6162,
+          "pageSize": 5769,
+          "unpaged": true
+        },
+        "empty": false
+      }
+order: 1000

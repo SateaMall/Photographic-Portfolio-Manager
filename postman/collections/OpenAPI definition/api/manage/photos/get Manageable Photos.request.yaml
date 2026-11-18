@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/photos?slug=string&page=0&size=48"
+method: GET
+headers:
+  Accept: "*/*"
+queryParams:
+  slug: string
+  page: "0"
+  size: "48"
+body:
+  type: text
+  content: ""
+examples: ./.resources/get Manageable Photos.resources/examples
+order: 3000

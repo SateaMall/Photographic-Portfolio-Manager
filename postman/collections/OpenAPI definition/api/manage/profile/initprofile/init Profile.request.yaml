@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/api/manage/profile/initprofile"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: "*/*"
+body:
+  type: json
+  content: |-
+    {
+      "displayName": "string",
+      "bio": "string",
+      "primaryColor": "string",
+      "secondaryColor": "string",
+      "publicEmail": "string",
+      "linkedIn": "string",
+      "instagram": "string",
+      "phoneNumber": "string"
+    }
+examples: ./.resources/init Profile.resources/examples
+order: 1000

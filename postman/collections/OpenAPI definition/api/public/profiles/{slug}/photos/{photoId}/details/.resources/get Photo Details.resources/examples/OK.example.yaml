@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/public/profiles/:slug/photos/:photoId/details"
+  method: GET
+  headers:
+    Accept: "*/*"
+  pathVariables:
+    slug: string
+    photoId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "id": "67d70e54-6d8b-6075-fa81-726ce4017170",
+        "createdAt": "1967-10-25T23:27:14.456Z",
+        "title": "string",
+        "description": "string",
+        "country": "string",
+        "city": "string",
+        "captureYear": 7017,
+        "themes": [
+          "ARCHITECTURE_SPACES",
+          "CONCEPTUAL_ARTISTIC"
+        ],
+        "width": 8597,
+        "height": 8359
+      }
+order: 1000

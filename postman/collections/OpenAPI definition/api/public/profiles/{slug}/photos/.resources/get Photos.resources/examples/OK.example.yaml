@@ -1,0 +1,76 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/public/profiles/:slug/photos?photoId=5c6c0be3-b5c7-71f0-0\
+    b7f-8de564259fb9&page=0&size=20"
+  method: GET
+  headers:
+    Accept: "*/*"
+  queryParams:
+    photoId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+    page: "0"
+    size: "20"
+  pathVariables:
+    slug: string
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "totalElements": 2365,
+        "totalPages": 7544,
+        "first": false,
+        "last": true,
+        "numberOfElements": 9572,
+        "size": 8919,
+        "content": [
+          {
+            "id": "41f65a9b-135b-5600-af06-133e6ce1231d",
+            "createdAt": "1961-05-21T02:24:19.946Z",
+            "title": "string",
+            "description": "string",
+            "country": "string",
+            "city": "string",
+            "captureYear": 9713,
+            "width": 1888,
+            "height": 1346
+          },
+          {
+            "id": "15440248-1713-4a5e-cbe5-a08ffd4146df",
+            "createdAt": "2019-05-24T11:13:39.556Z",
+            "title": "string",
+            "description": "string",
+            "country": "string",
+            "city": "string",
+            "captureYear": 9853,
+            "width": 3428,
+            "height": 4563
+          }
+        ],
+        "number": 9206,
+        "sort": {
+          "empty": true,
+          "sorted": true,
+          "unsorted": true
+        },
+        "pageable": {
+          "offset": 9297,
+          "sort": {
+            "empty": false,
+            "sorted": true,
+            "unsorted": false
+          },
+          "paged": false,
+          "pageNumber": 2209,
+          "pageSize": 4073,
+          "unpaged": true
+        },
+        "empty": false
+      }
+order: 1000

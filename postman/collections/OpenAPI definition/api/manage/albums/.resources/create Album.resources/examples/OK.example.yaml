@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/manage/albums?slug=string&title=string&description=string"
+  method: POST
+  headers:
+    Accept: "*/*"
+  queryParams:
+    slug: string
+    title: string
+    description: string
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "id": "c7cb1351-c894-6301-2475-42784f13e920",
+        "title": "string",
+        "description": "string"
+      }
+order: 1000

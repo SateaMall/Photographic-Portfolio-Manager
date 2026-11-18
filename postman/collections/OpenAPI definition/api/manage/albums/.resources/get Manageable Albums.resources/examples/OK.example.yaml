@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/manage/albums?slug=string"
+  method: GET
+  headers:
+    Accept: "*/*"
+  queryParams:
+    slug: string
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      [
+        {
+          "albumId": "0bde3dd9-96ef-d370-02d7-1225cc153ecd",
+          "firstPhotoId": "40da6224-7911-8285-34bb-e8d8deaf08a5",
+          "title": "string",
+          "description": "string",
+          "numberOfPhotos": 1028
+        },
+        {
+          "albumId": "8821b14a-d0a7-ac7f-166b-e8bfcae4a7c6",
+          "firstPhotoId": "ca20b56b-b2a5-fdfa-4f79-4169bb7ad6dc",
+          "title": "string",
+          "description": "string",
+          "numberOfPhotos": 5804
+        }
+      ]
+order: 1000

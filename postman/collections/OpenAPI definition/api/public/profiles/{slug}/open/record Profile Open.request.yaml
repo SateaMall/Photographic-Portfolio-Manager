@@ -1,0 +1,10 @@
+$kind: http-request
+url: "{{baseUrl}}/api/public/profiles/:slug/open"
+method: POST
+pathVariables:
+  slug: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/record Profile Open.resources/examples
+order: 1000

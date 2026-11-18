@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/auth/me"
+  method: GET
+  headers:
+    Accept: "*/*"
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "authenticated": true,
+        "email": "string",
+        "profileSlug": "string",
+        "displayName": "string"
+      }
+order: 1000

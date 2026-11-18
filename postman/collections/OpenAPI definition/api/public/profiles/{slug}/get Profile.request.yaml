@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/public/profiles/:slug"
+method: GET
+headers:
+  Accept: "*/*"
+pathVariables:
+  slug: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/get Profile.resources/examples
+order: 2000

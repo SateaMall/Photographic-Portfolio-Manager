@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/public/profiles/:slug/hero-photos"
+method: GET
+headers:
+  Accept: "*/*"
+pathVariables:
+  slug: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/get Hero Photos.resources/examples
+order: 1000

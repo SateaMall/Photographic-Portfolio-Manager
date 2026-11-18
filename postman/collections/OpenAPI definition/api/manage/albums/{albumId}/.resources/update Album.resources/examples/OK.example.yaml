@@ -1,0 +1,28 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/manage/albums/:albumId?title=string&description=string"
+  method: PUT
+  headers:
+    Accept: "*/*"
+  queryParams:
+    title: string
+    description: string
+  pathVariables:
+    albumId: 5c6c0be3-b5c7-71f0-0b7f-8de564259fb9
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "id": "c7cb1351-c894-6301-2475-42784f13e920",
+        "title": "string",
+        "description": "string"
+      }
+order: 1000
