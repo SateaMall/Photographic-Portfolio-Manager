@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Let Me Lens</title>
+  <defs>
+    <path id="feather" d="M0 0 C -22 -26 -20 -64 0 -88 C 20 -64 22 -26 0 0 Z"/>
+    <clipPath id="body-clip"><circle cx="256" cy="284" r="176"/></clipPath>
+  </defs>
+
+  <!-- thin bird legs with three toes -->
+  <g fill="none" stroke="#E8AE74" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="196" y1="440" x2="196" y2="472" stroke-width="10"/>
+    <line x1="316" y1="440" x2="316" y2="472" stroke-width="10"/>
+    <path d="M196 472 L172 488 M196 472 L196 493 M196 472 L220 488" stroke-width="9"/>
+    <path d="M316 472 L292 488 M316 472 L316 493 M316 472 L340 488" stroke-width="9"/>
+  </g>
+
+  <!-- head tuft -->
+  <use href="#feather" fill="#76ADEA" transform="translate(256 132) rotate(-36) scale(1.2)"/>
+  <use href="#feather" fill="#76ADEA" transform="translate(256 132) rotate(36) scale(1.2)"/>
+  <use href="#feather" fill="#8FC0F2" transform="translate(256 132) scale(1.2)"/>
+
+  <!-- body -->
+  <circle cx="256" cy="284" r="176" fill="#76ADEA"/>
+  <circle cx="236" cy="264" r="170" fill="#8FC0F2" clip-path="url(#body-clip)"/>
+
+  <!-- face plate -->
+  <circle cx="256" cy="290" r="124" fill="#FFFFFF" stroke="#E1EDFB" stroke-width="7"/>
+
+  <!-- lens -->
+  <circle cx="256" cy="290" r="100" fill="#E4EEFA"/>
+  <circle cx="256" cy="290" r="86" fill="#1F2C48"/>
+  <circle cx="256" cy="290" r="70" fill="#2A4374"/>
+  <g fill="none" stroke-width="9" stroke-linecap="round">
+    <path d="M203.4 270.8 A56 56 0 0 1 246.3 234.9" stroke="#3CC4A6"/>
+    <path d="M308.6 309.2 A56 56 0 0 1 265.7 345.1" stroke="#8F6FE3"/>
+  </g>
+  <circle cx="256" cy="290" r="40" fill="#0E1628"/>
+  <circle cx="235" cy="269" r="14" fill="#FFFFFF"/>
+  <circle cx="253" cy="284" r="6" fill="#FFFFFF"/>
+</svg>

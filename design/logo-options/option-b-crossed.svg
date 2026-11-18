@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Let Me Lens</title>
+  <defs>
+    <path id="feather" d="M0 0 C -22 -26 -20 -64 0 -88 C 20 -64 22 -26 0 0 Z"/>
+    <!-- wing drawn from the shoulder (origin) out along +x -->
+    <path id="arm" d="M0 -24 C 80 -26 190 -22 232 -14 C 258 -9 258 16 232 19 C 190 23 80 25 0 24 Z"/>
+    <clipPath id="body-clip"><circle cx="256" cy="284" r="176"/></clipPath>
+  </defs>
+
+  <!-- legs, tucked under the body -->
+  <g fill="#76ADEA">
+    <rect x="170" y="416" width="52" height="54" rx="22"/>
+    <rect x="290" y="416" width="52" height="54" rx="22"/>
+  </g>
+
+  <!-- head tuft -->
+  <use href="#feather" fill="#76ADEA" transform="translate(256 132) rotate(-36) scale(1.2)"/>
+  <use href="#feather" fill="#76ADEA" transform="translate(256 132) rotate(36) scale(1.2)"/>
+  <use href="#feather" fill="#8FC0F2" transform="translate(256 132) scale(1.2)"/>
+
+  <!-- body -->
+  <circle cx="256" cy="284" r="176" fill="#76ADEA"/>
+  <circle cx="236" cy="264" r="170" fill="#8FC0F2" clip-path="url(#body-clip)"/>
+
+  <!-- toes -->
+  <g fill="#F1C08F">
+    <circle cx="174" cy="468" r="17"/>
+    <circle cx="218" cy="468" r="17"/>
+    <circle cx="196" cy="475" r="17"/>
+    <circle cx="294" cy="468" r="17"/>
+    <circle cx="338" cy="468" r="17"/>
+    <circle cx="316" cy="475" r="17"/>
+  </g>
+
+  <!-- face plate -->
+  <circle cx="256" cy="262" r="114" fill="#FFFFFF" stroke="#E1EDFB" stroke-width="7"/>
+
+  <!-- lens -->
+  <circle cx="256" cy="262" r="92" fill="#E4EEFA"/>
+  <circle cx="256" cy="262" r="79" fill="#1F2C48"/>
+  <circle cx="256" cy="262" r="64" fill="#2A4374"/>
+  <g fill="none" stroke-width="8" stroke-linecap="round">
+    <path d="M208.1 244.6 A51 51 0 0 1 247.1 211.8" stroke="#3CC4A6"/>
+    <path d="M303.9 279.4 A51 51 0 0 1 264.9 312.2" stroke="#8F6FE3"/>
+  </g>
+  <circle cx="256" cy="262" r="37" fill="#0E1628"/>
+  <circle cx="237" cy="243" r="13" fill="#FFFFFF"/>
+  <circle cx="253" cy="256" r="5.5" fill="#FFFFFF"/>
+
+  <!-- crossed wings, clipped so they grow out of the body sides -->
+  <g clip-path="url(#body-clip)">
+    <g stroke="#4F8FDB" stroke-width="4" stroke-linejoin="round">
+      <use href="#arm" fill="#5F9BE3" transform="translate(88 350) rotate(16)"/>
+      <use href="#arm" fill="#6BA4E8" transform="translate(424 350) scale(-1 1) rotate(16)"/>
+    </g>
+    <!-- feather tips on the front wing -->
+    <g stroke="#4F8FDB" stroke-width="4" stroke-linecap="round" transform="translate(424 350) scale(-1 1) rotate(16)">
+      <line x1="214" y1="-4" x2="240" y2="-2"/>
+      <line x1="214" y1="8" x2="240" y2="9"/>
+    </g>
+  </g>
+</svg>
