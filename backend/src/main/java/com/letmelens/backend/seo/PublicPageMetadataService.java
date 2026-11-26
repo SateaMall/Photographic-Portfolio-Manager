@@ -33,6 +33,10 @@ public class PublicPageMetadataService {
     private static final String SITE_NAME = "Let Me Lens";
     private static final String SITE_DESCRIPTION = "Let Me Lens empowers photographers to share what matters to them.";
     private static final String SITE_IMAGE_PATH = "/preview/default-image";
+    // Must match frontend/public/letmelens-og.png served by SITE_IMAGE_PATH
+    private static final String SITE_IMAGE_TYPE = "image/png";
+    private static final int SITE_IMAGE_WIDTH = 1200;
+    private static final int SITE_IMAGE_HEIGHT = 627;
     private static final String DEFAULT_OG_TYPE = "website";
     private static final String INDEX_ROBOTS = "index,follow";
     private static final String NO_INDEX_ROBOTS = "noindex,nofollow";
@@ -252,6 +256,8 @@ public class PublicPageMetadataService {
             String imageUrl,
             String imageAlt
     ) {
+        boolean isSiteImage = buildPublicUrl(SITE_IMAGE_PATH).equals(imageUrl);
+
         return new PublicPageMetadata(
                 normalizeText(title),
                 truncateDescription(description),
@@ -259,7 +265,10 @@ public class PublicPageMetadataService {
                 robots,
                 DEFAULT_OG_TYPE,
                 imageUrl,
-                normalizeText(imageAlt)
+                normalizeText(imageAlt),
+                isSiteImage ? SITE_IMAGE_TYPE : null,
+                isSiteImage ? SITE_IMAGE_WIDTH : null,
+                isSiteImage ? SITE_IMAGE_HEIGHT : null
         );
     }
 

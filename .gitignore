@@ -42,3 +42,8 @@ storage/
 
 # junkins secret
 Jenkins/jenkins.txt
+
+# Python RAG project files (cache and environment)
+.venv/
+__pycache__/
+rag-service/.cache/

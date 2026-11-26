@@ -7,6 +7,10 @@ public record PublicPageMetadata(
         String robots,
         String ogType,
         String imageUrl,
-        String imageAlt
+        String imageAlt,
+        // Only known for the default site image; null for photo previews
+        String imageType,
+        Integer imageWidth,
+        Integer imageHeight
 ) {
 }

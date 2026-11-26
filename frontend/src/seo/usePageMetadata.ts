@@ -14,6 +14,12 @@ export const DEFAULT_SITE_TITLE = "Let Me Lens";
 export const DEFAULT_SITE_DESCRIPTION = "Let Me Lens empowers photographers to share what matters to them.";
 export const DEFAULT_SITE_IMAGE_PATH = "/preview/default-image";
 export const DEFAULT_SITE_IMAGE_ALT = "Let Me Lens preview";
+// Must match frontend/public/letmelens-og.png served by DEFAULT_SITE_IMAGE_PATH
+const DEFAULT_SITE_IMAGE_DETAILS = {
+  "og:image:type": "image/png",
+  "og:image:width": "1200",
+  "og:image:height": "627",
+} as const;
 
 function toAbsoluteUrl(pathOrUrl: string) {
   if (/^https?:\/\//i.test(pathOrUrl)) {
@@ -73,6 +79,7 @@ export function usePageMetadata(metadata: PageMetadata) {
   const description = metadata.description.trim() || DEFAULT_SITE_DESCRIPTION;
   const canonicalUrl = toAbsoluteUrl(metadata.canonicalPath);
   const imageUrl = toAbsoluteUrl(metadata.imageUrl?.trim() || DEFAULT_SITE_IMAGE_PATH);
+  const isDefaultImage = new URL(imageUrl).pathname === DEFAULT_SITE_IMAGE_PATH;
   const imageAlt = metadata.imageAlt?.trim() || DEFAULT_SITE_IMAGE_ALT;
   const robots = metadata.robots?.trim() || "index,follow";
   const type = metadata.type?.trim() || "website";
@@ -92,11 +99,18 @@ export function usePageMetadata(metadata: PageMetadata) {
     getOrCreateMetaByProperty("og:url").setAttribute("content", canonicalUrl);
     getOrCreateMetaByProperty("og:image").setAttribute("content", imageUrl);
     getOrCreateMetaByProperty("og:image:alt").setAttribute("content", imageAlt);
+    for (const [property, value] of Object.entries(DEFAULT_SITE_IMAGE_DETAILS)) {
+      if (isDefaultImage) {
+        getOrCreateMetaByProperty(property).setAttribute("content", value);
+      } else {
+        document.head.querySelector(`meta[property="${property}"]`)?.remove();
+      }
+    }
 
     getOrCreateMetaByName("twitter:card").setAttribute("content", "summary_large_image");
     getOrCreateMetaByName("twitter:title").setAttribute("content", title);
     getOrCreateMetaByName("twitter:description").setAttribute("content", description);
     getOrCreateMetaByName("twitter:image").setAttribute("content", imageUrl);
     getOrCreateMetaByName("twitter:image:alt").setAttribute("content", imageAlt);
-  }, [canonicalUrl, description, imageAlt, imageUrl, robots, title, type]);
+  }, [canonicalUrl, description, imageAlt, imageUrl, isDefaultImage, robots, title, type]);
 }

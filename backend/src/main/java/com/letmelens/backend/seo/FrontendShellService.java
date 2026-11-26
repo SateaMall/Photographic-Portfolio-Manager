@@ -133,7 +133,7 @@ public class FrontendShellService {
                 <meta property="og:description" content="%s" />
                 <meta property="og:url" content="%s" />
                 <meta property="og:image" content="%s" />
-                <meta property="og:image:alt" content="%s" />
+                %s<meta property="og:image:alt" content="%s" />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content="%s" />
                 <meta name="twitter:description" content="%s" />
@@ -150,12 +150,32 @@ public class FrontendShellService {
                 description,
                 canonicalUrl,
                 imageUrl,
+                buildImageDetails(metadata),
                 imageAlt,
                 title,
                 description,
                 imageUrl,
                 imageAlt
         );
+    }
+
+    private String buildImageDetails(PublicPageMetadata metadata) {
+        StringBuilder details = new StringBuilder();
+        if (StringUtils.hasText(metadata.imageType())) {
+            details.append("<meta property=\"og:image:type\" content=\"")
+                    .append(escape(metadata.imageType()))
+                    .append("\" />\n");
+        }
+        if (metadata.imageWidth() != null && metadata.imageHeight() != null) {
+            details.append("<meta property=\"og:image:width\" content=\"")
+                    .append(metadata.imageWidth())
+                    .append("\" />\n");
+            details.append("<meta property=\"og:image:height\" content=\"")
+                    .append(metadata.imageHeight())
+                    .append("\" />\n");
+        }
+
+        return details.toString();
     }
 
     private String escape(String value) {

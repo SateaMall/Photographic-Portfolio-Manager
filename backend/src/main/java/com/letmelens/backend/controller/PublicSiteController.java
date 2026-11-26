@@ -74,7 +74,7 @@ public class PublicSiteController {
     @ResponseBody
     @GetMapping(value = "/preview/default-image")
     public ResponseEntity<byte[]> defaultPreviewImage() {
-        FrontendShellService.FrontendAsset asset = frontendShellService.loadAsset("/letmelensHQ.png");
+        FrontendShellService.FrontendAsset asset = frontendShellService.loadAsset("/letmelens-og.png");
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(asset.contentType()))
                 .body(asset.body());
